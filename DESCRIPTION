@@ -33,7 +33,7 @@ Description: Provides functions to estimate optimal plot size for
     coefficient of variation and plot size. Implements the linear
     response plateau (LRP) and quadratic response plateau (QRP) models,
     with standardized diagnostic statistics and plotting.
-License: MIT + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Depends: 

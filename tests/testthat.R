@@ -1,4 +1,4 @@
 library(testthat)
-library(DimExp)
+library(trialSize)
 
-test_check("DimExp")
+test_check("trialSize")

@@ -187,8 +187,8 @@ plot.replicates_fit <- function(x, y_var = c("r_optimal", "r_continuous"),
                                 xlab = "Number of treatments",
                                 ylab = NULL, colour_lab = "LSD (%)",
                                 line_size = 0.8, point_size = 1.8,
-                                base_size = 13, title_size = NULL,
-                                family = "serif", theme = NULL,
+                                base_size = 12, title_size = NULL,
+                                family = "sans", theme = NULL,
                                 save = FALSE, file = NULL,
                                 format = c("tiff", "png", "jpeg", "pdf", "eps"),
                                 dpi = 300, width = 18, height = 12, units = "cm",
@@ -209,14 +209,9 @@ plot.replicates_fit <- function(x, y_var = c("r_optimal", "r_continuous"),
     ggplot2::geom_point(size = point_size) +
     ggplot2::labs(title = title, x = xlab, y = ylab, colour = colour_lab) +
     (if (is.null(theme))
-      ggplot2::theme_classic(base_size = base_size, base_family = family)
+      .theme_trialsize(base_size = base_size, family = family)
      else theme) +
-    ggplot2::theme(
-      plot.title = ggplot2::element_text(hjust = 0.5, size = title_size),
-      axis.line  = ggplot2::element_line(colour = "black", linewidth = 0.6),
-      axis.ticks = ggplot2::element_line(colour = "black"),
-      axis.text  = ggplot2::element_text(colour = "black")
-    )
+    ggplot2::theme(plot.title = ggplot2::element_text(size = title_size))
 
   if (save) {
     .save_lrp(g, file, title, format, dpi, width, height, units, compression)

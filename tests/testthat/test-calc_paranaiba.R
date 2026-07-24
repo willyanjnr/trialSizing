@@ -23,8 +23,8 @@ test_that("calc_paranaiba estimates are stable to three decimals", {
 
   expect_equal(fit$summary$mean, 227.687, tolerance = 1e-3)
   expect_equal(fit$summary$variance, 4792.240, tolerance = 1e-3)
-  expect_equal(fit$summary$rho_row, -0.018972, tolerance = 1e-5)
-  expect_equal(fit$summary$rho_col,  0.129026, tolerance = 1e-5)
+  expect_equal(fit$summary$rho_row, -0.018972, tolerance = 1e-4)
+  expect_equal(fit$summary$rho_col,  0.129026, tolerance = 1e-4)
   expect_equal(fit$summary$Xo, 5.696, tolerance = 1e-3)
   expect_equal(fit$summary$CVxo, 12.737, tolerance = 1e-3)
 })

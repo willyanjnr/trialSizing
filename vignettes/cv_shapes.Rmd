@@ -1,0 +1,163 @@
+---
+title: "CV by plot shape"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CV by plot shape}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 6.5,
+                      fig.height = 4.2, dpi = 120)
+```
+
+```{r setup}
+library(trialSize)
+```
+
+## The step before the models
+
+`fit_lrp()`, `fit_qrp()` and `fit_mcm()` all start from the same thing: a table
+of coefficients of variation, one row per planned plot size. `calc_cv_shapes()`
+builds that table from the raw grid of basic experimental units (BEU) as the
+trial was harvested, so the whole pipeline is grid in, CV table out, model fit.
+
+## Theory
+
+A uniformity trial is a grid of $L$ rows by $C$ columns of BEU. A rectangular
+**plot shape** groups adjacent units into blocks of $X_L$ rows by $X_C$ columns,
+and this is only possible when $X_L$ divides $L$ and $X_C$ divides $C$. Each
+shape tiles the grid into
+
+$$
+n = \frac{L \, C}{X_L \, X_C}
+$$
+
+non-overlapping plots. For every shape the plot **totals** are formed, and their
+mean, standard deviation and CV are computed:
+
+$$
+CV = 100 \times \frac{s}{\bar{y}}
+$$
+
+As plots get larger they average over more units, the totals vary
+proportionally less, and the CV falls -- the decreasing curve every plot-size
+method is built to read.
+
+### Shapes are not interchangeable at equal area
+
+A $1 \times 2$ shape and a $2 \times 1$ shape cover the same two basic units,
+but along different directions of the field. Whenever fertility is not the same
+in both directions their CVs differ, so both are reported and the CV table has
+**repeated plot sizes** ($x = X_L X_C$) that are genuinely different rows. This
+is the table-level counterpart of the directional autocorrelation that
+[calc_paranaiba()] uses.
+
+### Fewer plots, less information
+
+A shape of area $X$ yields $n = LC/X$ plots, so a large plot size rests on few
+plots and its CV is estimated with little information: the last rows of the
+table are the least reliable. The `n` column is returned for exactly this
+reason and is the natural weight for a weighted fit. Shapes leaving fewer than
+`min_plots` plots are dropped, which by default removes only the whole grid
+(a single plot, which has no variance).
+
+## Data and basic use
+
+```{r data}
+grid1 <- as.matrix(dados_ensaio_C1[dados_ensaio_C1$Rep == 1, paste0("C", 1:8)])
+dim(grid1)
+```
+
+```{r fit}
+tab <- calc_cv_shapes(grid1)
+tab
+```
+
+The columns are `trial`, `X_L` and `X_C` (the shape in basic units), `x` (the
+plot size $X_L X_C$), `n` (number of plots), `mean`, `sd` and `cv` (percent),
+ordered by plot size.
+
+### Same area, different orientation
+
+The repeated plot sizes make the anisotropy visible directly:
+
+```{r orientation}
+tab[tab$x == 2, ]
+```
+
+Two shapes of 2 m², one running along the rows and one along the columns, with
+different CVs. If they disagree strongly, a plot size chosen from one
+orientation will not be the plot size chosen from the other.
+
+### n falls as the plot grows
+
+```{r counts}
+unique(tab[, c("x", "n")])
+```
+
+The largest plots are supported by a handful of plots only, which is the case
+for weighting the fit.
+
+## Feeding the fitters
+
+The returned columns are already named `x`, `cv` and `trial`, so the table goes
+straight into the models with no reshaping:
+
+```{r feed}
+fit_lrp(tab, x = "x", cv = "cv", step = 0.05)
+```
+
+Passing `weights = TRUE` to the fitters uses the `n` column, giving the
+well-estimated small plots more say than the sparse large ones.
+
+## Several trials at once
+
+A named list of grids produces one block of rows per trial, ready to fit one
+model per trial with the `trial` argument:
+
+```{r multi}
+grids <- lapply(split(dados_ensaio_C1, dados_ensaio_C1$Rep),
+                function(d) as.matrix(d[, paste0("C", 1:8)]))
+names(grids) <- paste("Rep", names(grids))
+
+tab3 <- calc_cv_shapes(grids)
+table(tab3$trial)
+```
+
+```{r multi-fit}
+fit_lrp(tab3, x = "x", cv = "cv", trial = "trial", step = 0.05)$summary
+```
+
+## Long-format data
+
+When the measurements come out of a spreadsheet, the grid can be rebuilt from
+row and column index columns rather than trusting the row order of the file:
+
+```{r long}
+long <- expand.grid(col = 1:8, row = 1:6)
+long$mf <- as.vector(t(grid1))
+
+head(calc_cv_shapes(long, value = "mf", row_id = "row", col_id = "col"), 4)
+```
+
+Missing cells are an error rather than a silent gap: every row/column
+combination must be present.
+
+## Where this fits
+
+`calc_cv_shapes()` sits between checking the trial (`vignette("check_trial")`)
+and fitting a model (`vignette("lrp")`, `vignette("qrp")`, `vignette("mcm")`).
+The Paranaíba method (`vignette("paranaiba")`) skips it, working on the raw grid
+directly, and `vignette("compare")` runs several methods on one trial at once,
+building this table on the way when given a grid.
+
+### References
+
+Cargnelutti Filho, A. et al. (2025). Determinação do tamanho de parcela para
+avaliar a massa de parte aérea de grão-de-bico. *Revista Vivências*, 21(43),
+499-513.
+
+Paranaíba, P. F., Ferreira, D. F. & Morais, A. R. (2009). Tamanho ótimo de
+parcelas experimentais. *Revista Brasileira de Biometria*, 27(2), 255-268.

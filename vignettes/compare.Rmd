@@ -1,0 +1,137 @@
+---
+title: "Comparing the methods"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Comparing the methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 6.5,
+                      fig.height = 4.2, dpi = 120)
+```
+
+```{r setup}
+library(trialSize)
+```
+
+## Why compare
+
+The plot-size methods disagree by construction, and the published articles
+report that disagreement as a finding rather than a nuisance. The MCM optimum is
+typically the smallest, the LRP intermediate and the QRP the largest -- an
+ordering seen across many crops. `compare_methods()` runs them on one set of
+data and tabulates what each recommends, so the spread is visible instead of
+inferred from separate calls.
+
+The real question it answers is not *which method gives the largest number* but
+*whether the methods disagree by more than their own uncertainty*. With
+`bootstrap = TRUE` the answer comes with intervals, and the spread between
+methods is often smaller than the imprecision within any one of them.
+
+## From a CV table
+
+Given a data frame with `x` and `cv` columns, the three CV-based methods run:
+
+```{r cvtable}
+X   <- c(1, 2, 2, 3, 3, 4, 6, 6, 6, 6, 9, 12, 12, 18, 18)
+CV1 <- c(30.40, 19.51, 23.72, 12.89, 21.32, 16.69, 6.71, 10.75,
+         17.58, 14.94, 11.93, 3.18, 8.63, 4.25, 11.41)
+
+cmp <- compare_methods(data.frame(x = X, cv = CV1), step = 0.05)
+cmp
+```
+
+The footer reports the range of $X_o$ across methods as a factor: how many times
+larger the largest recommendation is than the smallest.
+
+## From the raw grid
+
+Given a grid of basic experimental units instead of a CV table,
+`compare_methods()` builds the CV table on the way with [calc_cv_shapes()], and
+the Paranaíba method joins the comparison -- it works on the basic units
+directly and so is only available when the grid is supplied:
+
+```{r grid}
+grid1 <- as.matrix(dados_ensaio_C1[dados_ensaio_C1$Rep == 1, paste0("C", 1:8)])
+compare_methods(grid1, step = 0.05)
+```
+
+## Which statistics are comparable
+
+`R2` and `RMSE` are **recomputed here** from the residuals on the original CV
+scale, so they mean the same thing for every method even when the fit itself was
+weighted -- a weighted fit stores weighted statistics, and comparing those
+across methods would compare different quantities.
+
+Two deliberate absences:
+
+- **AIC and BIC** are not shown. The MCM has two parameters against the plateau
+  models' three plus a breakpoint, and the breakpoint is not an ordinary
+  parameter, so the information criteria are not on a common footing.
+- The Paranaíba row has `NA` for `R2` and `RMSE` by nature, not by omission: it
+  is a closed form over the basic units with no fitted residuals.
+
+## Weighting
+
+`weights = TRUE` uses the `n` column -- the number of plots each shape yields --
+which a grid always provides. It reaches the MCM through that method's Federer
+`df` argument, the same weighted least squares by another name. The Paranaíba
+row is unaffected, since it never sees the CV table.
+
+```{r weights}
+compare_methods(grid1, step = 0.05, weights = TRUE)$summary
+```
+
+## Intervals: the point of the exercise
+
+Without intervals the table invites over-reading a difference that may be noise.
+`bootstrap = TRUE` adds a confidence interval for each $X_o$, and a
+breakpoint-existence p-value for the methods that have one:
+
+```{r bootstrap}
+set.seed(1)
+compare_methods(grid1, step = 0.05, bootstrap = TRUE, n_boot = 200)
+```
+
+The print method reads the intervals for you: if they all share a common
+stretch, the methods do not disagree beyond their own uncertainty, and the
+choice between them matters less than it looked. If they do not overlap, the
+difference is real and worth a decision.
+
+## Several trials at once
+
+A named list of grids compares the methods within each trial:
+
+```{r multi}
+grids <- lapply(split(dados_ensaio_C1, dados_ensaio_C1$Rep),
+                function(d) as.matrix(d[, paste0("C", 1:8)]))
+names(grids) <- paste("Rep", names(grids))
+
+compare_methods(grids, step = 0.05)$summary
+```
+
+## Choosing the methods
+
+By default every applicable method runs. Restrict them with `methods`; the
+Paranaíba method requires a grid and errors if asked for on a CV table:
+
+```{r subset}
+compare_methods(grid1, step = 0.05, methods = c("lrp", "qrp"))$summary
+```
+
+## Where this fits
+
+`compare_methods()` brings together the methods documented one at a time in
+`vignette("lrp")`, `vignette("qrp")`, `vignette("mcm")` and
+`vignette("paranaiba")`. Run `vignette("check_trial")` first to know whether the
+trial is worth sizing plots against, and `vignette("replicates")` afterwards to
+turn the chosen $CV_{Xo}$ into a number of replications.
+
+### References
+
+Cargnelutti Filho, A. et al. (2025). Determinação do tamanho de parcela para
+avaliar a massa de parte aérea de grão-de-bico. *Revista Vivências*, 21(43),
+499-513, which compares the same three methods and reports 4.81, 7.19 and
+10.25 m² for the MCM, LRP and QRP respectively.

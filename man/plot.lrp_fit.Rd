@@ -19,10 +19,10 @@
   point_colour = "black",
   line_colour = "black",
   bp_colour = "red",
-  base_size = 13,
+  base_size = 12,
   label_size = 4.6,
   title_size = NULL,
-  family = "serif",
+  family = "sans",
   theme = NULL,
   save = FALSE,
   file = NULL,
@@ -65,9 +65,9 @@ from it.}
 
 \item{family}{font family for the theme and annotations.}
 
-\item{theme}{optional \pkg{ggplot2} theme object used instead of the default
-\code{theme_classic(base_size)}; the axis-line, tick and centred-title
-tweaks are applied on top.}
+\item{theme}{optional \pkg{ggplot2} theme object used instead of the package
+default (the shared \code{trialSize} theme); the \code{title_size} tweak is
+applied on top.}
 
 \item{save}{logical; if \code{TRUE}, write the figure to disk (default FALSE).}
 

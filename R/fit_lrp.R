@@ -846,9 +846,9 @@ summary.lrp_fit <- function(object, ...) {
 #' @param label_size size of the annotation text (equations, Xo, CVxo).
 #' @param title_size size of the plot title. \code{NULL} uses \code{base_size}.
 #' @param family font family for the theme and annotations.
-#' @param theme optional \pkg{ggplot2} theme object used instead of the default
-#'   \code{theme_classic(base_size)}; the axis-line, tick and centred-title
-#'   tweaks are applied on top.
+#' @param theme optional \pkg{ggplot2} theme object used instead of the package
+#'   default (the shared \code{trialSize} theme); the \code{title_size} tweak is
+#'   applied on top.
 #' @param save logical; if \code{TRUE}, write the figure to disk (default FALSE).
 #' @param file output file name; if \code{NULL}, derived from \code{title}.
 #' @param format one of "tiff", "png", "jpeg", "pdf", "eps". TIFF/PDF/EPS are
@@ -866,8 +866,8 @@ plot.lrp_fit <- function(x, title = "Linear Plateau", annotate_model = TRUE,
                          point_size = 2.3, line_size = 0.8,
                          point_colour = "black", line_colour = "black",
                          bp_colour = "red",
-                         base_size = 13, label_size = 4.6, title_size = NULL,
-                         family = "serif", theme = NULL,
+                         base_size = 12, label_size = 4.6, title_size = NULL,
+                         family = "sans", theme = NULL,
                          save = FALSE, file = NULL,
                          format = c("tiff", "png", "jpeg", "pdf", "eps"),
                          dpi = 300, width = 18, height = 12, units = "cm",
@@ -943,14 +943,9 @@ plot.lrp_fit <- function(x, title = "Linear Plateau", annotate_model = TRUE,
     ggplot2::scale_y_continuous(limits = c(0, ymax), expand = c(0, 0)) +
     ggplot2::labs(title = title, x = xlab, y = ylab) +
     (if (is.null(theme))
-      ggplot2::theme_classic(base_size = base_size, base_family = family)
+      .theme_trialsize(base_size = base_size, family = family)
      else theme) +
-    ggplot2::theme(
-      plot.title = ggplot2::element_text(hjust = 0.5, size = title_size),
-      axis.line  = ggplot2::element_line(colour = "black", linewidth = 0.6),
-      axis.ticks = ggplot2::element_line(colour = "black"),
-      axis.text  = ggplot2::element_text(colour = "black")
-    )
+    ggplot2::theme(plot.title = ggplot2::element_text(size = title_size))
 
   if (save) {
     .save_lrp(g, file, title, format, dpi, width, height, units, compression)

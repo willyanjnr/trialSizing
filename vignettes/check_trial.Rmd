@@ -1,0 +1,185 @@
+---
+title: "Checking a uniformity trial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Checking a uniformity trial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 6.5,
+                      fig.height = 4.2, dpi = 120)
+```
+
+```{r setup}
+library(trialSize)
+```
+
+## Why check first
+
+Every method in the package turns a uniformity trial into a recommended plot
+size, and every one of them assumes the trial is worth sizing plots against. A
+grid with missing cells, a harvest outlier, a fertility gradient down one side,
+or -- most importantly -- no spatial structure at all, will still produce a
+number. `check_trial()` is the step that looks at the raw grid of basic
+experimental units (BEU) *before* any model is fitted, so the number you get
+later is one you can trust.
+
+It reports four things: whether the grid is **structurally** usable, whether the
+**values** are sane, whether there is a **trend** across the field, and how much
+**spatial structure** the field actually has. All of it is computed from the
+standard geostatistical definitions, so the package depends only on **ggplot2**.
+
+## Data
+
+The example is the chickpea uniformity trial shipped with the package: three
+replications, each a 6 × 8 grid of 1 m² basic units holding the fresh mass of
+the aerial part.
+
+```{r data}
+grid1 <- as.matrix(dados_ensaio_C1[dados_ensaio_C1$Rep == 1, paste0("C", 1:8)])
+dim(grid1)
+```
+
+The matrix must preserve the field layout: rows and columns are not
+interchangeable, because trend and autocorrelation are directional.
+
+## Running the check
+
+```{r check}
+chk <- check_trial(grid1)
+chk
+```
+
+The printout is the whole diagnostic at a glance. Reading it top to bottom:
+
+- **Grid / Shapes** -- the dimensions and how many rectangular plot shapes the
+  grid admits. This matters because the CV-based methods need several shapes to
+  fit a curve; a grid whose sides are prime yields almost none. The count is
+  flagged when it drops below six.
+- **Values / Outliers** -- mean, sd, CV, range, and outliers by the boxplot
+  rule. In a uniformity trial an outlying unit is usually a harvest failure or a
+  typing error, and because it enters every plot shape that contains it, it is
+  worth resolving before anything else.
+- **Trend** -- the p-value of a monotone trend along the rows and along the
+  columns. A gradient in one direction is field fertility, and it is exactly
+  why shapes of equal area but different orientation give different CVs.
+- **Moran's I / rho** -- global spatial autocorrelation and the first-order
+  autocorrelations that [calc_paranaiba()] uses.
+- **Variogram** -- the fitted model, discussed next.
+
+## Reading the variogram
+
+The fitted variogram gives three numbers that bear directly on plot size, and
+they are the reason the check is more than a data audit.
+
+```{r variogram}
+chk$checks[[1]]$variogram[c("model", "nugget", "sill", "range",
+                            "nugget_ratio", "dependence")]
+```
+
+The **range** is the distance beyond which basic units stop being correlated. A
+plot larger than the range is averaging units that are already independent --
+which is the spatial reading of the plateau that `fit_lrp()` and `fit_qrp()`
+estimate empirically from the CV curve. Seeing the range here, before fitting,
+tells you roughly where that plateau should land.
+
+The **nugget-to-sill ratio** is the share of variance with no spatial structure.
+Following Cambardella et al. (1994) it is read as strong dependence (below
+0.25), moderate (0.25 to 0.75) or weak (above 0.75). When it is weak, the field
+varies almost at random from unit to unit, and no choice of plot size will buy
+much precision -- worth knowing before fitting five models to a CV table.
+
+The model is fitted without a spatial-statistics dependency: the range is
+profiled over a grid and, at each candidate, the nugget and partial sill are
+solved exactly under non-negativity. Spherical, exponential and Gaussian shapes
+are all tried and the best weighted fit is kept.
+
+## The field map
+
+The `plot()` method draws the trial as a map: an ordinary-kriging surface built
+from that variogram, with the basic units drawn on top and filled on the same
+colour scale. The surface shows where the field is systematically better or
+worse; the points show the data the surface came from, so an interpolation
+artefact cannot be mistaken for a measurement.
+
+```{r map}
+plot(chk)
+```
+
+The default palette is `viridis`, which is perceptually uniform and readable in
+greyscale and to colour-blind readers. `"blues"` gives the classic look, and
+`point_values = FALSE` draws the units as plain position markers instead of
+filling them:
+
+```{r map-blues}
+plot(chk, palette = "blues", point_values = FALSE)
+```
+
+When the variogram shows weak spatial dependence the surface is mostly telling
+you about the interpolation rather than the field, and `surface = FALSE` gives
+the honest picture -- the data alone:
+
+```{r map-nosurface}
+plot(chk, surface = FALSE)
+```
+
+Saving works as elsewhere in the package:
+
+```{r save, eval = FALSE}
+plot(chk, save = TRUE, file = "trial.tiff", format = "tiff", dpi = 300)
+```
+
+## Several trials at once
+
+Given a named list of grids, the check runs on each and the summary is one row
+per trial:
+
+```{r multi}
+grids <- lapply(split(dados_ensaio_C1, dados_ensaio_C1$Rep),
+                function(d) as.matrix(d[, paste0("C", 1:8)]))
+names(grids) <- paste("Rep", names(grids))
+
+check_trial(grids)$summary
+```
+
+The maps are then faceted and share one colour scale, which is what makes them
+directly comparable:
+
+```{r multi-map, fig.height = 3.4}
+plot(check_trial(grids))
+```
+
+## When the grid is awkward
+
+A grid whose sides are prime admits almost no plot shapes, and the check says so
+rather than letting the CV-based methods fail later:
+
+```{r prime}
+check_trial(matrix(rnorm(77, 100, 10), nrow = 7))$checks[[1]]$issues
+```
+
+Fitting the variogram is the only appreciable computation. With a very large
+grid, or when you only want the structural and value checks, `variogram = FALSE`
+skips it.
+
+## Where this fits
+
+`check_trial()` is the entry point of the workflow. Once a trial passes, build
+the CV table with `vignette("cv_shapes")`, fit the models with
+`vignette("lrp")`, `vignette("qrp")` and `vignette("mcm")`, or use the raw grid
+directly with `vignette("paranaiba")`. To see every method's recommendation side
+by side, see `vignette("compare")`.
+
+### References
+
+Cambardella, C. A. et al. (1994). Field-scale variability of soil properties in
+central Iowa soils. *Soil Science Society of America Journal*, 58(5),
+1501-1511.
+
+Matheron, G. (1963). Principles of geostatistics. *Economic Geology*, 58(8),
+1246-1266.
+
+Webster, R. & Oliver, M. A. (2007). *Geostatistics for Environmental
+Scientists*, 2nd ed. Wiley, Chichester.

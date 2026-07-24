@@ -1,5 +1,5 @@
 ## ============================================================================
-## DimExp :: Quadratic Response Plateau (QRP) model by grid search
+## trialSize :: Quadratic Response Plateau (QRP) model by grid search
 ## ----------------------------------------------------------------------------
 ## Mirrors fit_lrp(): same interfaces, S3 classes, publication plot and saving.
 ## The quadratic-plateau joins smoothly (vertex at the breakpoint), so fixing

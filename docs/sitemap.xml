@@ -7,10 +7,15 @@
 <url><loc>/articles/qrp.html</loc></url>
 <url><loc>/articles/replicates.html</loc></url>
 <url><loc>/authors.html</loc></url>
+<url><loc>/CODE_OF_CONDUCT.html</loc></url>
 <url><loc>/index.html</loc></url>
 <url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/reference/calc_cv_shapes.html</loc></url>
 <url><loc>/reference/calc_paranaiba.html</loc></url>
 <url><loc>/reference/calc_replicates.html</loc></url>
+<url><loc>/reference/check_trial.html</loc></url>
+<url><loc>/reference/compare_methods.html</loc></url>
 <url><loc>/reference/dados_ensaio_C1.html</loc></url>
 <url><loc>/reference/DimExp-package.html</loc></url>
 <url><loc>/reference/fit_lrp.html</loc></url>
@@ -25,12 +30,18 @@
 <url><loc>/reference/plot.qrp_fit.html</loc></url>
 <url><loc>/reference/plot.qrp_multi.html</loc></url>
 <url><loc>/reference/plot.replicates_fit.html</loc></url>
+<url><loc>/reference/plot.trial_check.html</loc></url>
 <url><loc>/reference/predict.lrp_fit.html</loc></url>
 <url><loc>/reference/predict.mcm_fit.html</loc></url>
 <url><loc>/reference/predict.qrp_fit.html</loc></url>
 <url><loc>/reference/print.lrp_fit.html</loc></url>
 <url><loc>/reference/print.lrp_multi.html</loc></url>
+<url><loc>/reference/print.method_comparison.html</loc></url>
+<url><loc>/reference/print.trial_check.html</loc></url>
 <url><loc>/reference/summary.lrp_fit.html</loc></url>
 <url><loc>/reference/summary.lrp_multi.html</loc></url>
+<url><loc>/reference/summary.method_comparison.html</loc></url>
+<url><loc>/reference/summary.trial_check.html</loc></url>
+<url><loc>/reference/trialSize-package.html</loc></url>
 </urlset>
 

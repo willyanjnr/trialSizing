@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Number of replications • DimExp</title>
+<title>Number of replications • trialSize</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -36,7 +36,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">DimExp</a>
+        <a class="navbar-link" href="../index.html">trialSize</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
@@ -95,7 +95,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DimExp</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">trialSize</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="theory">Theory<a class="anchor" aria-label="anchor" href="#theory"></a>
 </h2>
@@ -285,9 +285,6 @@ Fitting the chickpea trial and feeding the result straight through:</p>
 <span>         <span class="fl">17.58</span>, <span class="fl">14.94</span>, <span class="fl">11.93</span>, <span class="fl">3.18</span>, <span class="fl">8.63</span>, <span class="fl">4.25</span>, <span class="fl">11.41</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">lrp</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Competing local minimum at breakpoint 9.280 (SSE 7.5% above the</span></span>
-<span><span class="co">#&gt; optimum at 7.436). The breakpoint is not sharply identified; see $local_minima</span></span>
-<span><span class="co">#&gt; and consider `search_range`.</span></span>
 <span><span class="va">cvxo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">lrp</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint_Response"</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">cvxo</span></span>
 <span><span class="co">#&gt; [1] 7.880598</span></span>

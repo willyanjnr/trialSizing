@@ -1,5 +1,5 @@
 ## ============================================================================
-## DimExp :: Paranaiba method (maximum curvature of the CV model)
+## trialSize :: Paranaiba method (maximum curvature of the CV model)
 ## ----------------------------------------------------------------------------
 ## Paranaiba, Ferreira & Morais (2009). From the raw uniformity-trial grid, the
 ## first-order spatial autocorrelation (rho) is estimated along a serpentine

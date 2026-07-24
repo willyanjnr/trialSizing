@@ -1,5 +1,5 @@
 ## ============================================================================
-## DimExp :: Modified Maximum Curvature (MCM) plot-size model
+## trialSize :: Modified Maximum Curvature (MCM) plot-size model
 ## ----------------------------------------------------------------------------
 ## Meier & Lessman (1971), after Lessman & Atkins (1963). The CV vs plot-size
 ## relationship CV = a * X^(-b) is fit and the optimum plot size is the point of

@@ -35,7 +35,7 @@ PNG.
 
 ## Installation
 
-You can install the development version of DimExp from
+You can install the development version of trialSize from
 [GitHub](https://github.com/willyanjnr/trialSize) with:
 
 ``` r
@@ -241,6 +241,6 @@ plot(reps, title = "Replications needed")
 
 ## Citation
 
-If you use DimExp in your research, please cite the underlying methods
+If you use trialSize in your research, please cite the underlying methods
 (see each function’s documentation for the corresponding reference) as
 well as the package itself.

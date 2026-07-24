@@ -1,5 +1,5 @@
 ## ============================================================================
-## DimExp :: Optimal number of replications (Cargnelutti Filho et al., 2014)
+## trialSize :: Optimal number of replications (Cargnelutti Filho et al., 2014)
 ## ----------------------------------------------------------------------------
 ## For each (treatments, LSD) the required replications solve, iteratively,
 ##   r = ( q_alpha * CV / LSD )^2,   q_alpha = studentized range (Tukey),

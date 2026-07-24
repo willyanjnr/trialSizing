@@ -1,5 +1,5 @@
 ## ============================================================================
-## DimExp :: CV by plot shape, from the raw uniformity-trial grid
+## trialSize :: CV by plot shape, from the raw uniformity-trial grid
 ## ----------------------------------------------------------------------------
 ## The step before any of the CV-based models. A uniformity trial is harvested
 ## as a grid of basic experimental units (BEU); the CV table that fit_lrp(),

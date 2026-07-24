@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# DimExp
+# trialSize
 
 <img src="man/figures/logo.png" align="right" height="140" />
 
@@ -9,7 +9,7 @@
 
 <!-- badges: end -->
 
-DimExp provides tools for experimental design sizing in agricultural
+trialSize provides tools for experimental design sizing in agricultural
 research. It implements several methods for estimating the optimal plot
 size from uniformity trial data, and for estimating the optimal number
 of replications, with standardized diagnostic statistics and plots:
@@ -36,11 +36,11 @@ PNG.
 ## Installation
 
 You can install the development version of DimExp from
-[GitHub](https://github.com/lpradebon/DimExp) with:
+[GitHub](https://github.com/willyanjnr/trialSize) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("lpradebon/DimExp")
+pak::pak("willyanjnr/trialSize")
 ```
 
 ## Example
@@ -51,7 +51,7 @@ estimated optimal plot size. The breakpoint is found by a grid search,
 so no starting values are needed.
 
 ``` r
-library(DimExp)
+library(trialSize)
 
 # Example uniformity trial data: CV (%) decreasing with plot size
 plot_size <- c(1, 2, 4, 6, 8, 10, 15, 20, 25, 30)

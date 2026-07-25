@@ -3,5 +3,6 @@
 ^README\.Rmd$
 ^doc$
 ^Meta$
+^figure$
 ^LICENSE\.md$
 ^CODE_OF_CONDUCT\.md$

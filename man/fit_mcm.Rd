@@ -27,9 +27,9 @@ weighting, as a vector or a column name. \code{NULL} = unweighted.}
 
 \item{trial}{optional column name identifying the trial.}
 
-\item{method}{estimation method: \code{"nls"} (default, original scale;
-reproduces the chickpea article) or \code{"loglinear"} (Meier & Lessman
-regression).}
+\item{method}{estimation method: \code{"nls"} (default, original scale, as in
+the modern Brazilian plot-size papers) or \code{"loglinear"} (Meier &
+Lessman regression).}
 
 \item{bootstrap}{logical; if \code{TRUE}, also estimate the uncertainty of
 \eqn{X_c} by resampling the shapes (default \code{FALSE}). See the section
@@ -100,10 +100,13 @@ Set the random seed before calling to make the result reproducible.
 }
 
 \examples{
-## Chickpea uniformity trial, trial 1 (Cargnelutti Filho et al., 2025)
-X   <- c(1, 2, 2, 3, 3, 4, 6, 6, 6, 6, 9, 12, 12, 18, 18)
-CV1 <- c(30.40, 19.51, 23.72, 12.89, 21.32, 16.69, 6.71, 10.75,
-         17.58, 14.94, 11.93, 3.18, 8.63, 4.25, 11.41)
+## CV per plot shape from the bundled simulated uniformity trial
+## (see ?uniformity_trial).
+grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
+                                    grep("^col", names(uniformity_trial))])
+cv_tab <- calc_cv_shapes(list(T1 = grid1))
+X   <- cv_tab$x
+CV1 <- cv_tab$cv
 
 fit <- fit_mcm(X, CV1)
 fit
@@ -119,9 +122,9 @@ c(nls       = unname(fit$parameters["Breakpoint"]),
   loglinear = unname(fit_mcm(X, CV1, method = "loglinear")$parameters["Breakpoint"]))
 
 ## Federer (1955) weighting: the CV of a large plot size rests on fewer
-## plots, so pass the degrees of freedom of each point to down-weight it.
-n_plots <- 72 / X
-fit_mcm(X, CV1, df = n_plots - 1)$parameters["Breakpoint"]
+## plots, so pass the degrees of freedom of each point (n - 1) to down-weight
+## it. The plot count n is carried in the CV table.
+fit_mcm(X, CV1, df = cv_tab$n - 1)$parameters["Breakpoint"]
 
 ## Uncertainty of Xc, off by default. There is no existence test here: the
 ## curve always has a maximum-curvature point when b > 0, so what gets an
@@ -139,7 +142,7 @@ trials <- rbind(
 fit_mcm(trials, x = "x", cv = "cv", trial = "trial")$summary
 
 \donttest{
-plot(fit, title = "Chickpea, trial 1")
+plot(fit, title = "Uniformity trial, T1")
 
 ## The three CV-based methods on the same data. MCM is the most
 ## conservative and QRP the most generous; the ordering is systematic.

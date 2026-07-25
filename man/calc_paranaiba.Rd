@@ -63,18 +63,19 @@ data frame whose \code{n_col} value columns hold the grid (see \code{value},
 }
 
 \examples{
-## The packaged uniformity trial holds three replications, each a 6 x 8 grid
-## of basic experimental units (columns C1-C8).
-rep1 <- as.matrix(dados_ensaio_C1[dados_ensaio_C1$Rep == 1, paste0("C", 1:8)])
+## The bundled simulated uniformity trial holds three trials, each an 8 x 12
+## grid of basic experimental units (columns col01-col12); see
+## ?uniformity_trial.
+col_cols <- grep("^col", names(uniformity_trial))
+rep1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1", col_cols])
 dim(rep1)
 
 ## One trial, from a matrix
 calc_paranaiba(rep1)
 
 ## Several trials, from a named list of matrices
-grids <- lapply(split(dados_ensaio_C1, dados_ensaio_C1$Rep),
-                function(d) as.matrix(d[, paste0("C", 1:8)]))
-names(grids) <- paste("Rep", names(grids))
+grids <- lapply(split(uniformity_trial, uniformity_trial$trial),
+                function(d) as.matrix(d[, grep("^col", names(d))]))
 par_fit <- calc_paranaiba(grids)
 par_fit$summary
 
@@ -88,13 +89,13 @@ cbind(
 
 ## Long format: one row per basic unit, with row and column indices
 long <- data.frame(
-  rep   = rep(dados_ensaio_C1$Rep, times = 8),
-  linha = rep(dados_ensaio_C1$Linha, times = 8),
-  coluna = rep(paste0("C", 1:8), each = nrow(dados_ensaio_C1)),
-  valor = unlist(dados_ensaio_C1[, paste0("C", 1:8)], use.names = FALSE)
+  trial = rep(uniformity_trial$trial, times = length(col_cols)),
+  row   = rep(uniformity_trial$row,   times = length(col_cols)),
+  col   = rep(names(uniformity_trial)[col_cols], each = nrow(uniformity_trial)),
+  value = unlist(uniformity_trial[, col_cols], use.names = FALSE)
 )
-calc_paranaiba(long, value = "valor", row_id = "linha", col_id = "coluna",
-               trial = "rep")$summary
+calc_paranaiba(long, value = "value", row_id = "row", col_id = "col",
+               trial = "trial")$summary
 
 \donttest{
 plot(par_fit)

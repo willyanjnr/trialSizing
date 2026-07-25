@@ -187,15 +187,18 @@ calling to make the result reproducible.
 }
 
 \examples{
-## Chickpea uniformity trial, trial 1 (Cargnelutti Filho et al., 2025).
-## One CV per basic-unit form: plot sizes repeat because several shapes
-## give the same area.
-X   <- c(1, 2, 2, 3, 3, 4, 6, 6, 6, 6, 9, 12, 12, 18, 18)
-CV1 <- c(30.40, 19.51, 23.72, 12.89, 21.32, 16.69, 6.71, 10.75,
-         17.58, 14.94, 11.93, 3.18, 8.63, 4.25, 11.41)
+## A simulated uniformity trial bundled with the package (see
+## ?uniformity_trial). Group its 1 m2 basic units into plots of every shape,
+## then read one CV per shape -- the input the plateau models expect. Several
+## shapes share an area, so the plot sizes repeat.
+grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
+                                    grep("^col", names(uniformity_trial))])
+cv_tab <- calc_cv_shapes(list(T1 = grid1))
+X   <- cv_tab$x    # plot size (m2)
+CV1 <- cv_tab$cv   # CV (\%) among plots of that shape
 
-## A coarse grid runs fast and already reproduces the published Xo to two
-## decimals; the default step = 0.001 refines the third.
+## A coarse grid runs fast and already reproduces Xo to two decimals; the
+## default step = 0.001 refines the third.
 fit <- fit_lrp(X, CV1, step = 0.01)
 fit
 coef(fit)
@@ -209,21 +212,19 @@ predict(fit, newx = c(2, 5, 7.5, 15))
 fit_lrp(X, CV1)$parameters["Breakpoint"]
 
 ## Title and styling belong to plot(), not to the fit
-plot(fit, title = "Chickpea, trial 1")
+plot(fit, title = "Uniformity trial, T1")
 
 ## Weighting by the number of plots -----------------------------------------
-## The CV of an 18 m2 shape rests on 2 plots, that of a 1 m2 shape on 36.
-## Weighting by n pulls the fit towards the small sizes, so Xo falls.
-n_plots <- c(36, 18, 18, 12, 12, 9, 6, 6, 6, 6, 4, 3, 3, 2, 2)
+## The CV of a large shape rests on very few plots, that of a 1 m2 shape on
+## many. Weighting by n (carried in the CV table) pulls the fit towards the
+## small sizes, so Xo falls.
 c(unweighted = unname(fit_lrp(X, CV1, step = 0.01)$parameters["Breakpoint"]),
   weighted   = unname(fit_lrp(X, CV1, step = 0.01,
-                              weights = n_plots)$parameters["Breakpoint"]))
+                              weights = cv_tab$n)$parameters["Breakpoint"]))
 
-## Straight from a grid, `weights = TRUE` finds the n column itself
-grid1 <- as.matrix(dados_ensaio_C1[dados_ensaio_C1$Rep == 1,
-                                   paste0("C", 1:8)])
-tab <- calc_cv_shapes(grid1)
-fit_lrp(tab, x = "x", cv = "cv", step = 0.05, weights = TRUE)$parameters["Breakpoint"]
+## Straight from the grid table, `weights = TRUE` finds the n column itself
+fit_lrp(cv_tab, x = "x", cv = "cv", step = 0.05,
+        weights = TRUE)$parameters["Breakpoint"]
 
 ## Uncertainty of Xo -------------------------------------------------------
 ## Off by default, because the published procedure reports the point alone.

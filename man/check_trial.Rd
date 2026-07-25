@@ -91,8 +91,9 @@ convention, where the range is the distance reaching 95\% of the sill.
 }
 
 \examples{
-grid1 <- as.matrix(dados_ensaio_C1[dados_ensaio_C1$Rep == 1,
-                                   paste0("C", 1:8)])
+## The bundled simulated uniformity trial (see ?uniformity_trial)
+grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
+                                    grep("^col", names(uniformity_trial))])
 chk <- check_trial(grid1)
 chk
 
@@ -105,9 +106,8 @@ chk$checks[[1]]$variogram[c("model", "nugget", "sill", "range",
 plot(chk)
 
 ## several trials at once
-grids <- lapply(split(dados_ensaio_C1, dados_ensaio_C1$Rep),
-                function(d) as.matrix(d[, paste0("C", 1:8)]))
-names(grids) <- paste("Rep", names(grids))
+grids <- lapply(split(uniformity_trial, uniformity_trial$trial),
+                function(d) as.matrix(d[, grep("^col", names(d))]))
 check_trial(grids)$summary
 
 ## a grid whose sides are prime admits almost no plot shapes

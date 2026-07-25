@@ -66,24 +66,28 @@ Original method: Paranaíba, P. F., Ferreira, D. F. & Morais, A. R. (2009).
 Tamanho ótimo de parcelas experimentais: proposição de métodos de estimação.
 *Revista Brasileira de Biometria*, 27(2), 255-268.
 
-Validation used here: Cargnelutti Filho, A., Loro, M. V., Ortiz, V. M. &
-Andretta, J. A. (2025). Determinação do tamanho de parcela para avaliar a massa
-de parte aérea de grão-de-bico. *Revista Vivências*, 21(43), 499-513.
+The implementation is validated against published results in the package tests;
+see Cargnelutti Filho, A., Loro, M. V., Ortiz, V. M. & Andretta, J. A. (2025).
+Determinação do tamanho de parcela para avaliar a massa de parte aérea de
+grão-de-bico. *Revista Vivências*, 21(43), 499-513.
 
 ## Data
 
-The examples use the chickpea uniformity trials of the validation article: a
-6 × 6 grid of 1 m² BEU per trial, grouped into 15 plot shapes. `X` is the plot
-size in BEU and `CV1`--`CV3` are the CVs of trials 1 to 3.
+The examples use the bundled simulated uniformity trial (`?uniformity_trial`):
+an 8 × 12 grid of 1 m² BEU per trial, grouped by `calc_cv_shapes()` into plot
+shapes. `X` is the plot size in BEU and `CV1`--`CV3` are the CVs of trials 1
+to 3.
 
-```{r data}
-X   <- c(1, 2, 2, 3, 3, 4, 6, 6, 6, 6, 9, 12, 12, 18, 18)
-CV1 <- c(30.40, 19.51, 23.72, 12.89, 21.32, 16.69, 6.71, 10.75,
-         17.58, 14.94, 11.93, 3.18, 8.63, 4.25, 11.41)
-CV2 <- c(34.79, 29.44, 26.45, 26.35, 31.74, 25.01, 21.44, 22.86,
-         28.93, 16.17, 27.29, 19.89, 16.85, 26.53, 14.70)
-CV3 <- c(31.12, 20.87, 29.09, 20.02, 28.04, 19.97, 10.74, 19.28,
-         18.18, 26.46, 17.41, 11.51, 17.96, 9.18, 19.17)
+```{r data, message = FALSE}
+grid_mat <- function(t)
+  as.matrix(uniformity_trial[uniformity_trial$trial == t,
+                             grep("^col", names(uniformity_trial))])
+
+tab1 <- calc_cv_shapes(grid_mat("T1"))
+X   <- tab1$x
+CV1 <- tab1$cv
+CV2 <- calc_cv_shapes(grid_mat("T2"))$cv
+CV3 <- calc_cv_shapes(grid_mat("T3"))$cv
 ```
 
 Note that `X` repeats: several shapes share the same size (four different
@@ -97,8 +101,8 @@ fit <- fit_lrp(x = X, cv = CV1)
 fit
 ```
 
-$X_o = 7.44$ m² with $CV_{Xo} = 7.88\%$, reproducing the published values for
-trial 1. The competing minima listed underneath are explained
+$X_o \approx 9.2$ m² with $CV_{Xo} \approx 6.9\%$ for trial 1. The competing
+minima listed underneath are explained
 [further down](#competing-breakpoints).
 
 `summary()` splits the model coefficients from the fit statistics:
@@ -119,7 +123,7 @@ round(fit$residuals[1:5], 3)
 the plateau behaviour:
 
 ```{r predict}
-predict(fit, newx = c(1, 5, 7.44, 15))
+predict(fit, newx = c(1, 5, 12, 15))
 ```
 
 The last two values are identical: past the breakpoint the model is flat.
@@ -130,7 +134,7 @@ The `plot()` method draws the article-style figure. Title and styling go here,
 not in `fit_lrp()`:
 
 ```{r plot}
-plot(fit, title = "Trial 1 (chickpea)")
+plot(fit, title = "Trial 1")
 ```
 
 For Portuguese-language figures, switch the decimal mark and the conditional
@@ -168,9 +172,9 @@ res <- fit_lrp(trials, x = "x", cv = "cv", trial = "trial")
 res$summary
 ```
 
-The three breakpoints (7.44, 6.56, 7.57) match the published table, and their
-mean, 7.19 m², is the article's overall recommendation. The `n_local` column
-counts competing basins per trial.
+The three breakpoints differ from trial to trial, as real trials do; their mean
+is the natural overall recommendation. The `n_local` column counts competing
+basins per trial.
 
 The individual fits stay accessible, so any single trial can be inspected or
 plotted as usual:
@@ -221,11 +225,11 @@ lm2[c("breakpoint", "SSE", "SSE_excess")] <-
 lm2
 ```
 
-Read the `SSE_excess` column as "how much worse than the optimum". Here the
-runner-up at $X_o = 5.47$ fits only **0.9% worse** than the reported 6.56. For
-practical purposes those two plot sizes are tied, and the published 6.56 carries
-more uncertainty than its two decimals suggest. A competitor 30% worse, in
-contrast, can be safely dismissed.
+Read the `SSE_excess` column as "how much worse than the optimum". When a
+runner-up basin fits only a few percent worse than the reported optimum, those
+two plot sizes are effectively tied and the breakpoint carries more uncertainty
+than its decimals suggest. A competitor 30% worse, in contrast, can be safely
+dismissed.
 
 The whole profile is available for inspection or plotting:
 

@@ -67,33 +67,24 @@ Original method: Paranaíba, P. F., Ferreira, D. F. & Morais, A. R. (2009).
 Tamanho ótimo de parcelas experimentais: proposição de métodos de estimação.
 *Revista Brasileira de Biometria*, 27(2), 255-268.
 
-Validation used here: Cargnelutti Filho, A. et al. (2014). Tamanho de parcela e
-número de repetições em aveia preta. *Ciência Rural*, 44(10), 1732-1739. The
-formulas above are reproduced in that article, and `calc_paranaiba()` returns
-its published $X_o$ and $CV_{Xo}$ for all nine trials of the first evaluation
-date.
+The formulas are validated against published results in the package tests; see
+Cargnelutti Filho, A. et al. (2014). Tamanho de parcela e número de repetições
+em aveia preta. *Ciência Rural*, 44(10), 1732-1739, where `calc_paranaiba()`
+reproduces the published $X_o$ and $CV_{Xo}$ for all nine black-oat trials of
+the first evaluation date.
 
 ## Data
 
-The example uses trial 1 of the chickpea uniformity trials: a 6 × 6 grid of
-1 m² BEU, each holding the fresh mass of the aerial part in g m⁻².
+The example uses the bundled simulated uniformity trial (`?uniformity_trial`):
+8 × 12 grids of 1 m² BEU, each holding a biomass-like measurement in g m⁻².
 
-```{r data}
-E1 <- matrix(c(288.35, 106.10, 213.70,  92.88, 185.88, 310.72,
-               262.45, 290.88, 177.45, 162.66, 346.70, 205.90,
-               303.74, 196.98, 196.11, 185.08, 137.66, 311.93,
-               339.32, 234.04, 273.59, 228.91, 112.36, 215.99,
-               311.05, 228.65, 227.15, 259.83, 293.07, 111.10,
-               238.23, 204.57, 336.62, 242.58, 173.34, 191.17),
-             nrow = 6, byrow = TRUE)
-
-E2 <- matrix(c(274.68, 244.44, 296.02, 182.82, 170.22, 270.54,
-               272.81, 207.95, 217.12, 307.88, 235.11, 263.63,
-               303.56, 184.47, 147.03, 255.88, 210.06, 227.52,
-               190.72, 421.05, 528.89, 351.25, 310.37, 156.68,
-               294.45, 451.29, 496.12, 446.41, 302.98, 248.26,
-               437.76, 434.10, 402.28, 329.27, 278.65, 164.26),
-             nrow = 6, byrow = TRUE)
+```{r data, message = FALSE}
+grid_mat <- function(t)
+  unname(as.matrix(uniformity_trial[uniformity_trial$trial == t,
+                                    grep("^col", names(uniformity_trial))]))
+E1 <- grid_mat("T1")
+E2 <- grid_mat("T2")
+dim(E1)
 ```
 
 The matrix must preserve the field layout. Rows and columns are not
@@ -133,10 +124,9 @@ do.call(rbind, lapply(c("row", "col", "mean"), function(d) {
 }))
 ```
 
-Here the two directions disagree in sign, which is worth noticing in itself: the
-effect on $X_o$ is small in this trial only because both values are close to
-zero, and $(1 - \rho^2)$ is flat near the origin. In a field with a strong
-gradient the gap would matter much more.
+Here both directional estimates are small, so the choice of direction barely
+moves $X_o$: $(1 - \rho^2)$ is flat near the origin. In a field with a strong
+directional gradient the two would differ more and the choice would matter.
 
 Unless you are deliberately reproducing a study that did otherwise, keep the
 default `"row"`, which is the original method.
@@ -157,7 +147,7 @@ The grid is rebuilt from the indices, not from the row order of the file, which
 is much safer when data come out of a spreadsheet:
 
 ```{r long}
-long <- expand.grid(col = 1:6, row = 1:6)
+long <- expand.grid(col = 1:12, row = 1:8)
 long$mf <- as.vector(t(E1))
 
 calc_paranaiba(long, value = "mf", row_id = "row", col_id = "col")$summary$Xo
@@ -168,7 +158,7 @@ With a `trial` column, one estimate is produced per trial:
 ```{r long-trial}
 long2 <- rbind(
   transform(long, trial = "Trial 1"),
-  transform(expand.grid(col = 1:6, row = 1:6), mf = as.vector(t(E2)),
+  transform(expand.grid(col = 1:12, row = 1:8), mf = as.vector(t(E2)),
             trial = "Trial 2")
 )
 

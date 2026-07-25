@@ -60,6 +60,9 @@ measurement."><meta property="og:image" content="/logo.png"><!-- mathjax --><scr
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -184,8 +187,8 @@ is what makes them comparable.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">[</span><span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span> <span class="op">==</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>                                   <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"T1"</span>,</span></span>
+<span class="r-in"><span>                                    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">chk</span> <span class="op">&lt;-</span> <span class="fu"><a href="check_trial.html">check_trial</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking 1 trial(s).</span>
 <span class="r-in"><span></span></span>

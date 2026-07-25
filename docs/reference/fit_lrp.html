@@ -63,6 +63,9 @@ nls fit, so no initial values are required."><meta property="og:image" content="
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -312,69 +315,69 @@ Bootstrap</em>. Chapman &amp; Hall, New York.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Chickpea uniformity trial, trial 1 (Cargnelutti Filho et al., 2025).</span></span></span>
-<span class="r-in"><span><span class="co">## One CV per basic-unit form: plot sizes repeat because several shapes</span></span></span>
-<span class="r-in"><span><span class="co">## give the same area.</span></span></span>
-<span class="r-in"><span><span class="va">X</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">9</span>, <span class="fl">12</span>, <span class="fl">12</span>, <span class="fl">18</span>, <span class="fl">18</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">CV1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30.40</span>, <span class="fl">19.51</span>, <span class="fl">23.72</span>, <span class="fl">12.89</span>, <span class="fl">21.32</span>, <span class="fl">16.69</span>, <span class="fl">6.71</span>, <span class="fl">10.75</span>,</span></span>
-<span class="r-in"><span>         <span class="fl">17.58</span>, <span class="fl">14.94</span>, <span class="fl">11.93</span>, <span class="fl">3.18</span>, <span class="fl">8.63</span>, <span class="fl">4.25</span>, <span class="fl">11.41</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## A simulated uniformity trial bundled with the package (see</span></span></span>
+<span class="r-in"><span><span class="co">## ?uniformity_trial). Group its 1 m2 basic units into plots of every shape,</span></span></span>
+<span class="r-in"><span><span class="co">## then read one CV per shape -- the input the plateau models expect. Several</span></span></span>
+<span class="r-in"><span><span class="co">## shapes share an area, so the plot sizes repeat.</span></span></span>
+<span class="r-in"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"T1"</span>,</span></span>
+<span class="r-in"><span>                                    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cv_tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>T1 <span class="op">=</span> <span class="va">grid1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> CV by shape for 1 trial(s).</span>
+<span class="r-in"><span><span class="va">X</span>   <span class="op">&lt;-</span> <span class="va">cv_tab</span><span class="op">$</span><span class="va">x</span>    <span class="co"># plot size (m2)</span></span></span>
+<span class="r-in"><span><span class="va">CV1</span> <span class="op">&lt;-</span> <span class="va">cv_tab</span><span class="op">$</span><span class="va">cv</span>   <span class="co"># CV (%) among plots of that shape</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## A coarse grid runs fast and already reproduces the published Xo to two</span></span></span>
-<span class="r-in"><span><span class="co">## decimals; the default step = 0.001 refines the third.</span></span></span>
+<span class="r-in"><span><span class="co">## A coarse grid runs fast and already reproduces Xo to two decimals; the</span></span></span>
+<span class="r-in"><span><span class="co">## default step = 0.001 refines the third.</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_lrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Linear Response Plateau (LRP) fit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Method:                  segment  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint (Xo):         7.440 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CV at breakpoint:        7.870 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R2: 0.715  RMSE: 3.857  AIC: 91.1  BIC: 93.9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint (Xo):         9.160 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CV at breakpoint:        6.945 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R2: 0.893  RMSE: 1.513  AIC: 92.3  BIC: 96.9 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Local minima of the SSE profile (5):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   9.280   SSE   +7.5% vs optimum  *</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   4.870   SSE  +11.2% vs optimum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   3.930   SSE  +21.5% vs optimum</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Local minima of the SSE profile (8):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   7.400   SSE  +15.3% vs optimum</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =  12.820   SSE  +34.5% vs optimum</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   5.750   SSE  +50.1% vs optimum</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ... see $local_minima for all</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   * fits within 10% of the optimum (local_min_tol); breakpoint not sharply identified</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         a         b </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28.006590 -2.706562 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21.049460 -1.539805 </span>
 <span class="r-in"><span><span class="va">fit</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Breakpoint"</span>, <span class="st">"Breakpoint_Response"</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          Breakpoint Breakpoint_Response </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            7.440000            7.869772 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            9.160000            6.944847 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## CV expected at plot sizes that were not evaluated</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, newx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">7.5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 22.593467 14.473782  7.869772  7.869772</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 17.969850 13.350435  9.500923  6.944847</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co">## Full precision (about ten times slower)</span></span></span>
 <span class="r-in"><span><span class="fu">fit_lrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      7.436 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      9.159 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Title and styling belong to plot(), not to the fit</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Chickpea, trial 1"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Uniformity trial, T1"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="fit_lrp-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Weighting by the number of plots -----------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## The CV of an 18 m2 shape rests on 2 plots, that of a 1 m2 shape on 36.</span></span></span>
-<span class="r-in"><span><span class="co">## Weighting by n pulls the fit towards the small sizes, so Xo falls.</span></span></span>
-<span class="r-in"><span><span class="va">n_plots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">36</span>, <span class="fl">18</span>, <span class="fl">18</span>, <span class="fl">12</span>, <span class="fl">12</span>, <span class="fl">9</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">## The CV of a large shape rests on very few plots, that of a 1 m2 shape on</span></span></span>
+<span class="r-in"><span><span class="co">## many. Weighting by n (carried in the CV table) pulls the fit towards the</span></span></span>
+<span class="r-in"><span><span class="co">## small sizes, so Xo falls.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>unweighted <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="fu">fit_lrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  weighted   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="fu">fit_lrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span>,</span></span>
-<span class="r-in"><span>                              weights <span class="op">=</span> <span class="va">n_plots</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                              weights <span class="op">=</span> <span class="va">cv_tab</span><span class="op">$</span><span class="va">n</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> unweighted   weighted </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       7.44       3.60 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       9.16       5.05 </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## Straight from a grid, `weights = TRUE` finds the n column itself</span></span></span>
-<span class="r-in"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">[</span><span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span> <span class="op">==</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>                                   <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> CV by shape for 1 trial(s).</span>
-<span class="r-in"><span><span class="fu">fit_lrp</span><span class="op">(</span><span class="va">tab</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, step <span class="op">=</span> <span class="fl">0.05</span>, weights <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="co">## Straight from the grid table, `weights = TRUE` finds the n column itself</span></span></span>
+<span class="r-in"><span><span class="fu">fit_lrp</span><span class="op">(</span><span class="va">cv_tab</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, step <span class="op">=</span> <span class="fl">0.05</span>,</span></span>
+<span class="r-in"><span>        weights <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using x = 'x', cv = 'cv' (single series).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       5.25 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       5.05 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Uncertainty of Xo -------------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co">## Off by default, because the published procedure reports the point alone.</span></span></span>
@@ -383,45 +386,50 @@ Bootstrap</em>. Chapman &amp; Hall, New York.</p>
 <span class="r-in"><span><span class="va">unc</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Linear Response Plateau (LRP) fit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Method:                  segment  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint (Xo):         7.440 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   95% CI (percentile):  [3.155, 14.361]   SE 3.298</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   breakpoint exists:     p = 0.0120  (500 resamples)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CV at breakpoint:        7.870 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R2: 0.715  RMSE: 3.857  AIC: 91.1  BIC: 93.9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint (Xo):         9.160 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   95% CI (percentile):  [5.320, 16.725]   SE 2.862</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   breakpoint exists:     p = 0.0020  (500 resamples)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CV at breakpoint:        6.945 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R2: 0.893  RMSE: 1.513  AIC: 92.3  BIC: 96.9 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Local minima of the SSE profile (5):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   9.280   SSE   +7.5% vs optimum  *</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   4.870   SSE  +11.2% vs optimum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   3.930   SSE  +21.5% vs optimum</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Local minima of the SSE profile (8):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   7.400   SSE  +15.3% vs optimum</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =  12.820   SSE  +34.5% vs optimum</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   5.750   SSE  +50.1% vs optimum</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ... see $local_minima for all</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   * fits within 10% of the optimum (local_min_tol); breakpoint not sharply identified</span>
 <span class="r-in"><span><span class="va">unc</span><span class="op">$</span><span class="va">bootstrap</span><span class="op">$</span><span class="va">ci</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  3.15475 14.36150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  5.320 16.725</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## p_value tests whether a breakpoint exists at all: a large value means a</span></span></span>
 <span class="r-in"><span><span class="co">## straight line explains the CV just as well, and no plateau should be read.</span></span></span>
 <span class="r-in"><span><span class="va">unc</span><span class="op">$</span><span class="va">bootstrap</span><span class="op">$</span><span class="va">p_value</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01197605</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.001996008</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Competing breakpoints ---------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co">## Every local minimum of the SSE profile is reported; those fitting within</span></span></span>
 <span class="r-in"><span><span class="co">## local_min_tol of the optimum are flagged as competing.</span></span></span>
 <span class="r-in"><span><span class="va">fit</span><span class="op">$</span><span class="va">local_minima</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   breakpoint      SSE SSE_excess competing</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       9.28 239.8679 0.07469676      TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       4.87 248.1216 0.11167642     FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3.93 271.1003 0.21462936     FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      12.00 272.4233 0.22055693     FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       2.99 354.3422 0.58758392     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   breakpoint       SSE SSE_excess competing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       7.40  60.68947  0.1526208     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      12.82  70.83320  0.3452716     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       5.75  79.02721  0.5008931     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      16.00  89.28975  0.6958005     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      24.00 142.08688  1.6985290     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       3.99 158.60770  2.0122943     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      32.00 176.35459  2.3493450     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8       2.99 366.62097  5.9629043     FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Lower the tolerance to flag only near-ties</span></span></span>
 <span class="r-in"><span><span class="fu">fit_lrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span>, local_min_tol <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span><span class="op">$</span><span class="va">local_minima</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   breakpoint      SSE SSE_excess competing</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       9.28 239.8679 0.07469676     FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       4.87 248.1216 0.11167642     FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3.93 271.1003 0.21462936     FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      12.00 272.4233 0.22055693     FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       2.99 354.3422 0.58758392     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   breakpoint       SSE SSE_excess competing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       7.40  60.68947  0.1526208     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      12.82  70.83320  0.3452716     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       5.75  79.02721  0.5008931     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      16.00  89.28975  0.6958005     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      24.00 142.08688  1.6985290     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       3.99 158.60770  2.0122943     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      32.00 176.35459  2.3493450     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8       2.99 366.62097  5.9629043     FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## The whole profile, for inspection</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">sse_profile</span>, type <span class="op">=</span> <span class="st">"l"</span>, xlab <span class="op">=</span> <span class="st">"Breakpoint"</span>, ylab <span class="op">=</span> <span class="st">"SSE"</span><span class="op">)</span></span></span>
@@ -435,33 +443,33 @@ Bootstrap</em>. Chapman &amp; Hall, New York.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $breakpoint</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 12.82</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $coefficients</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         a         b </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24.506438 -1.671301 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          a          b </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18.8969810 -0.9859507 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $plateau</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4.450822</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.257094</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $SSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 272.4233</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 70.8332</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $SSE_excess</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2205569</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3452716</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Other arguments ---------------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co">## Restrict the search when an outlier pulls the breakpoint away</span></span></span>
 <span class="r-in"><span><span class="fu">fit_lrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span>, search_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       7.44 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       9.16 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## "ramp" estimates the descending line from every observation instead of</span></span></span>
 <span class="r-in"><span><span class="co">## only those below the breakpoint, which can shift the optimum</span></span></span>
 <span class="r-in"><span><span class="fu">fit_lrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span>, method <span class="op">=</span> <span class="st">"ramp"</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       7.44 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       9.16 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Several trials at once --------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="va">trials</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span></span>
@@ -472,31 +480,31 @@ Bootstrap</em>. Chapman &amp; Hall, New York.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using x = 'x', cv = 'cv', trial = 'trial' -&gt; 2 trials.</span>
 <span class="r-in"><span><span class="va">res</span><span class="op">$</span><span class="va">summary</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   trial       a       b breakpoint plateau     R2   RMSE    AIC    BIC n_local</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    T1 28.0066 -2.7066       7.44  7.8698 0.7154 3.8574 91.068 93.900       5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    T2 23.8056 -2.3006       7.44  6.6893 0.7154 3.2788 86.193 89.025       5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    T1 21.0495 -1.5398       9.16  6.9448 0.8926 1.5130 92.321 96.863       8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    T2 17.8920 -1.3088       9.16  5.9031 0.8926 1.2861 84.845 89.387       8</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## CVxo feeds the number of replications</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="calc_replicates.html">calc_replicates</a></span><span class="op">(</span>treatments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                cv_percent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint_Response"</span><span class="op">]</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                lsd_percent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Optimal number of replications</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Design: CRD  CV: 7.87%  alpha: 0.05 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Design: CRD  CV: 6.94%  alpha: 0.05 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Rows: 6  | Non-converged: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Treatments CV_percent LSD_percent Alpha Design r_continuous r_optimal df_error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           5   7.869772          10  0.05    CRD        10.00        11       50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          10   7.869772          10  0.05    CRD        12.88        13      120</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          20   7.869772          10  0.05    CRD        15.84        16      300</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           5   7.869772          20  0.05    CRD         3.23         4       15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          10   7.869772          20  0.05    CRD         3.67         4       30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          20   7.869772          20  0.05    CRD         4.23         5       80</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           5   6.944847          10  0.05    CRD         7.98         8       35</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          10   6.944847          10  0.05    CRD        10.15        11      100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          20   6.944847          10  0.05    CRD        12.41        13      240</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           5   6.944847          20  0.05    CRD         2.76         3       10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          10   6.944847          20  0.05    CRD         3.02         4       30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          20   6.944847          20  0.05    CRD         3.39         4       60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  q_tukey converged at_floor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4.002      TRUE    FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4.560      TRUE    FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5.057      TRUE    FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4.367      TRUE    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4.066      TRUE    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4.577      TRUE    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5.069      TRUE    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4.654      TRUE    FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    4.824      TRUE    FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5.183      TRUE    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5.241      TRUE    FALSE</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

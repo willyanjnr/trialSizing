@@ -147,22 +147,22 @@
 #'
 #' @seealso [fit_lrp()], [fit_qrp()], [fit_mcm()], [calc_paranaiba()]
 #' @examples
-#' ## Three replications of a uniformity trial, each a 6 x 8 grid of basic units
-#' grids <- lapply(split(dados_ensaio_C1, dados_ensaio_C1$Rep),
-#'                 function(d) as.matrix(d[, paste0("C", 1:8)]))
-#' names(grids) <- paste("Rep", names(grids))
+#' ## Three trials of the bundled simulated uniformity trial, each an 8 x 12
+#' ## grid of basic units (see ?uniformity_trial).
+#' grids <- lapply(split(uniformity_trial, uniformity_trial$trial),
+#'                 function(d) as.matrix(d[, grep("^col", names(d))]))
 #'
 #' tab <- calc_cv_shapes(grids)
 #' head(tab, 8)
 #'
 #' ## Same area, different orientation, different CV
-#' tab[tab$trial == "Rep 1" & tab$x == 2, ]
+#' tab[tab$trial == "T1" & tab$x == 2, ]
 #'
 #' ## The table feeds the fitters unchanged
-#' fit_lrp(tab[tab$trial == "Rep 1", ], x = "x", cv = "cv", step = 0.05)
+#' fit_lrp(tab[tab$trial == "T1", ], x = "x", cv = "cv", step = 0.05)
 #'
 #' \donttest{
-#' ## One model per replication, straight from the grids
+#' ## One model per trial, straight from the grids
 #' fit_lrp(tab, x = "x", cv = "cv", trial = "trial", step = 0.01)$summary
 #'
 #' ## n falls as the plot grows: the last shapes rest on very few plots

@@ -35,11 +35,11 @@ methods is often smaller than the imprecision within any one of them.
 Given a data frame with `x` and `cv` columns, the three CV-based methods run:
 
 ```{r cvtable}
-X   <- c(1, 2, 2, 3, 3, 4, 6, 6, 6, 6, 9, 12, 12, 18, 18)
-CV1 <- c(30.40, 19.51, 23.72, 12.89, 21.32, 16.69, 6.71, 10.75,
-         17.58, 14.94, 11.93, 3.18, 8.63, 4.25, 11.41)
+grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
+                                    grep("^col", names(uniformity_trial))])
+cv_tab <- calc_cv_shapes(grid1)
 
-cmp <- compare_methods(data.frame(x = X, cv = CV1), step = 0.05)
+cmp <- compare_methods(data.frame(x = cv_tab$x, cv = cv_tab$cv), step = 0.05)
 cmp
 ```
 
@@ -54,7 +54,6 @@ the Paranaíba method joins the comparison -- it works on the basic units
 directly and so is only available when the grid is supplied:
 
 ```{r grid}
-grid1 <- as.matrix(dados_ensaio_C1[dados_ensaio_C1$Rep == 1, paste0("C", 1:8)])
 compare_methods(grid1, step = 0.05)
 ```
 
@@ -105,9 +104,8 @@ difference is real and worth a decision.
 A named list of grids compares the methods within each trial:
 
 ```{r multi}
-grids <- lapply(split(dados_ensaio_C1, dados_ensaio_C1$Rep),
-                function(d) as.matrix(d[, paste0("C", 1:8)]))
-names(grids) <- paste("Rep", names(grids))
+grids <- lapply(split(uniformity_trial, uniformity_trial$trial),
+                function(d) as.matrix(d[, grep("^col", names(d))]))
 
 compare_methods(grids, step = 0.05)$summary
 ```

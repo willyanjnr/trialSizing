@@ -20,29 +20,11 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-trialSize provides tools for experimental design sizing in agricultural
-research. It implements several methods for estimating the optimal
-plot size from uniformity trial data, and for estimating the optimal
-number of replications, with standardized diagnostic statistics and
-plots:
-
-- `fit_lrp()`: optimal plot size via the Linear Response Plateau model
-  (Paranaiba, Ferreira & Morais, 2009)
-- `fit_qrp()`: optimal plot size via the Quadratic Response Plateau model
-  (Peixoto, Faria & Morais, 2011)
-- `fit_mcm()`: optimal plot size via the Modified Maximum Curvature
-  method (Meier & Lessman, 1971)
-- `calc_paranaiba()`: optimal plot size via the Paranaiba method
-  (Paranaiba, Ferreira & Morais, 2009)
-- `calc_replicates()`: optimal number of replications (Cargnelutti
-  Filho et al., 2014)
-
-`fit_lrp()`, `fit_qrp()` and `fit_mcm()` share the same interface
-(numeric vectors, or a data frame with a trial column) and take CV values
-already computed for several plot sizes. `calc_paranaiba()` is different:
-it works directly on the raw grid of basic experimental units and returns
-a closed-form estimate. All of them return standardized statistics and
-publication-style plots that can be saved to TIFF, PDF or PNG.
+trialSize provides tools for **experimental design sizing** in agricultural
+research: estimating the optimal plot size from a uniformity trial, and the
+number of replications needed to detect a given difference between treatments.
+Every method returns standardized diagnostic statistics and publication-style
+plots that can be saved to TIFF, PDF or PNG.
 
 ## Installation
 
@@ -54,146 +36,170 @@ You can install the development version of trialSize from
 pak::pak("willyanjnr/trialSize")
 ```
 
-## Example
+## The workflow
 
-A basic uniformity-trial workflow: fit a Linear Response Plateau model
-to coefficient of variation data across plot sizes, and inspect the
-estimated optimal plot size. The breakpoint is found by a grid search,
-so no starting values are needed.
+A plot-size study starts from a **uniformity trial** -- a field sown uniformly
+and harvested in a fine grid of small *basic experimental units* (BEU) -- and
+walks through a fixed sequence of steps. trialSize has one function for each:
 
-```{r example}
+| Step | Question | Function |
+|-----:|----------|----------|
+| 1 | Is the grid usable, and how strong is the spatial structure? | `check_trial()` |
+| 2 | What is the CV of every plot shape the grid allows? | `calc_cv_shapes()` |
+| 3 | At what plot size does the CV stop falling? | `fit_lrp()`, `fit_qrp()`, `fit_mcm()` |
+| 4 | How do the methods compare (incl. the closed-form Paranaiba)? | `compare_methods()`, `calc_paranaiba()` |
+| 5 | Given that CV, how many replications are needed? | `calc_replicates()` |
+
+The rest of this page follows those steps on one dataset. Everything below uses
+`uniformity_trial`, a **simulated** trial bundled with the package (three
+8 &times; 12 grids of 1 m&sup2; BEU; see `?uniformity_trial`).
+
+```{r setup, message = FALSE}
 library(trialSize)
 
-# Example uniformity trial data: CV (%) decreasing with plot size
-plot_size <- c(1, 2, 4, 6, 8, 10, 15, 20, 25, 30)
-cv        <- c(22.1, 18.4, 14.2, 11.8, 10.1, 9.3, 8.1, 7.6, 7.4, 7.3)
+# One trial, as the numeric grid the functions expect
+grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
+                                    grep("^col", names(uniformity_trial))])
+dim(grid1)   # 8 rows x 12 columns of 1 m^2 basic units
+```
 
-fit <- fit_lrp(x = plot_size, cv = cv)
+### Step 1 — Check the trial
+
+Before estimating anything, look at the raw grid: its dimensions decide which
+plot shapes exist at all, and its spatial autocorrelation is what the whole
+method rests on. `check_trial()` reports both, and `plot()` draws the field map.
+
+```{r check}
+chk <- check_trial(grid1)
+chk
+```
+
+### Step 2 — CV by plot shape
+
+`calc_cv_shapes()` groups the BEU into every rectangular plot the grid allows
+and returns one row per shape: the plot size `x` (in BEU), the number of plots
+`n` of that size, and the coefficient of variation `cv` among them. Several
+shapes share the same area, so `x` repeats.
+
+```{r cv-shapes}
+cv_tab <- calc_cv_shapes(grid1)
+head(cv_tab)
+```
+
+This table is the input the plot-size models expect.
+
+### Step 3 — Fit a plot-size model
+
+The CV falls steeply for small plots and then levels off; the plot size where
+it stops falling is the optimum. `fit_lrp()` finds it with a Linear Response
+Plateau model, by a grid search over the breakpoint (no starting values
+needed).
+
+```{r fit}
+fit <- fit_lrp(cv_tab, x = "x", cv = "cv", step = 0.05)
 fit
 ```
 
-The plot title (and other options) go on the `plot()` method, which
-draws the fitted broken line, the breakpoint, and the plateau-model
-annotations in the layout commonly used in plot-size articles:
+Title and styling belong to the `plot()` method, which draws the fitted broken
+line, the breakpoint and the plateau annotations:
 
-```{r example-plot}
-plot(fit, title = "Uniformity trial example")
+```{r fit-plot}
+plot(fit, title = "Uniformity trial T1")
 ```
 
-To export a figure, use `save = TRUE`; TIFF is written with LZW
-compression, and vector formats are available for line art:
+To export a figure, use `save = TRUE`; TIFF is written with LZW compression,
+and vector formats are available for line art:
 
 ``` r
-plot(fit, title = "Uniformity trial example",
+plot(fit, title = "Uniformity trial T1",
      save = TRUE, file = "trial.tiff", format = "tiff", dpi = 300)
 ```
 
-## Comparing plot-size methods
+### Step 4 — Compare methods
 
-The three CV-based methods are called the same way and often give
-different optima. The optimal plot size typically increases in the order
-MCM < LRP < QRP:
+The three CV-based models and the closed-form Paranaiba method often give
+different optima; the plot size typically increases in the order
+MCM &lt; LRP &lt; QRP. `compare_methods()` runs them all from a single grid (it
+builds the CV table on the way, and adds Paranaiba because it has the raw
+units):
 
 ```{r compare}
-lrp <- fit_lrp(plot_size, cv)
-qrp <- fit_qrp(plot_size, cv)
-mcm <- fit_mcm(plot_size, cv)
-
-data.frame(
-  method = c("MCM", "LRP", "QRP"),
-  Xo   = c(mcm$parameters["Breakpoint"],
-           lrp$parameters["Breakpoint"],
-           qrp$parameters["Breakpoint"]),
-  CVxo = c(mcm$parameters["Breakpoint_Response"],
-           lrp$parameters["Breakpoint_Response"],
-           qrp$parameters["Breakpoint_Response"]),
-  row.names = NULL
-)
+compare_methods(grid1, step = 0.05)
 ```
 
-Because every `plot()` method returns a `ggplot` object, the three fits
-can be shown side by side with `patchwork`:
+`calc_paranaiba()` can also be called on its own; it works directly on the grid
+and returns a closed-form estimate from the first-order spatial
+autocorrelation:
 
-```{r compare-plot, fig.width = 12, fig.height = 4}
+```{r paranaiba}
+calc_paranaiba(grid1)$summary
+```
+
+Because every `plot()` method returns a `ggplot` object, several fits can be
+shown side by side with `patchwork`:
+
+``` r
 library(patchwork)
+lrp <- fit_lrp(cv_tab, x = "x", cv = "cv", step = 0.05)
+qrp <- fit_qrp(cv_tab, x = "x", cv = "cv", step = 0.05)
+mcm <- fit_mcm(cv_tab, x = "x", cv = "cv")
 
 plot(mcm, title = "MCM", label_size = 3) +
   plot(lrp, title = "LRP", label_size = 3) +
   plot(qrp, title = "QRP", label_size = 3)
 ```
 
-### Several trials at once
+#### Several trials at once
 
-Pass a data frame and the column names to fit one model per trial. The
-result carries a per-trial summary table plus the individual fits (this
-works for `fit_lrp()`, `fit_qrp()` and `fit_mcm()`):
+Pass a data frame (or a list of grids) with a trial column to fit one model per
+trial. The result carries a per-trial summary table plus the individual fits
+(this works for `fit_lrp()`, `fit_qrp()`, `fit_mcm()` and `compare_methods()`):
 
-```{r example-trials}
-trials <- rbind(
-  data.frame(plot_size, cv, trial = "Trial A"),
-  data.frame(plot_size, cv = cv + 1.5, trial = "Trial B")
-)
+```{r multi}
+grids <- lapply(split(uniformity_trial, uniformity_trial$trial),
+                function(d) as.matrix(d[, grep("^col", names(d))]))
 
-res <- fit_lrp(trials, x = "plot_size", cv = "cv", trial = "trial")
+cv_all <- calc_cv_shapes(grids)
+res <- fit_lrp(cv_all, x = "x", cv = "cv", trial = "trial", step = 0.05)
 res$summary
 ```
 
-If the optimum is known to lie in a given region, restrict the
-breakpoint search with `search_range`, for example
-`fit_lrp(x = plot_size, cv = cv, search_range = c(5, 20))`.
+### Step 5 — Number of replications
 
-## The Paranaiba method
-
-`calc_paranaiba()` starts from the raw uniformity trial: a grid of basic
-experimental units. It estimates the first-order spatial autocorrelation
-along a serpentine walk and returns the optimal plot size in closed form.
-Supply one matrix, a list of matrices, or a long data frame with row and
-column indices:
-
-```{r paranaiba}
-set.seed(42)
-grid_a <- matrix(rnorm(36, mean = 250, sd = 55), nrow = 6)
-grid_b <- matrix(rnorm(36, mean = 300, sd = 80), nrow = 6)
-
-par_fit <- calc_paranaiba(list(`Trial A` = grid_a, `Trial B` = grid_b))
-par_fit
-```
-
-The walk follows the rows by default, as in the original method; use
-`rho_direction = "col"` or `"mean"` for the alternatives.
-
-```{r paranaiba-plot, fig.width = 6.5, fig.height = 4.2}
-plot(par_fit, title = "Paranaiba: optimal plot size")
-```
-
-## Number of replications
-
-The CV at the optimal plot size feeds directly into the number of
-replications needed to detect a given difference between treatment means
-(as a percent of the mean), for CRD or RCBD designs:
+The CV at the optimal plot size (`CVxo`) feeds directly into the number of
+replications needed to detect a given difference between treatment means (as a
+percent of the mean), for CRD or RCBD designs:
 
 ```{r replicates}
-cvxo <- unname(lrp$parameters["Breakpoint_Response"])
+cvxo <- unname(fit$parameters["Breakpoint_Response"])
 
 reps <- calc_replicates(
-  treatments  = 3:30,
+  treatments  = 3:20,
   cv_percent  = cvxo,
-  lsd_percent = c(10, 20, 30),
+  lsd_percent = c(10, 20),
   design      = "CRD"
 )
 reps
 ```
 
-The output reports both `r_continuous` (the tabulated value) and
-`r_optimal` (the practical integer, at least 2). Plotting shows how the
-requirement grows with the number of treatments, one line per LSD level:
+The output reports both `r_continuous` (the tabulated value) and `r_optimal`
+(the practical integer, at least 2). Plotting shows how the requirement grows
+with the number of treatments, one line per LSD level:
 
-```{r replicates-plot, fig.width = 6.8, fig.height = 4.4}
+```{r replicates-plot}
 plot(reps, title = "Replications needed")
 ```
 
+## Where to go next
+
+Each step has a dedicated vignette with the theory and the full set of options:
+`vignette("check_trial")`, `vignette("cv_shapes")`, `vignette("lrp")`,
+`vignette("qrp")`, `vignette("mcm")`, `vignette("paranaiba")`,
+`vignette("compare")` and `vignette("replicates")`. The methods are validated
+against published results in the tests and in `vignette("validation")`.
+
 ## Citation
 
-If you use trialSize in your research, please cite the underlying methods
-(see each function's documentation for the corresponding reference) as
-well as the package itself.
+If you use trialSize in your research, please cite the underlying methods (see
+each function's documentation for the corresponding reference) as well as the
+package itself.

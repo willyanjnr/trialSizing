@@ -59,6 +59,9 @@ method drawing the field map."><meta property="og:image" content="/logo.png"><!-
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -211,20 +214,23 @@ Scientists</em>, 2nd ed. Wiley, Chichester.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">[</span><span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span> <span class="op">==</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>                                   <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## The bundled simulated uniformity trial (see ?uniformity_trial)</span></span></span>
+<span class="r-in"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"T1"</span>,</span></span>
+<span class="r-in"><span>                                    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">chk</span> <span class="op">&lt;-</span> <span class="fu">check_trial</span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking 1 trial(s).</span>
 <span class="r-in"><span><span class="va">chk</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Uniformity trial check -- Trial 1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Grid:      6 x 8 = 48 basic units, 0 missing</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Shapes:    15 rectangular plot shapes available</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Values:    mean 32.311, sd 2.202, CV 6.82%, range [27.847, 37.209]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Grid:      8 x 12 = 96 basic units, 0 missing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Shapes:    23 rectangular plot shapes available</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Values:    mean 251.013, sd 58.922, CV 23.47%, range [114.590, 368.440]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Outliers:  0 by the boxplot rule</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Trend:     rows p = 0.136, columns p = 0.884</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Moran's I: 0.160 (p = 0.0868)   rho row 0.252, col -0.042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Variogram: spherical | nugget 2.897, sill 4.437, range 2.29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              nugget/sill 0.65 -&gt; moderate spatial dependence</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Trend:     rows p = 0.387, columns p = 0.0336</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Moran's I: 0.057 (p = 0.367)   rho row 0.059, col 0.104</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Variogram: gaussian | nugget 3223.678, sill 3715.746, range 9.54</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              nugget/sill 0.87 -&gt; weak spatial dependence</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              little spatial structure: plot size will buy little</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              precision here, whatever method is used</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Issues:    none</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
@@ -232,22 +238,22 @@ Scientists</em>, 2nd ed. Wiley, Chichester.</p>
 <span class="r-in"><span><span class="va">chk</span><span class="op">$</span><span class="va">checks</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">variogram</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"model"</span>, <span class="st">"nugget"</span>, <span class="st">"sill"</span>, <span class="st">"range"</span>,</span></span>
 <span class="r-in"><span>                            <span class="st">"nugget_ratio"</span>, <span class="st">"dependence"</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spherical"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "gaussian"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $nugget</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.896619</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3223.678</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $sill</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4.437451</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3715.746</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $range</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.29014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 9.543577</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $nugget_ratio</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6527664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8675723</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dependence</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "moderate"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "weak"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
@@ -256,19 +262,18 @@ Scientists</em>, 2nd ed. Wiley, Chichester.</p>
 <span class="r-plt img"><img src="check_trial-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## several trials at once</span></span></span>
-<span class="r-in"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span>, <span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Rep"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">uniformity_trial</span>, <span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">check_trial</span><span class="op">(</span><span class="va">grids</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Checking 3 trial(s).</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   trial rows cols n_missing n_shapes     mean       cv n_outliers    morans_i</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Rep 1    6    8         0       15 32.31128 6.815609          0  0.16039301</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Rep 2    6    8         0       15 30.36146 5.491876          0 -0.01025904</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Rep 3    6    8         0       15 31.01494 6.806416          1  0.15381528</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   trial rows cols n_missing n_shapes     mean       cv n_outliers   morans_i</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    T1    8   12         0       23 251.0129 23.47375          0 0.05689653</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    T2    8   12         0       23 256.1666 22.58366          4 0.10942413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    T3    8   12         0       23 244.5397 24.61861          1 0.08041496</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      range nugget_ratio dependence n_issues</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2.290140    0.6527664   moderate        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 6.239547    0.8630260       weak        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 2.263810    0.4393369   moderate        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 9.543577   0.86757225       weak        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.429325   0.02860592     strong        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1.386393   0.57994864   moderate        0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## a grid whose sides are prime admits almost no plot shapes</span></span></span>
 <span class="r-in"><span><span class="fu">check_trial</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">77</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">checks</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">issues</span></span></span>

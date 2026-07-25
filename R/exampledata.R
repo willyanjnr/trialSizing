@@ -1,17 +1,35 @@
-#' Dados de um ensaio de uniformidade (Cultivar C1)
+#' Simulated uniformity trial
 #'
-#' Conjunto de dados provenientes de um ensaio de uniformidade,
-#' contendo medições em unidades básicas experimentais organizadas
-#' em linhas, colunas e repetições, utilizado como exemplo
-#' para funções de planejamento experimental.
+#' A simulated uniformity trial used throughout the package examples and
+#' vignettes. A uniformity trial is a field sown uniformly -- one genotype, one
+#' management -- and harvested in a fine grid of small \emph{basic experimental
+#' units} (BEU). The spatial variation that remains is environmental noise, and
+#' it is what plot-size methods use to decide how large a plot must be.
 #'
-#' @format Um data.frame com 18 observações e 11 variáveis:
+#' The data are entirely synthetic (a separable first-order autoregressive
+#' field plus independent noise), so they carry no usage restriction. Three
+#' independent trials are provided, each an 8 (rows) by 12 (columns) grid of
+#' 1 m\eqn{^2} BEU whose response is a biomass-like measurement in
+#' g m\eqn{^{-2}}. The parameters were chosen so the coefficient of variation
+#' falls with plot size and levels off at a plateau, as in a real trial. The
+#' generating script is in \code{data-raw/uniformity_trial.R}.
+#'
+#' @format A data frame with 24 rows (8 grid rows \eqn{\times} 3 trials) and
+#'   14 variables:
 #' \describe{
-#'   \item{Cultivar}{Cultivar avaliado}
-#'   \item{Rep}{Repetição}
-#'   \item{Linha}{Identificação da linha}
-#'   \item{C1--C8}{Variáveis quantitativas avaliadas}
+#'   \item{trial}{trial identifier, \code{"T1"}, \code{"T2"} or \code{"T3"}.}
+#'   \item{row}{grid row index, 1-8.}
+#'   \item{col01--col12}{response (g m\eqn{^{-2}}) at each of the 12 grid
+#'     columns.}
 #' }
 #'
-#' @source Dados simulados para fins didáticos.
-"dados_ensaio_C1"
+#' To recover a trial as a numeric matrix (the form the grid functions expect):
+#' \preformatted{
+#' g1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
+#'                                   grep("^col", names(uniformity_trial))])
+#' }
+#'
+#' @seealso [calc_cv_shapes()], [calc_paranaiba()], [check_trial()],
+#'   [fit_lrp()]
+#' @source Simulated data for teaching; see \code{data-raw/uniformity_trial.R}.
+"uniformity_trial"

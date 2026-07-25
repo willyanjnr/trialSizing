@@ -63,6 +63,9 @@ where \(m\) and \(s^2\) are the mean and variance of the BEU values and
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -172,11 +175,13 @@ repeticoes em aveia preta. <em>Ciencia Rural</em>, 44(10), 1732-1739.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## The packaged uniformity trial holds three replications, each a 6 x 8 grid</span></span></span>
-<span class="r-in"><span><span class="co">## of basic experimental units (columns C1-C8).</span></span></span>
-<span class="r-in"><span><span class="va">rep1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">[</span><span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span> <span class="op">==</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## The bundled simulated uniformity trial holds three trials, each an 8 x 12</span></span></span>
+<span class="r-in"><span><span class="co">## grid of basic experimental units (columns col01-col12); see</span></span></span>
+<span class="r-in"><span><span class="co">## ?uniformity_trial.</span></span></span>
+<span class="r-in"><span><span class="va">col_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rep1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"T1"</span>, <span class="va">col_cols</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">rep1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6 8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  8 12</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## One trial, from a matrix</span></span></span>
 <span class="r-in"><span><span class="fu">calc_paranaiba</span><span class="op">(</span><span class="va">rep1</span><span class="op">)</span></span></span>
@@ -184,24 +189,23 @@ repeticoes em aveia preta. <em>Ciencia Rural</em>, 44(10), 1732-1739.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Paranaiba optimal plot size</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Trials: 1  | rho direction: row  | invalid: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    trial   mean variance    CV rho_row rho_col   rho    Xo CVxo valid</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Trial 1 32.311     4.85 6.816   0.251   0.095 0.251 2.057  4.6  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    trial    mean variance     CV rho_row rho_col   rho    Xo  CVxo valid</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Trial 1 251.013 3471.819 23.474   0.017   0.091 0.017 4.794 10.72  TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Several trials, from a named list of matrices</span></span></span>
-<span class="r-in"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span>, <span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Rep"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">uniformity_trial</span>, <span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">par_fit</span> <span class="op">&lt;-</span> <span class="fu">calc_paranaiba</span><span class="op">(</span><span class="va">grids</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Paranaiba method on 3 trial(s); rho direction = 'row'.</span>
 <span class="r-in"><span><span class="va">par_fit</span><span class="op">$</span><span class="va">summary</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   trial     mean variance       CV   rho_row    rho_col       rho       Xo</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Rep 1 32.31128 4.849731 6.815609 0.2505572 0.09457409 0.2505572 2.057282</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Rep 2 30.36146 2.780268 5.491876 0.0862595 0.02803403 0.0862595 1.815833</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Rep 3 31.01494 4.456345 6.806416 0.3211815 0.11859546 0.3211815 2.025479</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   trial     mean variance       CV    rho_row    rho_col        rho       Xo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    T1 251.0129 3471.819 23.47375 0.01655932 0.09052249 0.01655932 4.793933</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    T2 256.1666 3346.830 22.58366 0.14621177 0.10257518 0.14621177 4.638860</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    T3 244.5397 3624.312 24.61861 0.08624510 0.10522436 0.08624510 4.936716</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       CVxo valid</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 4.600222  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 4.060327  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 4.529109  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 10.71956  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 10.37281  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 11.03883  TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## rho is estimated along a serpentine walk. The original method walks the</span></span></span>
 <span class="r-in"><span><span class="co">## rows; walking the columns instead can give a visibly different Xo.</span></span></span>
@@ -214,28 +218,28 @@ repeticoes em aveia preta. <em>Ciencia Rural</em>, 44(10), 1732-1739.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Paranaiba method on 3 trial(s); rho direction = 'col'.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Paranaiba method on 3 trial(s); rho direction = 'mean'.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           row      col     mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 2.057282 2.095941 2.081150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 1.815833 1.819882 1.818376</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 2.025479 2.090444 2.065925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.793933 4.781240 4.789785</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 4.638860 4.655951 4.648170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 4.936716 4.930684 4.933851</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Long format: one row per basic unit, with row and column indices</span></span></span>
 <span class="r-in"><span><span class="va">long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  rep   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span>, times <span class="op">=</span> <span class="fl">8</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  linha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Linha</span>, times <span class="op">=</span> <span class="fl">8</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  coluna <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span>, each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  valor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span>, use.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  trial <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">col_cols</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  row   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">row</span>,   times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">col_cols</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  col   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">[</span><span class="va">col_cols</span><span class="op">]</span>, each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span>, <span class="va">col_cols</span><span class="op">]</span>, use.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">calc_paranaiba</span><span class="op">(</span><span class="va">long</span>, value <span class="op">=</span> <span class="st">"valor"</span>, row_id <span class="op">=</span> <span class="st">"linha"</span>, col_id <span class="op">=</span> <span class="st">"coluna"</span>,</span></span>
-<span class="r-in"><span>               trial <span class="op">=</span> <span class="st">"rep"</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span></span>
+<span class="r-in"><span><span class="fu">calc_paranaiba</span><span class="op">(</span><span class="va">long</span>, value <span class="op">=</span> <span class="st">"value"</span>, row_id <span class="op">=</span> <span class="st">"row"</span>, col_id <span class="op">=</span> <span class="st">"col"</span>,</span></span>
+<span class="r-in"><span>               trial <span class="op">=</span> <span class="st">"trial"</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Paranaiba method on 3 trial(s); rho direction = 'row'.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   trial     mean variance       CV     rho_row     rho_col         rho       Xo</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1 32.31128 4.849731 6.815609 0.250557183  0.09457409 0.250557183 2.057282</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     2 30.36146 2.780268 5.491876 0.009239887 -0.03346129 0.009239887 1.820308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     3 31.01494 4.456345 6.806416 0.321181475  0.11859546 0.321181475 2.025479</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   trial     mean variance       CV    rho_row    rho_col        rho       Xo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    T1 251.0129 3471.819 23.47375 0.01655932 0.09052249 0.01655932 4.793933</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    T2 256.1666 3346.830 22.58366 0.14621177 0.10257518 0.14621177 4.638860</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    T3 244.5397 3624.312 24.61861 0.08624510 0.10522436 0.08624510 4.936716</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       CVxo valid</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 4.600222  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 4.070332  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 4.529109  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 10.71956  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 10.37281  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 11.03883  TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">par_fit</span><span class="op">)</span></span></span>
@@ -246,23 +250,23 @@ repeticoes em aveia preta. <em>Ciencia Rural</em>, 44(10), 1732-1739.</p>
 <span class="r-in"><span>                cv_percent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">par_fit</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">CVxo</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                lsd_percent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Optimal number of replications</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Design: CRD  CV: 4.40%  alpha: 0.05 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Design: CRD  CV: 10.71%  alpha: 0.05 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Rows: 6  | Non-converged: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Treatments CV_percent LSD_percent Alpha Design r_continuous r_optimal df_error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           5   4.396552          10  0.05    CRD         3.77         4       15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          10   4.396552          10  0.05    CRD         4.42         5       40</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          20   4.396552          10  0.05    CRD         5.18         6      100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           5   4.396552          20  0.05    CRD         2.00         2        5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          10   4.396552          20  0.05    CRD         2.00         2       10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          20   4.396552          20  0.05    CRD         2.00         2       20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           5    10.7104          10  0.05    CRD        17.83        18       85</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          10    10.7104          10  0.05    CRD        23.43        24      230</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          20    10.7104          10  0.05    CRD        29.09        30      580</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           5    10.7104          20  0.05    CRD         5.11         6       25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          10    10.7104          20  0.05    CRD         6.26         7       60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          20    10.7104          20  0.05    CRD         7.51         8      140</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  q_tukey converged at_floor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4.367      TRUE    FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4.735      TRUE    FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5.149      TRUE    FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5.673      TRUE     TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5.598      TRUE     TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5.714      TRUE     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3.942      TRUE    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4.519      TRUE    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5.035      TRUE    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4.153      TRUE    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4.646      TRUE    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5.110      TRUE    FALSE</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

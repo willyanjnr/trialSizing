@@ -9,6 +9,7 @@
 <url><loc>/articles/paranaiba.html</loc></url>
 <url><loc>/articles/qrp.html</loc></url>
 <url><loc>/articles/replicates.html</loc></url>
+<url><loc>/articles/validation.html</loc></url>
 <url><loc>/authors.html</loc></url>
 <url><loc>/CODE_OF_CONDUCT.html</loc></url>
 <url><loc>/index.html</loc></url>
@@ -46,5 +47,6 @@
 <url><loc>/reference/summary.method_comparison.html</loc></url>
 <url><loc>/reference/summary.trial_check.html</loc></url>
 <url><loc>/reference/trialSize-package.html</loc></url>
+<url><loc>/reference/uniformity_trial.html</loc></url>
 </urlset>
 

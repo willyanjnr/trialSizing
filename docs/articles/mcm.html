@@ -77,6 +77,9 @@
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -186,8 +189,9 @@ abyssinica</em> Hochst. <em>Crop Science</em>, 11(5), 648-650. (After
 Lessman &amp; Atkins, 1963.)</p>
 <p>Weighting: Federer, W. T. (1955). <em>Experimental Design</em>.
 Macmillan, New York.</p>
-<p>Validation used here: Cargnelutti Filho, A., Loro, M. V., Ortiz, V.
-M. &amp; Andretta, J. A. (2025). Determinação do tamanho de parcela para
+<p>The implementation is validated against published results in the
+package tests; see Cargnelutti Filho, A., Loro, M. V., Ortiz, V. M.
+&amp; Andretta, J. A. (2025). Determinação do tamanho de parcela para
 avaliar a massa de parte aérea de grão-de-bico. <em>Revista
 Vivências</em>, 21(43), 499-513.</p>
 </div>
@@ -195,19 +199,21 @@ Vivências</em>, 21(43), 499-513.</p>
 <div class="section level2">
 <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h2>
-<p>The chickpea trials again. <code>n</code> is the number of plots of
-each size
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>36</mn><mi>/</mi><mi>X</mi></mrow><annotation encoding="application/x-tex">n = 36/X</annotation></semantics></math>),
-which supplies the degrees of freedom for the optional weighting.</p>
+<p>The bundled simulated uniformity trial
+(<code><a href="../reference/uniformity_trial.html">?uniformity_trial</a></code>) again. <code>n</code> is the number of
+plots of each size, returned by <code><a href="../reference/calc_cv_shapes.html">calc_cv_shapes()</a></code>, and
+supplies the degrees of freedom for the optional weighting.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">X</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">9</span>, <span class="fl">12</span>, <span class="fl">12</span>, <span class="fl">18</span>, <span class="fl">18</span><span class="op">)</span></span>
-<span><span class="va">n</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">36</span>, <span class="fl">18</span>, <span class="fl">18</span>, <span class="fl">12</span>, <span class="fl">12</span>, <span class="fl">9</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">CV1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30.40</span>, <span class="fl">19.51</span>, <span class="fl">23.72</span>, <span class="fl">12.89</span>, <span class="fl">21.32</span>, <span class="fl">16.69</span>, <span class="fl">6.71</span>, <span class="fl">10.75</span>,</span>
-<span>         <span class="fl">17.58</span>, <span class="fl">14.94</span>, <span class="fl">11.93</span>, <span class="fl">3.18</span>, <span class="fl">8.63</span>, <span class="fl">4.25</span>, <span class="fl">11.41</span><span class="op">)</span></span>
-<span><span class="va">CV2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">34.79</span>, <span class="fl">29.44</span>, <span class="fl">26.45</span>, <span class="fl">26.35</span>, <span class="fl">31.74</span>, <span class="fl">25.01</span>, <span class="fl">21.44</span>, <span class="fl">22.86</span>,</span>
-<span>         <span class="fl">28.93</span>, <span class="fl">16.17</span>, <span class="fl">27.29</span>, <span class="fl">19.89</span>, <span class="fl">16.85</span>, <span class="fl">26.53</span>, <span class="fl">14.70</span><span class="op">)</span></span>
-<span><span class="va">CV3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">31.12</span>, <span class="fl">20.87</span>, <span class="fl">29.09</span>, <span class="fl">20.02</span>, <span class="fl">28.04</span>, <span class="fl">19.97</span>, <span class="fl">10.74</span>, <span class="fl">19.28</span>,</span>
-<span>         <span class="fl">18.18</span>, <span class="fl">26.46</span>, <span class="fl">17.41</span>, <span class="fl">11.51</span>, <span class="fl">17.96</span>, <span class="fl">9.18</span>, <span class="fl">19.17</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">grid_mat</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">t</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="va">t</span>,</span>
+<span>                             <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tab1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="fu">grid_mat</span><span class="op">(</span><span class="st">"T1"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">X</span>   <span class="op">&lt;-</span> <span class="va">tab1</span><span class="op">$</span><span class="va">x</span></span>
+<span><span class="va">n</span>   <span class="op">&lt;-</span> <span class="va">tab1</span><span class="op">$</span><span class="va">n</span></span>
+<span><span class="va">CV1</span> <span class="op">&lt;-</span> <span class="va">tab1</span><span class="op">$</span><span class="va">cv</span></span>
+<span><span class="va">CV2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="fu">grid_mat</span><span class="op">(</span><span class="st">"T2"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">cv</span></span>
+<span><span class="va">CV3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="fu">grid_mat</span><span class="op">(</span><span class="st">"T3"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">cv</span></span></code></pre></div>
 <p>Both <code>x</code> and <code>cv</code> must be strictly positive:
 the log-log fit and the starting values are undefined otherwise.</p>
 </div>
@@ -220,33 +226,33 @@ the log-log fit and the starting values are undefined otherwise.</p>
 <span><span class="co">#&gt; Modified Maximum Curvature (MCM) fit</span></span>
 <span><span class="co">#&gt; Method:                  nls </span></span>
 <span><span class="co">#&gt; Weighted by df:          FALSE </span></span>
-<span><span class="co">#&gt; Breakpoint (Xo):         5.755 </span></span>
-<span><span class="co">#&gt; CV at breakpoint:        12.542 </span></span>
-<span><span class="co">#&gt; R2: 0.775  RMSE: 3.427</span></span></code></pre></div>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>o</mi></msub><mo>=</mo><mn>5.76</mn></mrow><annotation encoding="application/x-tex">X_o = 5.76</annotation></semantics></math>
+<span><span class="co">#&gt; Breakpoint (Xo):         4.495 </span></span>
+<span><span class="co">#&gt; CV at breakpoint:        12.742 </span></span>
+<span><span class="co">#&gt; R2: 0.975  RMSE: 0.725</span></span></code></pre></div>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>o</mi></msub><mo>≈</mo><mn>4.5</mn></mrow><annotation encoding="application/x-tex">X_o \approx 4.5</annotation></semantics></math>
 m² with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mrow><mi>X</mi><mi>o</mi></mrow></msub><mo>=</mo><mn>12.54</mn><mi>%</mi></mrow><annotation encoding="application/x-tex">CV_{Xo} = 12.54\%</annotation></semantics></math>,
-reproducing the published MCM values for trial 1 (and, as expected, well
-below the LRP’s 7.44 m²).</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mrow><mi>X</mi><mi>o</mi></mrow></msub><mo>≈</mo><mn>12.7</mn><mi>%</mi></mrow><annotation encoding="application/x-tex">CV_{Xo} \approx 12.7\%</annotation></semantics></math>
+for trial 1 – as expected, well below the LRP’s ~9.2 m². The MCM is the
+most conservative of the three methods.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Model coefficients (CV = a * X^(-b)):</span></span>
-<span><span class="co">#&gt;         a         b </span></span>
-<span><span class="co">#&gt; 30.687871  0.511278 </span></span>
+<span><span class="co">#&gt;          a          b </span></span>
+<span><span class="co">#&gt; 23.4700048  0.4064403 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Goodness of fit:</span></span>
 <span><span class="co">#&gt;          Breakpoint Breakpoint_Response                  R2                RMSE </span></span>
-<span><span class="co">#&gt;            5.754886           12.542286            0.775326            3.427240</span></span></code></pre></div>
+<span><span class="co">#&gt;           4.4948651          12.7415655           0.9753420           0.7248675</span></span></code></pre></div>
 <p>The closed form can be verified straight from the coefficients:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">"a"</span><span class="op">]</span><span class="op">)</span>; <span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">"b"</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>formula  <span class="op">=</span> <span class="op">(</span><span class="op">(</span><span class="va">a</span><span class="op">^</span><span class="fl">2</span> <span class="op">*</span> <span class="va">b</span><span class="op">^</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">b</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">b</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">b</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  reported <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  formula reported </span></span>
-<span><span class="co">#&gt; 5.754886 5.754886</span></span></code></pre></div>
+<span><span class="co">#&gt; 4.494865 4.494865</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, newx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">18</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 30.687871 12.277646  7.001216</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 23.470005 11.330292  7.249696</span></span></code></pre></div>
 <p>Note there is no AIC or BIC here. The MCM is not nested with the
 plateau models and, under <code>"loglinear"</code>, is not even fitted
 on the same scale, so an information criterion would not be comparable.
@@ -264,9 +270,9 @@ on the original scale.</p>
 <span>                       df <span class="op">=</span> <span class="va">n</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Breakpoint"</span>, <span class="st">"R2"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;           Breakpoint        R2</span></span>
-<span><span class="co">#&gt; nls         5.754886 0.7753260</span></span>
-<span><span class="co">#&gt; loglinear   6.025869 0.7604369</span></span>
-<span><span class="co">#&gt; loglin_df   5.858971 0.7679485</span></span></code></pre></div>
+<span><span class="co">#&gt; nls         4.494865 0.9753420</span></span>
+<span><span class="co">#&gt; loglinear   4.389611 0.9744473</span></span>
+<span><span class="co">#&gt; loglin_df   4.525946 0.9751706</span></span></code></pre></div>
 <p>The differences are modest here but real, and they grow when the CVs
 of the large plots are noisy, which is exactly the case the weighting is
 meant to handle. The <code>df</code> weighting only applies with
@@ -279,7 +285,7 @@ is the unweighted fit.</p>
 <p>The figure has no flat segment: the power curve keeps descending, and
 the dotted guides mark the maximum-curvature point.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Trial 1 (chickpea)"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Trial 1"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="mcm_files/figure-html/plot-1.png" class="r-plt" alt="" width="840"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Ensaio 1"</span>, decimal_mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span></span></code></pre></div>
@@ -312,11 +318,12 @@ by the breakpoint.</p>
 <span><span class="co">#&gt; MCM fits for 3 trials</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;    trial       a      b breakpoint plateau     R2   RMSE method weighted</span></span>
-<span><span class="co">#&gt;  Trial 1 30.6879 0.5113     5.7549 12.5423 0.7753 3.4272    nls    FALSE</span></span>
-<span><span class="co">#&gt;  Trial 2 33.6190 0.1956     3.9928 25.6432 0.4968 4.0081    nls    FALSE</span></span>
-<span><span class="co">#&gt;  Trial 3 31.0513 0.2812     4.6815 20.1174 0.5570 4.2224    nls    FALSE</span></span></code></pre></div>
-<p>The three breakpoints (5.76, 3.99, 4.68) average 4.81 m², the
-article’s MCM figure.</p>
+<span><span class="co">#&gt;  Trial 1 23.4700 0.4064     4.4949 12.7416 0.9753 0.7249    nls    FALSE</span></span>
+<span><span class="co">#&gt;  Trial 2 24.9856 0.4829     4.9563 11.5337 0.8821 1.9801    nls    FALSE</span></span>
+<span><span class="co">#&gt;  Trial 3 25.1900 0.4554     4.9050 12.2104 0.9068 1.6560    nls    FALSE</span></span></code></pre></div>
+<p>The three MCM breakpoints cluster below 5 m²; their mean is the
+overall recommendation, and all three sit well under the LRP and QRP
+optima.</p>
 <p>The degrees of freedom can be supplied as a column, applied to every
 trial:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">

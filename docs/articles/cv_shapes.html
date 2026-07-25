@@ -77,6 +77,9 @@
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -182,29 +185,38 @@ the whole grid (a single plot, which has no variance).</p>
 <h2 id="data-and-basic-use">Data and basic use<a class="anchor" aria-label="anchor" href="#data-and-basic-use"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">[</span><span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span> <span class="op">==</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"T1"</span>,</span>
+<span>                                    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 6 8</span></span></code></pre></div>
+<span><span class="co">#&gt; [1]  8 12</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; CV by shape for 1 trial(s).</span></span>
 <span><span class="va">tab</span></span>
-<span><span class="co">#&gt;      trial X_L X_C  x  n      mean        sd        cv</span></span>
-<span><span class="co">#&gt; 1  Trial 1   1   1  1 48  32.31128  2.202211 6.8156094</span></span>
-<span><span class="co">#&gt; 2  Trial 1   1   2  2 24  64.62256  3.694164 5.7165238</span></span>
-<span><span class="co">#&gt; 3  Trial 1   2   1  2 24  64.62256  3.533597 5.4680548</span></span>
-<span><span class="co">#&gt; 4  Trial 1   3   1  3 16  96.93384  3.636578 3.7516084</span></span>
-<span><span class="co">#&gt; 5  Trial 1   1   4  4 12 129.24512  6.469336 5.0054784</span></span>
-<span><span class="co">#&gt; 6  Trial 1   2   2  4 12 129.24512  5.838428 4.5173299</span></span>
-<span><span class="co">#&gt; 7  Trial 1   3   2  6  8 193.86768  5.612771 2.8951557</span></span>
-<span><span class="co">#&gt; 8  Trial 1   6   1  6  8 193.86768  5.103029 2.6322228</span></span>
-<span><span class="co">#&gt; 9  Trial 1   1   8  8  6 258.49023 12.772621 4.9412392</span></span>
-<span><span class="co">#&gt; 10 Trial 1   2   4  8  6 258.49023 11.376689 4.4012066</span></span>
-<span><span class="co">#&gt; 11 Trial 1   3   4 12  4 387.73535  9.383598 2.4201037</span></span>
-<span><span class="co">#&gt; 12 Trial 1   6   2 12  4 387.73535  3.858250 0.9950731</span></span>
-<span><span class="co">#&gt; 13 Trial 1   2   8 16  3 516.98047 23.362726 4.5190733</span></span>
-<span><span class="co">#&gt; 14 Trial 1   3   8 24  2 775.47070 19.027797 2.4537094</span></span>
-<span><span class="co">#&gt; 15 Trial 1   6   4 24  2 775.47070  3.983342 0.5136676</span></span></code></pre></div>
+<span><span class="co">#&gt;      trial X_L X_C  x  n       mean        sd        cv</span></span>
+<span><span class="co">#&gt; 1  Trial 1   1   1  1 96   251.0129  58.92214 23.473749</span></span>
+<span><span class="co">#&gt; 2  Trial 1   1   2  2 48   502.0258  91.52677 18.231487</span></span>
+<span><span class="co">#&gt; 3  Trial 1   2   1  2 48   502.0258  87.47753 17.424907</span></span>
+<span><span class="co">#&gt; 4  Trial 1   1   3  3 32   753.0388 109.57170 14.550606</span></span>
+<span><span class="co">#&gt; 5  Trial 1   1   4  4 24  1004.0517 145.29792 14.471160</span></span>
+<span><span class="co">#&gt; 6  Trial 1   2   2  4 24  1004.0517 135.13136 13.458606</span></span>
+<span><span class="co">#&gt; 7  Trial 1   4   1  4 24  1004.0517 128.77483 12.825519</span></span>
+<span><span class="co">#&gt; 8  Trial 1   1   6  6 16  1506.0775 170.84259 11.343546</span></span>
+<span><span class="co">#&gt; 9  Trial 1   2   3  6 16  1506.0775 177.45778 11.782779</span></span>
+<span><span class="co">#&gt; 10 Trial 1   2   4  8 12  2008.1033 210.36242 10.475677</span></span>
+<span><span class="co">#&gt; 11 Trial 1   4   2  8 12  2008.1033 194.66600  9.694023</span></span>
+<span><span class="co">#&gt; 12 Trial 1   8   1  8 12  2008.1033 173.34725  8.632387</span></span>
+<span><span class="co">#&gt; 13 Trial 1   1  12 12  8  3012.1550 252.44911  8.381013</span></span>
+<span><span class="co">#&gt; 14 Trial 1   2   6 12  8  3012.1550 294.88366  9.789790</span></span>
+<span><span class="co">#&gt; 15 Trial 1   4   3 12  8  3012.1550 247.35836  8.212006</span></span>
+<span><span class="co">#&gt; 16 Trial 1   4   4 16  6  4016.2067 290.71099  7.238447</span></span>
+<span><span class="co">#&gt; 17 Trial 1   8   2 16  6  4016.2067 250.68705  6.241886</span></span>
+<span><span class="co">#&gt; 18 Trial 1   2  12 24  4  6024.3100 453.63761  7.530117</span></span>
+<span><span class="co">#&gt; 19 Trial 1   4   6 24  4  6024.3100 385.55772  6.400031</span></span>
+<span><span class="co">#&gt; 20 Trial 1   8   3 24  4  6024.3100 404.50742  6.714585</span></span>
+<span><span class="co">#&gt; 21 Trial 1   8   4 32  3  8032.4133 393.61571  4.900342</span></span>
+<span><span class="co">#&gt; 22 Trial 1   4  12 48  2 12048.6200 745.99765  6.191561</span></span>
+<span><span class="co">#&gt; 23 Trial 1   8   6 48  2 12048.6200 579.14874  4.806764</span></span></code></pre></div>
 <p>The columns are <code>trial</code>, <code>X_L</code> and
 <code>X_C</code> (the shape in basic units), <code>x</code> (the plot
 size
@@ -218,8 +230,8 @@ size
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tab</span><span class="op">[</span><span class="va">tab</span><span class="op">$</span><span class="va">x</span> <span class="op">==</span> <span class="fl">2</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;     trial X_L X_C x  n     mean       sd       cv</span></span>
-<span><span class="co">#&gt; 2 Trial 1   1   2 2 24 64.62256 3.694164 5.716524</span></span>
-<span><span class="co">#&gt; 3 Trial 1   2   1 2 24 64.62256 3.533597 5.468055</span></span></code></pre></div>
+<span><span class="co">#&gt; 2 Trial 1   1   2 2 48 502.0258 91.52677 18.23149</span></span>
+<span><span class="co">#&gt; 3 Trial 1   2   1 2 48 502.0258 87.47753 17.42491</span></span></code></pre></div>
 <p>Two shapes of 2 m², one running along the rows and one along the
 columns, with different CVs. If they disagree strongly, a plot size
 chosen from one orientation will not be the plot size chosen from the
@@ -231,15 +243,17 @@ other.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">tab</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"n"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     x  n</span></span>
-<span><span class="co">#&gt; 1   1 48</span></span>
-<span><span class="co">#&gt; 2   2 24</span></span>
-<span><span class="co">#&gt; 4   3 16</span></span>
-<span><span class="co">#&gt; 5   4 12</span></span>
-<span><span class="co">#&gt; 7   6  8</span></span>
-<span><span class="co">#&gt; 9   8  6</span></span>
-<span><span class="co">#&gt; 11 12  4</span></span>
-<span><span class="co">#&gt; 13 16  3</span></span>
-<span><span class="co">#&gt; 14 24  2</span></span></code></pre></div>
+<span><span class="co">#&gt; 1   1 96</span></span>
+<span><span class="co">#&gt; 2   2 48</span></span>
+<span><span class="co">#&gt; 4   3 32</span></span>
+<span><span class="co">#&gt; 5   4 24</span></span>
+<span><span class="co">#&gt; 8   6 16</span></span>
+<span><span class="co">#&gt; 10  8 12</span></span>
+<span><span class="co">#&gt; 13 12  8</span></span>
+<span><span class="co">#&gt; 16 16  6</span></span>
+<span><span class="co">#&gt; 18 24  4</span></span>
+<span><span class="co">#&gt; 21 32  3</span></span>
+<span><span class="co">#&gt; 22 48  2</span></span></code></pre></div>
 <p>The largest plots are supported by a handful of plots only, which is
 the case for weighting the fit.</p>
 </div>
@@ -255,15 +269,15 @@ the models with no reshaping:</p>
 <span><span class="co">#&gt; Using x = 'x', cv = 'cv' (single series).</span></span>
 <span><span class="co">#&gt; Linear Response Plateau (LRP) fit</span></span>
 <span><span class="co">#&gt; Method:                  segment  </span></span>
-<span><span class="co">#&gt; Breakpoint (Xo):         11.950 </span></span>
-<span><span class="co">#&gt; CV at breakpoint:        2.392 </span></span>
-<span><span class="co">#&gt; R2: 0.551  RMSE: 1.151  AIC: 54.8  BIC: 57.6 </span></span>
+<span><span class="co">#&gt; Breakpoint (Xo):         9.150 </span></span>
+<span><span class="co">#&gt; CV at breakpoint:        6.960 </span></span>
+<span><span class="co">#&gt; R2: 0.893  RMSE: 1.513  AIC: 92.3  BIC: 96.9 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Local minima of the SSE profile (3):</span></span>
-<span><span class="co">#&gt;   Xo =   6.000   SSE   +6.8% vs optimum  *</span></span>
-<span><span class="co">#&gt;   Xo =  20.000   SSE  +10.9% vs optimum</span></span>
-<span><span class="co">#&gt;   Xo =   3.450   SSE  +25.9% vs optimum</span></span>
-<span><span class="co">#&gt;   * fits within 10% of the optimum (local_min_tol); breakpoint not sharply identified</span></span></code></pre></div>
+<span><span class="co">#&gt; Local minima of the SSE profile (8):</span></span>
+<span><span class="co">#&gt;   Xo =   7.400   SSE  +15.3% vs optimum</span></span>
+<span><span class="co">#&gt;   Xo =  12.800   SSE  +34.5% vs optimum</span></span>
+<span><span class="co">#&gt;   Xo =   5.750   SSE  +50.1% vs optimum</span></span>
+<span><span class="co">#&gt;   ... see $local_minima for all</span></span></code></pre></div>
 <p>Passing <code>weights = TRUE</code> to the fitters uses the
 <code>n</code> column, giving the well-estimated small plots more say
 than the sparse large ones.</p>
@@ -274,23 +288,26 @@ than the sparse large ones.</p>
 <p>A named list of grids produces one block of rows per trial, ready to
 fit one model per trial with the <code>trial</code> argument:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span>, <span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span><span class="op">)</span>,</span>
-<span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Rep"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">uniformity_trial</span>, <span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span><span class="op">)</span>,</span>
+<span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">tab3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span></span>
 <span><span class="co">#&gt; CV by shape for 3 trial(s).</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">tab3</span><span class="op">$</span><span class="va">trial</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Rep 1 Rep 2 Rep 3 </span></span>
-<span><span class="co">#&gt;    15    15    15</span></span></code></pre></div>
+<span><span class="co">#&gt; T1 T2 T3 </span></span>
+<span><span class="co">#&gt; 23 23 23</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">tab3</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, trial <span class="op">=</span> <span class="st">"trial"</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; Using x = 'x', cv = 'cv', trial = 'trial' -&gt; 3 trials.</span></span>
-<span><span class="co">#&gt;   trial      a       b breakpoint plateau     R2   RMSE    AIC    BIC n_local</span></span>
-<span><span class="co">#&gt; 1 Rep 1 5.9095 -0.2943      11.95  2.3922 0.5515 1.1505 54.774 57.607       3</span></span>
-<span><span class="co">#&gt; 2 Rep 2 5.2223 -0.5485       6.65  1.5748 0.8332 0.4959 29.526 32.358       6</span></span>
-<span><span class="co">#&gt; 3 Rep 3 5.6972 -0.3646      11.10  1.6503 0.6345 1.0259 51.336 54.169       5</span></span></code></pre></div>
+<span><span class="co">#&gt;   trial       a       b breakpoint plateau     R2   RMSE     AIC     BIC</span></span>
+<span><span class="co">#&gt; 1    T1 21.0495 -1.5398       9.15  6.9602 0.8926 1.5131  92.322  96.864</span></span>
+<span><span class="co">#&gt; 2    T2 19.3597 -1.0725      14.40  3.9162 0.8341 2.3486 112.547 117.089</span></span>
+<span><span class="co">#&gt; 3    T3 21.3271 -1.5075      10.10  6.1011 0.8019 2.4138 113.806 118.348</span></span>
+<span><span class="co">#&gt;   n_local</span></span>
+<span><span class="co">#&gt; 1       8</span></span>
+<span><span class="co">#&gt; 2       7</span></span>
+<span><span class="co">#&gt; 3       8</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="long-format-data">Long-format data<a class="anchor" aria-label="anchor" href="#long-format-data"></a>
@@ -299,16 +316,16 @@ fit one model per trial with the <code>trial</code> argument:</p>
 rebuilt from row and column index columns rather than trusting the row
 order of the file:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span>, row <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, row <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
 <span><span class="va">long</span><span class="op">$</span><span class="va">mf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="va">long</span>, value <span class="op">=</span> <span class="st">"mf"</span>, row_id <span class="op">=</span> <span class="st">"row"</span>, col_id <span class="op">=</span> <span class="st">"col"</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="co">#&gt; CV by shape for 1 trial(s).</span></span>
-<span><span class="co">#&gt;     trial X_L X_C x  n     mean       sd       cv</span></span>
-<span><span class="co">#&gt; 1 Trial 1   1   1 1 48 32.31128 2.202211 6.815609</span></span>
-<span><span class="co">#&gt; 2 Trial 1   1   2 2 24 64.62256 3.694164 5.716524</span></span>
-<span><span class="co">#&gt; 3 Trial 1   2   1 2 24 64.62256 3.533597 5.468055</span></span>
-<span><span class="co">#&gt; 4 Trial 1   3   1 3 16 96.93384 3.636578 3.751608</span></span></code></pre></div>
+<span><span class="co">#&gt;     trial X_L X_C x  n     mean        sd       cv</span></span>
+<span><span class="co">#&gt; 1 Trial 1   1   1 1 96 251.0129  58.92214 23.47375</span></span>
+<span><span class="co">#&gt; 2 Trial 1   1   2 2 48 502.0258  91.52677 18.23149</span></span>
+<span><span class="co">#&gt; 3 Trial 1   2   1 2 48 502.0258  87.47753 17.42491</span></span>
+<span><span class="co">#&gt; 4 Trial 1   1   3 3 32 753.0388 109.57170 14.55061</span></span></code></pre></div>
 <p>Missing cells are an error rather than a silent gap: every row/column
 combination must be present.</p>
 </div>

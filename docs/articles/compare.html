@@ -77,6 +77,9 @@
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -127,22 +130,23 @@ smaller than the imprecision within any one of them.</p>
 <p>Given a data frame with <code>x</code> and <code>cv</code> columns,
 the three CV-based methods run:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">X</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">9</span>, <span class="fl">12</span>, <span class="fl">12</span>, <span class="fl">18</span>, <span class="fl">18</span><span class="op">)</span></span>
-<span><span class="va">CV1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30.40</span>, <span class="fl">19.51</span>, <span class="fl">23.72</span>, <span class="fl">12.89</span>, <span class="fl">21.32</span>, <span class="fl">16.69</span>, <span class="fl">6.71</span>, <span class="fl">10.75</span>,</span>
-<span>         <span class="fl">17.58</span>, <span class="fl">14.94</span>, <span class="fl">11.93</span>, <span class="fl">3.18</span>, <span class="fl">8.63</span>, <span class="fl">4.25</span>, <span class="fl">11.41</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"T1"</span>,</span>
+<span>                                    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">cv_tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; CV by shape for 1 trial(s).</span></span>
 <span></span>
-<span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_methods.html">compare_methods</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span>, cv <span class="op">=</span> <span class="va">CV1</span><span class="op">)</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
+<span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_methods.html">compare_methods</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cv_tab</span><span class="op">$</span><span class="va">x</span>, cv <span class="op">=</span> <span class="va">cv_tab</span><span class="op">$</span><span class="va">cv</span><span class="op">)</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Comparing 3 method(s) on 1 trial(s).</span></span>
 <span><span class="va">cmp</span></span>
 <span><span class="co">#&gt; Plot-size methods compared</span></span>
 <span><span class="co">#&gt; Trials: 1  | source: CV table  | weighted: FALSE </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;    trial method     Xo   CVxo    R2  RMSE</span></span>
-<span><span class="co">#&gt;  Trial 1    MCM  5.755 12.542 0.775 3.427</span></span>
-<span><span class="co">#&gt;  Trial 1    LRP  7.450  7.843 0.715 3.857</span></span>
-<span><span class="co">#&gt;  Trial 1    QRP 10.950  7.506 0.741 3.683</span></span>
+<span><span class="co">#&gt;  Trial 1    MCM  4.495 12.742 0.975 0.725</span></span>
+<span><span class="co">#&gt;  Trial 1    LRP  9.150  6.960 0.893 1.513</span></span>
+<span><span class="co">#&gt;  Trial 1    QRP 11.950  7.028 0.918 1.324</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Xo ranges from 5.755 to 10.950 (a factor of 1.9).</span></span></code></pre></div>
+<span><span class="co">#&gt; Xo ranges from 4.495 to 11.950 (a factor of 2.7).</span></span></code></pre></div>
 <p>The footer reports the range of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mi>o</mi></msub><annotation encoding="application/x-tex">X_o</annotation></semantics></math>
 across methods as a factor: how many times larger the largest
@@ -157,19 +161,18 @@ recommendation is than the smallest.</p>
 works on the basic units directly and so is only available when the grid
 is supplied:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">[</span><span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span> <span class="op">==</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/compare_methods.html">compare_methods</a></span><span class="op">(</span><span class="va">grid1</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_methods.html">compare_methods</a></span><span class="op">(</span><span class="va">grid1</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Comparing 4 method(s) on 1 trial(s).</span></span>
 <span><span class="co">#&gt; Plot-size methods compared</span></span>
 <span><span class="co">#&gt; Trials: 1  | source: raw grid  | weighted: FALSE </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;    trial    method     Xo  CVxo    R2  RMSE</span></span>
-<span><span class="co">#&gt;  Trial 1       MCM  1.771 5.660 0.602 1.083</span></span>
-<span><span class="co">#&gt;  Trial 1       LRP 11.950 2.392 0.551 1.151</span></span>
-<span><span class="co">#&gt;  Trial 1       QRP 14.050 2.343 0.562 1.137</span></span>
-<span><span class="co">#&gt;  Trial 1 Paranaiba  2.057 4.600    NA    NA</span></span>
+<span><span class="co">#&gt;    trial    method     Xo   CVxo    R2  RMSE</span></span>
+<span><span class="co">#&gt;  Trial 1       MCM  4.495 12.742 0.975 0.725</span></span>
+<span><span class="co">#&gt;  Trial 1       LRP  9.150  6.960 0.893 1.513</span></span>
+<span><span class="co">#&gt;  Trial 1       QRP 11.950  7.028 0.918 1.324</span></span>
+<span><span class="co">#&gt;  Trial 1 Paranaiba  4.794 10.720    NA    NA</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Xo ranges from 1.771 to 14.050 (a factor of 7.9).</span></span></code></pre></div>
+<span><span class="co">#&gt; Xo ranges from 4.495 to 11.950 (a factor of 2.7).</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="which-statistics-are-comparable">Which statistics are comparable<a class="anchor" aria-label="anchor" href="#which-statistics-are-comparable"></a>
@@ -202,11 +205,11 @@ unaffected, since it never sees the CV table.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_methods.html">compare_methods</a></span><span class="op">(</span><span class="va">grid1</span>, step <span class="op">=</span> <span class="fl">0.05</span>, weights <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; Comparing 4 method(s) on 1 trial(s).</span></span>
-<span><span class="co">#&gt;     trial    method       Xo     CVxo        R2     RMSE</span></span>
-<span><span class="co">#&gt; 1 Trial 1       MCM 1.692607 5.714696 0.6008679 1.085306</span></span>
-<span><span class="co">#&gt; 2 Trial 1       LRP 5.250000 3.102374 0.5062367 1.207128</span></span>
-<span><span class="co">#&gt; 3 Trial 1       QRP 6.750000 3.195027 0.4994381 1.215410</span></span>
-<span><span class="co">#&gt; 4 Trial 1 Paranaiba 2.057282 4.600222        NA       NA</span></span></code></pre></div>
+<span><span class="co">#&gt;     trial    method       Xo      CVxo        R2     RMSE</span></span>
+<span><span class="co">#&gt; 1 Trial 1       MCM 4.506414 12.726291 0.9753314 0.725023</span></span>
+<span><span class="co">#&gt; 2 Trial 1       LRP 5.050000  9.156181 0.7937801 2.096258</span></span>
+<span><span class="co">#&gt; 3 Trial 1       QRP 7.850000  8.682611 0.8502828 1.786139</span></span>
+<span><span class="co">#&gt; 4 Trial 1 Paranaiba 4.793933 10.719560        NA       NA</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="intervals-the-point-of-the-exercise">Intervals: the point of the exercise<a class="anchor" aria-label="anchor" href="#intervals-the-point-of-the-exercise"></a>
@@ -223,13 +226,13 @@ and a breakpoint-existence p-value for the methods that have one:</p>
 <span><span class="co">#&gt; Plot-size methods compared</span></span>
 <span><span class="co">#&gt; Trials: 1  | source: raw grid  | weighted: FALSE </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;    trial    method     Xo  CVxo    R2  RMSE Xo_lwr Xo_upr p_breakpoint</span></span>
-<span><span class="co">#&gt;  Trial 1       MCM  1.771 5.660 0.602 1.083  0.981  2.527           NA</span></span>
-<span><span class="co">#&gt;  Trial 1       LRP 11.950 2.392 0.551 1.151  3.050 24.000        0.174</span></span>
-<span><span class="co">#&gt;  Trial 1       QRP 14.050 2.343 0.562 1.137  4.448 24.000        0.104</span></span>
-<span><span class="co">#&gt;  Trial 1 Paranaiba  2.057 4.600    NA    NA     NA     NA           NA</span></span>
+<span><span class="co">#&gt;    trial    method     Xo   CVxo    R2  RMSE Xo_lwr Xo_upr p_breakpoint</span></span>
+<span><span class="co">#&gt;  Trial 1       MCM  4.495 12.742 0.975 0.725  4.171  4.787           NA</span></span>
+<span><span class="co">#&gt;  Trial 1       LRP  9.150  6.960 0.893 1.513  5.248 16.405        0.005</span></span>
+<span><span class="co">#&gt;  Trial 1       QRP 11.950  7.028 0.918 1.324  9.786 22.413        0.005</span></span>
+<span><span class="co">#&gt;  Trial 1 Paranaiba  4.794 10.720    NA    NA     NA     NA           NA</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Xo ranges from 1.771 to 14.050 (a factor of 7.9).</span></span>
+<span><span class="co">#&gt; Xo ranges from 4.495 to 11.950 (a factor of 2.7).</span></span>
 <span><span class="co">#&gt; The intervals do not all overlap: the methods differ beyond their</span></span>
 <span><span class="co">#&gt;   own uncertainty.</span></span></code></pre></div>
 <p>The print method reads the intervals for you: if they all share a
@@ -242,25 +245,24 @@ they do not overlap, the difference is real and worth a decision.</p>
 </h2>
 <p>A named list of grids compares the methods within each trial:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span>, <span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span><span class="op">)</span>,</span>
-<span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Rep"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">uniformity_trial</span>, <span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span><span class="op">)</span>,</span>
+<span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/compare_methods.html">compare_methods</a></span><span class="op">(</span><span class="va">grids</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; Comparing 4 method(s) on 3 trial(s).</span></span>
-<span><span class="co">#&gt;    trial    method        Xo     CVxo        R2      RMSE</span></span>
-<span><span class="co">#&gt; 1  Rep 1       MCM  1.771109 5.660004 0.6023525 1.0832859</span></span>
-<span><span class="co">#&gt; 2  Rep 1       LRP 11.950000 2.392169 0.5514655 1.1505140</span></span>
-<span><span class="co">#&gt; 3  Rep 1       QRP 14.050000 2.343376 0.5617358 1.1372658</span></span>
-<span><span class="co">#&gt; 4  Rep 1 Paranaiba  2.057282 4.600222        NA        NA</span></span>
-<span><span class="co">#&gt; 5  Rep 2       MCM  1.794914 4.109132 0.9351946 0.3090978</span></span>
-<span><span class="co">#&gt; 6  Rep 2       LRP  6.650000 1.574754 0.8332035 0.4958882</span></span>
-<span><span class="co">#&gt; 7  Rep 2       QRP 11.000000 1.400724 0.8689606 0.4395328</span></span>
-<span><span class="co">#&gt; 8  Rep 2 Paranaiba  1.815833 4.060327        NA        NA</span></span>
-<span><span class="co">#&gt; 9  Rep 3       MCM  2.012066 4.996687 0.7315816 0.8791909</span></span>
-<span><span class="co">#&gt; 10 Rep 3       LRP 11.100000 1.650288 0.6345004 1.0259365</span></span>
-<span><span class="co">#&gt; 11 Rep 3       QRP 14.200000 1.701737 0.6617139 0.9870045</span></span>
-<span><span class="co">#&gt; 12 Rep 3 Paranaiba  2.025479 4.529109        NA        NA</span></span></code></pre></div>
+<span><span class="co">#&gt;    trial    method        Xo      CVxo        R2      RMSE</span></span>
+<span><span class="co">#&gt; 1     T1       MCM  4.494865 12.741565 0.9753420 0.7248675</span></span>
+<span><span class="co">#&gt; 2     T1       LRP  9.150000  6.960245 0.8925619 1.5130685</span></span>
+<span><span class="co">#&gt; 3     T1       QRP 11.950000  7.028148 0.9177681 1.3237304</span></span>
+<span><span class="co">#&gt; 4     T1 Paranaiba  4.793933 10.719560        NA        NA</span></span>
+<span><span class="co">#&gt; 5     T2       MCM  4.956314 11.533737 0.8820733 1.9801430</span></span>
+<span><span class="co">#&gt; 6     T2       LRP 14.400000  3.916190 0.8341009 2.3486180</span></span>
+<span><span class="co">#&gt; 7     T2       QRP 22.500000  3.375754 0.8665844 2.1061713</span></span>
+<span><span class="co">#&gt; 8     T2 Paranaiba  4.638860 10.372807        NA        NA</span></span>
+<span><span class="co">#&gt; 9     T3       MCM  4.904998 12.210404 0.9067767 1.6560095</span></span>
+<span><span class="co">#&gt; 10    T3       LRP 10.100000  6.101082 0.8019446 2.4137591</span></span>
+<span><span class="co">#&gt; 11    T3       QRP 14.350000  5.966308 0.8298434 2.2373037</span></span>
+<span><span class="co">#&gt; 12    T3 Paranaiba  4.936716 11.038833        NA        NA</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="choosing-the-methods">Choosing the methods<a class="anchor" aria-label="anchor" href="#choosing-the-methods"></a>
@@ -272,8 +274,8 @@ asked for on a CV table:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_methods.html">compare_methods</a></span><span class="op">(</span><span class="va">grid1</span>, step <span class="op">=</span> <span class="fl">0.05</span>, methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lrp"</span>, <span class="st">"qrp"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; Comparing 2 method(s) on 1 trial(s).</span></span>
 <span><span class="co">#&gt;     trial method    Xo     CVxo        R2     RMSE</span></span>
-<span><span class="co">#&gt; 1 Trial 1    LRP 11.95 2.392169 0.5514655 1.150514</span></span>
-<span><span class="co">#&gt; 2 Trial 1    QRP 14.05 2.343376 0.5617358 1.137266</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 Trial 1    LRP  9.15 6.960245 0.8925619 1.513069</span></span>
+<span><span class="co">#&gt; 2 Trial 1    QRP 11.95 7.028148 0.9177681 1.323730</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="where-this-fits">Where this fits<a class="anchor" aria-label="anchor" href="#where-this-fits"></a>

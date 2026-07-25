@@ -76,8 +76,8 @@ With several trials the maps are faceted and share one colour scale, which
 is what makes them comparable.
 }
 \examples{
-grid1 <- as.matrix(dados_ensaio_C1[dados_ensaio_C1$Rep == 1,
-                                   paste0("C", 1:8)])
+grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
+                                    grep("^col", names(uniformity_trial))])
 chk <- check_trial(grid1)
 
 \donttest{

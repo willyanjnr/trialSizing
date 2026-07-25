@@ -61,6 +61,9 @@ plot totals are formed and their mean, standard deviation and CV reported."><met
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -167,66 +170,72 @@ Brasileira de Biometria</em>, 27(2), 255-268.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Three replications of a uniformity trial, each a 6 x 8 grid of basic units</span></span></span>
-<span class="r-in"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span>, <span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Rep"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Three trials of the bundled simulated uniformity trial, each an 8 x 12</span></span></span>
+<span class="r-in"><span><span class="co">## grid of basic units (see ?uniformity_trial).</span></span></span>
+<span class="r-in"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">uniformity_trial</span>, <span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="fu">calc_cv_shapes</span><span class="op">(</span><span class="va">grids</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> CV by shape for 3 trial(s).</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tab</span>, <span class="fl">8</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   trial X_L X_C x  n      mean       sd       cv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Rep 1   1   1 1 48  32.31128 2.202211 6.815609</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Rep 1   1   2 2 24  64.62256 3.694164 5.716524</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Rep 1   2   1 2 24  64.62256 3.533597 5.468055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Rep 1   3   1 3 16  96.93384 3.636578 3.751608</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Rep 1   1   4 4 12 129.24512 6.469336 5.005478</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Rep 1   2   2 4 12 129.24512 5.838428 4.517330</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 Rep 1   3   2 6  8 193.86768 5.612771 2.895156</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 Rep 1   6   1 6  8 193.86768 5.103029 2.632223</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   trial X_L X_C x  n      mean        sd       cv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    T1   1   1 1 96  251.0129  58.92214 23.47375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    T1   1   2 2 48  502.0258  91.52677 18.23149</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    T1   2   1 2 48  502.0258  87.47753 17.42491</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    T1   1   3 3 32  753.0388 109.57170 14.55061</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    T1   1   4 4 24 1004.0517 145.29792 14.47116</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    T1   2   2 4 24 1004.0517 135.13136 13.45861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    T1   4   1 4 24 1004.0517 128.77483 12.82552</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    T1   1   6 6 16 1506.0775 170.84259 11.34355</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Same area, different orientation, different CV</span></span></span>
-<span class="r-in"><span><span class="va">tab</span><span class="op">[</span><span class="va">tab</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"Rep 1"</span> <span class="op">&amp;</span> <span class="va">tab</span><span class="op">$</span><span class="va">x</span> <span class="op">==</span> <span class="fl">2</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">tab</span><span class="op">[</span><span class="va">tab</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"T1"</span> <span class="op">&amp;</span> <span class="va">tab</span><span class="op">$</span><span class="va">x</span> <span class="op">==</span> <span class="fl">2</span>, <span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   trial X_L X_C x  n     mean       sd       cv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Rep 1   1   2 2 24 64.62256 3.694164 5.716524</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Rep 1   2   1 2 24 64.62256 3.533597 5.468055</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    T1   1   2 2 48 502.0258 91.52677 18.23149</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    T1   2   1 2 48 502.0258 87.47753 17.42491</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## The table feeds the fitters unchanged</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">tab</span><span class="op">[</span><span class="va">tab</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"Rep 1"</span>, <span class="op">]</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">tab</span><span class="op">[</span><span class="va">tab</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"T1"</span>, <span class="op">]</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using x = 'x', cv = 'cv' (single series).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Linear Response Plateau (LRP) fit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Method:                  segment  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint (Xo):         11.950 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CV at breakpoint:        2.392 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R2: 0.551  RMSE: 1.151  AIC: 54.8  BIC: 57.6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint (Xo):         9.150 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CV at breakpoint:        6.960 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R2: 0.893  RMSE: 1.513  AIC: 92.3  BIC: 96.9 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Local minima of the SSE profile (3):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   6.000   SSE   +6.8% vs optimum  *</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =  20.000   SSE  +10.9% vs optimum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   3.450   SSE  +25.9% vs optimum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   * fits within 10% of the optimum (local_min_tol); breakpoint not sharply identified</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Local minima of the SSE profile (8):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   7.400   SSE  +15.3% vs optimum</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =  12.800   SSE  +34.5% vs optimum</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   5.750   SSE  +50.1% vs optimum</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ... see $local_minima for all</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="co">## One model per replication, straight from the grids</span></span></span>
+<span class="r-in"><span><span class="co">## One model per trial, straight from the grids</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">tab</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, trial <span class="op">=</span> <span class="st">"trial"</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using x = 'x', cv = 'cv', trial = 'trial' -&gt; 3 trials.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   trial      a       b breakpoint plateau     R2   RMSE    AIC    BIC n_local</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Rep 1 5.9095 -0.2943      11.99  2.3804 0.5520 1.1498 54.756 57.588       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Rep 2 5.2223 -0.5485       6.66  1.5693 0.8332 0.4959 29.525 32.358       6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Rep 3 5.6972 -0.3646      11.10  1.6503 0.6345 1.0259 51.336 54.169       5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   trial       a       b breakpoint plateau     R2   RMSE     AIC     BIC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    T1 21.0495 -1.5398       9.16  6.9448 0.8926 1.5130  92.321  96.863</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    T2 19.3597 -1.0725      14.40  3.9162 0.8341 2.3486 112.547 117.089</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    T3 21.3271 -1.5075      10.11  6.0860 0.8019 2.4137 113.805 118.347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   n_local</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       8</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## n falls as the plot grows: the last shapes rest on very few plots</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">tab</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"n"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x  n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1 48</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   2 24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3 16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   4 12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   6  8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   8  6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 12  4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 16  3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 24  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1 96</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   2 48</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3 32</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   4 24</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   6 16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  8 12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 12  8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 16  6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 24  4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 32  3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 48  2</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

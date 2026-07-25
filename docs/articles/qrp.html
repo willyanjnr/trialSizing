@@ -77,6 +77,9 @@
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -170,8 +173,9 @@ fit, without the starting values.</p>
 (2011). Modelos de regressão com platô na estimativa do tamanho de
 parcelas em experimento de conservação in vitro de maracujazeiro.
 <em>Ciência Rural</em>, 41(11), 1907-1913.</p>
-<p>Validation used here: Cargnelutti Filho, A., Loro, M. V., Ortiz, V.
-M. &amp; Andretta, J. A. (2025). Determinação do tamanho de parcela para
+<p>The implementation is validated against published results in the
+package tests; see Cargnelutti Filho, A., Loro, M. V., Ortiz, V. M.
+&amp; Andretta, J. A. (2025). Determinação do tamanho de parcela para
 avaliar a massa de parte aérea de grão-de-bico. <em>Revista
 Vivências</em>, 21(43), 499-513.</p>
 </div>
@@ -179,15 +183,19 @@ Vivências</em>, 21(43), 499-513.</p>
 <div class="section level2">
 <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h2>
-<p>Same chickpea uniformity trials used throughout the package.</p>
+<p>The bundled simulated uniformity trial
+(<code><a href="../reference/uniformity_trial.html">?uniformity_trial</a></code>), the same data used throughout the
+package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">X</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">9</span>, <span class="fl">12</span>, <span class="fl">12</span>, <span class="fl">18</span>, <span class="fl">18</span><span class="op">)</span></span>
-<span><span class="va">CV1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30.40</span>, <span class="fl">19.51</span>, <span class="fl">23.72</span>, <span class="fl">12.89</span>, <span class="fl">21.32</span>, <span class="fl">16.69</span>, <span class="fl">6.71</span>, <span class="fl">10.75</span>,</span>
-<span>         <span class="fl">17.58</span>, <span class="fl">14.94</span>, <span class="fl">11.93</span>, <span class="fl">3.18</span>, <span class="fl">8.63</span>, <span class="fl">4.25</span>, <span class="fl">11.41</span><span class="op">)</span></span>
-<span><span class="va">CV2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">34.79</span>, <span class="fl">29.44</span>, <span class="fl">26.45</span>, <span class="fl">26.35</span>, <span class="fl">31.74</span>, <span class="fl">25.01</span>, <span class="fl">21.44</span>, <span class="fl">22.86</span>,</span>
-<span>         <span class="fl">28.93</span>, <span class="fl">16.17</span>, <span class="fl">27.29</span>, <span class="fl">19.89</span>, <span class="fl">16.85</span>, <span class="fl">26.53</span>, <span class="fl">14.70</span><span class="op">)</span></span>
-<span><span class="va">CV3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">31.12</span>, <span class="fl">20.87</span>, <span class="fl">29.09</span>, <span class="fl">20.02</span>, <span class="fl">28.04</span>, <span class="fl">19.97</span>, <span class="fl">10.74</span>, <span class="fl">19.28</span>,</span>
-<span>         <span class="fl">18.18</span>, <span class="fl">26.46</span>, <span class="fl">17.41</span>, <span class="fl">11.51</span>, <span class="fl">17.96</span>, <span class="fl">9.18</span>, <span class="fl">19.17</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">grid_mat</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">t</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="va">t</span>,</span>
+<span>                             <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tab1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="fu">grid_mat</span><span class="op">(</span><span class="st">"T1"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">X</span>   <span class="op">&lt;-</span> <span class="va">tab1</span><span class="op">$</span><span class="va">x</span></span>
+<span><span class="va">CV1</span> <span class="op">&lt;-</span> <span class="va">tab1</span><span class="op">$</span><span class="va">cv</span></span>
+<span><span class="va">CV2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="fu">grid_mat</span><span class="op">(</span><span class="st">"T2"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">cv</span></span>
+<span><span class="va">CV3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="fu">grid_mat</span><span class="op">(</span><span class="st">"T3"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">cv</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="basic-use">Basic use<a class="anchor" aria-label="anchor" href="#basic-use"></a>
@@ -196,25 +204,25 @@ Vivências</em>, 21(43), 499-513.</p>
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span>, cv <span class="op">=</span> <span class="va">CV1</span><span class="op">)</span></span>
 <span><span class="va">fit</span></span>
 <span><span class="co">#&gt; Quadratic Response Plateau (QRP) fit</span></span>
-<span><span class="co">#&gt; Breakpoint (Xo):         10.965 </span></span>
-<span><span class="co">#&gt; CV at breakpoint:        7.500 </span></span>
-<span><span class="co">#&gt; R2: 0.741  R2 adj: 0.697  RMSE: 3.683  MAE: 3.216</span></span></code></pre></div>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>o</mi></msub><mo>=</mo><mn>10.97</mn></mrow><annotation encoding="application/x-tex">X_o = 10.97</annotation></semantics></math>
-m², matching the published value for trial 1, and noticeably larger than
-the LRP estimate of 7.44 m² on the same data.</p>
+<span><span class="co">#&gt; Breakpoint (Xo):         11.932 </span></span>
+<span><span class="co">#&gt; CV at breakpoint:        7.031 </span></span>
+<span><span class="co">#&gt; R2: 0.918  R2 adj: 0.910  RMSE: 1.324  MAE: 1.069</span></span></code></pre></div>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>o</mi></msub><mo>≈</mo><mn>11.9</mn></mrow><annotation encoding="application/x-tex">X_o \approx 11.9</annotation></semantics></math>
+m² for trial 1, noticeably larger than the LRP estimate of about 9.2 m²
+on the same data: the smooth join always pushes the optimum out.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Model coefficients:</span></span>
 <span><span class="co">#&gt;          a          b          c </span></span>
-<span><span class="co">#&gt; 30.1674289 -4.1345406  0.1885335 </span></span>
+<span><span class="co">#&gt; 23.4681004 -2.7551190  0.1154508 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Goodness of fit:</span></span>
 <span><span class="co">#&gt;          Breakpoint Breakpoint_Response                  R2              R2_adj </span></span>
-<span><span class="co">#&gt;          10.9650000           7.4998102           0.7405861           0.6973505 </span></span>
+<span><span class="co">#&gt;          11.9320000           7.0310606           0.9177688           0.9095457 </span></span>
 <span><span class="co">#&gt;                RMSE                 MAE                 AIC                 BIC </span></span>
-<span><span class="co">#&gt;           3.6826864           3.2156663          89.6774304          92.5096312 </span></span>
+<span><span class="co">#&gt;           1.3237244           1.0690865          86.1718395          90.7138163 </span></span>
 <span><span class="co">#&gt;                 SSE                 MSE </span></span>
-<span><span class="co">#&gt;         203.4326847          13.5621790</span></span></code></pre></div>
+<span><span class="co">#&gt;          40.3016648           1.7522463</span></span></code></pre></div>
 <p>The QRP reports more fit statistics than the LRP: alongside
 <code>R2</code> and <code>RMSE</code> it returns <code>R2_adj</code>
 (adjusted for the extra parameter), <code>MAE</code>, <code>SSE</code>
@@ -226,10 +234,10 @@ coefficients:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>vertex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="op">-</span><span class="va">cf</span><span class="op">[</span><span class="st">"b"</span><span class="op">]</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">cf</span><span class="op">[</span><span class="st">"c"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  reported <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   vertex reported </span></span>
-<span><span class="co">#&gt;   10.965   10.965</span></span></code></pre></div>
+<span><span class="co">#&gt;   11.932   11.932</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, newx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">11</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 26.22142 14.20806  7.49981  7.49981</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 20.828432 12.578777  7.131344  7.031061</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="plot">Plot<a class="anchor" aria-label="anchor" href="#plot"></a>
@@ -237,7 +245,7 @@ coefficients:</p>
 <p>The figure follows the same layout as the LRP, with the quadratic
 term in the annotated equation:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Trial 1 (chickpea)"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Trial 1"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="qrp_files/figure-html/plot-1.png" class="r-plt" alt="" width="840"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Ensaio 1"</span>, decimal_mark <span class="op">=</span> <span class="st">","</span>, cond_word <span class="op">=</span> <span class="st">"se"</span><span class="op">)</span></span></code></pre></div>
@@ -266,23 +274,23 @@ decimal control, <code>digits_c</code> (4 by default), separate from
 <span><span class="va">res</span></span>
 <span><span class="co">#&gt; QRP fits for 3 trials</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;    trial       a       b      c breakpoint plateau     R2   RMSE    AIC    BIC</span></span>
-<span><span class="co">#&gt;  Trial 1 30.1674 -4.1345 0.1885     10.965  7.4998 0.7406 3.6827 89.677 92.510</span></span>
-<span><span class="co">#&gt;  Trial 2 36.5290 -3.6542 0.2158      8.466 21.0610 0.4848 4.0557 92.572 95.404</span></span>
-<span><span class="co">#&gt;  Trial 3 31.6203 -2.9831 0.1319     11.308 14.7539 0.5406 4.2995 94.323 97.155</span></span>
-<span><span class="co">#&gt;  n_local</span></span>
-<span><span class="co">#&gt;        0</span></span>
-<span><span class="co">#&gt;        0</span></span>
-<span><span class="co">#&gt;        0</span></span></code></pre></div>
+<span><span class="co">#&gt;    trial       a       b      c breakpoint plateau     R2   RMSE     AIC</span></span>
+<span><span class="co">#&gt;  Trial 1 23.4681 -2.7551 0.1155     11.932  7.0311 0.9178 1.3237  86.172</span></span>
+<span><span class="co">#&gt;  Trial 2 20.4943 -1.5222 0.0338     22.489  3.3775 0.8666 2.1062 107.535</span></span>
+<span><span class="co">#&gt;  Trial 3 23.1974 -2.4046 0.0839     14.328  5.9705 0.8298 2.2373 110.314</span></span>
+<span><span class="co">#&gt;      BIC n_local</span></span>
+<span><span class="co">#&gt;   90.714       0</span></span>
+<span><span class="co">#&gt;  112.077       0</span></span>
+<span><span class="co">#&gt;  114.856       0</span></span></code></pre></div>
 <p>The summary table carries the extra <code>c</code> column, since the
 QRP has three coefficients. The three breakpoints average 10.25 m², the
 article’s QRP figure.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span><span class="op">$</span><span class="va">fits</span><span class="op">[[</span><span class="st">"Trial 3"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; Quadratic Response Plateau (QRP) fit</span></span>
-<span><span class="co">#&gt; Breakpoint (Xo):         11.308 </span></span>
-<span><span class="co">#&gt; CV at breakpoint:        14.754 </span></span>
-<span><span class="co">#&gt; R2: 0.541  R2 adj: 0.464  RMSE: 4.299  MAE: 3.709</span></span></code></pre></div>
+<span><span class="co">#&gt; Breakpoint (Xo):         14.328 </span></span>
+<span><span class="co">#&gt; CV at breakpoint:        5.971 </span></span>
+<span><span class="co">#&gt; R2: 0.830  R2 adj: 0.813  RMSE: 2.237  MAE: 1.660</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span>, label_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -294,10 +302,10 @@ article’s QRP figure.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, search_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span>
 <span><span class="co">#&gt; Breakpoint </span></span>
-<span><span class="co">#&gt;     10.965</span></span>
+<span><span class="co">#&gt;     11.932</span></span>
 <span><span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span>
 <span><span class="co">#&gt; Breakpoint </span></span>
-<span><span class="co">#&gt;      10.96</span></span></code></pre></div>
+<span><span class="co">#&gt;      11.93</span></span></code></pre></div>
 <p>There is no <code>method</code> argument here. The LRP has one
 because the published procedure fits the descending line using only the
 pre-breakpoint points; the QRP has no such variant.</p>
@@ -329,9 +337,9 @@ ordering:</p>
 <span>  row.names <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   method        Xo</span></span>
-<span><span class="co">#&gt; 1    MCM  5.754886</span></span>
-<span><span class="co">#&gt; 2    LRP  7.436000</span></span>
-<span><span class="co">#&gt; 3    QRP 10.965000</span></span></code></pre></div>
+<span><span class="co">#&gt; 1    MCM  4.494865</span></span>
+<span><span class="co">#&gt; 2    LRP  9.159000</span></span>
+<span><span class="co">#&gt; 3    QRP 11.932000</span></span></code></pre></div>
 <p>Which one to report is a judgement call. The larger optimum is the
 conservative choice: it buys more precision at the cost of more field
 area. The validation article recommends the LRP value as its overall

@@ -367,10 +367,13 @@
 #'   stepped profile of [fit_lrp()].
 #' @seealso [fit_lrp()], [plot.qrp_fit()]
 #' @examples
-#' ## Chickpea uniformity trial, trial 1 (Cargnelutti Filho et al., 2025)
-#' X   <- c(1, 2, 2, 3, 3, 4, 6, 6, 6, 6, 9, 12, 12, 18, 18)
-#' CV1 <- c(30.40, 19.51, 23.72, 12.89, 21.32, 16.69, 6.71, 10.75,
-#'          17.58, 14.94, 11.93, 3.18, 8.63, 4.25, 11.41)
+#' ## CV per plot shape from the bundled simulated uniformity trial
+#' ## (see ?uniformity_trial).
+#' grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
+#'                                     grep("^col", names(uniformity_trial))])
+#' cv_tab <- calc_cv_shapes(list(T1 = grid1))
+#' X   <- cv_tab$x
+#' CV1 <- cv_tab$cv
 #'
 #' ## A coarse grid runs fast; the default step = 0.001 refines the third decimal
 #' fit <- fit_qrp(X, CV1, step = 0.01)
@@ -385,7 +388,7 @@
 #' ## Full precision (about eight times slower)
 #' fit_qrp(X, CV1)$parameters["Breakpoint"]
 #'
-#' plot(fit, title = "Chickpea, trial 1")
+#' plot(fit, title = "Uniformity trial, T1")
 #'
 #' ## The smooth join makes the SSE profile a single basin, unlike the stepped
 #' ## profile of fit_lrp(): competing minima are rare and much worse.

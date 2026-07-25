@@ -82,19 +82,19 @@ omission.
 }
 
 \examples{
-X   <- c(1, 2, 2, 3, 3, 4, 6, 6, 6, 6, 9, 12, 12, 18, 18)
-CV1 <- c(30.40, 19.51, 23.72, 12.89, 21.32, 16.69, 6.71, 10.75,
-         17.58, 14.94, 11.93, 3.18, 8.63, 4.25, 11.41)
+## The bundled simulated uniformity trial (see ?uniformity_trial): one
+## 8 x 12 grid of 1 m2 basic units per trial.
+grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
+                                    grep("^col", names(uniformity_trial))])
 
-## From a CV table
-cmp <- compare_methods(data.frame(x = X, cv = CV1), step = 0.05)
+## From a CV table (built here from the grid)
+cv_tab <- calc_cv_shapes(list(T1 = grid1))
+cmp <- compare_methods(data.frame(x = cv_tab$x, cv = cv_tab$cv), step = 0.05)
 cmp
 
 \donttest{
 ## From the raw grid: the CV table is built on the way, and the Paranaiba
 ## method joins because it needs the basic units.
-grid1 <- as.matrix(dados_ensaio_C1[dados_ensaio_C1$Rep == 1,
-                                   paste0("C", 1:8)])
 compare_methods(grid1, step = 0.05)
 
 ## Weighted by the number of plots per shape
@@ -106,9 +106,8 @@ set.seed(1)
 compare_methods(grid1, step = 0.05, bootstrap = TRUE, n_boot = 200)
 
 ## Several trials at once
-grids <- lapply(split(dados_ensaio_C1, dados_ensaio_C1$Rep),
-                function(d) as.matrix(d[, paste0("C", 1:8)]))
-names(grids) <- paste("Rep", names(grids))
+grids <- lapply(split(uniformity_trial, uniformity_trial$trial),
+                function(d) as.matrix(d[, grep("^col", names(d))]))
 compare_methods(grids, step = 0.05)$summary
 }
 }

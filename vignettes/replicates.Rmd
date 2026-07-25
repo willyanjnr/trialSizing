@@ -134,14 +134,15 @@ rbind(
 ## The full workflow
 
 In practice $CV_{Xo}$ comes from one of the plot-size methods rather than being
-typed in. Fitting the chickpea trial and feeding the result straight through:
+typed in. Fitting the bundled simulated trial (`?uniformity_trial`) and feeding
+the result straight through:
 
-```{r workflow}
-X   <- c(1, 2, 2, 3, 3, 4, 6, 6, 6, 6, 9, 12, 12, 18, 18)
-CV1 <- c(30.40, 19.51, 23.72, 12.89, 21.32, 16.69, 6.71, 10.75,
-         17.58, 14.94, 11.93, 3.18, 8.63, 4.25, 11.41)
+```{r workflow, message = FALSE}
+grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
+                                    grep("^col", names(uniformity_trial))])
+cv_tab <- calc_cv_shapes(grid1)
 
-lrp  <- fit_lrp(X, CV1)
+lrp  <- fit_lrp(cv_tab, x = "x", cv = "cv")
 cvxo <- unname(lrp$parameters["Breakpoint_Response"])
 cvxo
 
@@ -150,9 +151,9 @@ calc_replicates(treatments = c(5, 10, 20), cv_percent = cvxo,
                   , c("Treatments", "LSD_percent", "r_continuous", "r_optimal")]
 ```
 
-So a trial designed with plots of 7.44 m² would carry an expected CV of 7.88%,
-and detecting differences of 20% of the mean among 10 treatments in blocks would
-need 4 replications.
+So a trial designed with plots of about 9 m² would carry an expected CV near
+7%, and the table reads off how many replications are needed to detect a given
+difference between treatment means.
 
 ## Plot
 

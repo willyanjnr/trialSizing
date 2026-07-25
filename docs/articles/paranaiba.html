@@ -77,6 +77,9 @@
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -172,38 +175,30 @@ along one axis.</p>
 R. (2009). Tamanho ótimo de parcelas experimentais: proposição de
 métodos de estimação. <em>Revista Brasileira de Biometria</em>, 27(2),
 255-268.</p>
-<p>Validation used here: Cargnelutti Filho, A. et al. (2014). Tamanho de
-parcela e número de repetições em aveia preta. <em>Ciência Rural</em>,
-44(10), 1732-1739. The formulas above are reproduced in that article,
-and <code><a href="../reference/calc_paranaiba.html">calc_paranaiba()</a></code> returns its published
+<p>The formulas are validated against published results in the package
+tests; see Cargnelutti Filho, A. et al. (2014). Tamanho de parcela e
+número de repetições em aveia preta. <em>Ciência Rural</em>, 44(10),
+1732-1739, where <code><a href="../reference/calc_paranaiba.html">calc_paranaiba()</a></code> reproduces the published
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mi>o</mi></msub><annotation encoding="application/x-tex">X_o</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><msub><mi>V</mi><mrow><mi>X</mi><mi>o</mi></mrow></msub></mrow><annotation encoding="application/x-tex">CV_{Xo}</annotation></semantics></math>
-for all nine trials of the first evaluation date.</p>
+for all nine black-oat trials of the first evaluation date.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h2>
-<p>The example uses trial 1 of the chickpea uniformity trials: a 6 × 6
-grid of 1 m² BEU, each holding the fresh mass of the aerial part in g
-m⁻².</p>
+<p>The example uses the bundled simulated uniformity trial
+(<code><a href="../reference/uniformity_trial.html">?uniformity_trial</a></code>): 8 × 12 grids of 1 m² BEU, each holding
+a biomass-like measurement in g m⁻².</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">E1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">288.35</span>, <span class="fl">106.10</span>, <span class="fl">213.70</span>,  <span class="fl">92.88</span>, <span class="fl">185.88</span>, <span class="fl">310.72</span>,</span>
-<span>               <span class="fl">262.45</span>, <span class="fl">290.88</span>, <span class="fl">177.45</span>, <span class="fl">162.66</span>, <span class="fl">346.70</span>, <span class="fl">205.90</span>,</span>
-<span>               <span class="fl">303.74</span>, <span class="fl">196.98</span>, <span class="fl">196.11</span>, <span class="fl">185.08</span>, <span class="fl">137.66</span>, <span class="fl">311.93</span>,</span>
-<span>               <span class="fl">339.32</span>, <span class="fl">234.04</span>, <span class="fl">273.59</span>, <span class="fl">228.91</span>, <span class="fl">112.36</span>, <span class="fl">215.99</span>,</span>
-<span>               <span class="fl">311.05</span>, <span class="fl">228.65</span>, <span class="fl">227.15</span>, <span class="fl">259.83</span>, <span class="fl">293.07</span>, <span class="fl">111.10</span>,</span>
-<span>               <span class="fl">238.23</span>, <span class="fl">204.57</span>, <span class="fl">336.62</span>, <span class="fl">242.58</span>, <span class="fl">173.34</span>, <span class="fl">191.17</span><span class="op">)</span>,</span>
-<span>             nrow <span class="op">=</span> <span class="fl">6</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">E2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">274.68</span>, <span class="fl">244.44</span>, <span class="fl">296.02</span>, <span class="fl">182.82</span>, <span class="fl">170.22</span>, <span class="fl">270.54</span>,</span>
-<span>               <span class="fl">272.81</span>, <span class="fl">207.95</span>, <span class="fl">217.12</span>, <span class="fl">307.88</span>, <span class="fl">235.11</span>, <span class="fl">263.63</span>,</span>
-<span>               <span class="fl">303.56</span>, <span class="fl">184.47</span>, <span class="fl">147.03</span>, <span class="fl">255.88</span>, <span class="fl">210.06</span>, <span class="fl">227.52</span>,</span>
-<span>               <span class="fl">190.72</span>, <span class="fl">421.05</span>, <span class="fl">528.89</span>, <span class="fl">351.25</span>, <span class="fl">310.37</span>, <span class="fl">156.68</span>,</span>
-<span>               <span class="fl">294.45</span>, <span class="fl">451.29</span>, <span class="fl">496.12</span>, <span class="fl">446.41</span>, <span class="fl">302.98</span>, <span class="fl">248.26</span>,</span>
-<span>               <span class="fl">437.76</span>, <span class="fl">434.10</span>, <span class="fl">402.28</span>, <span class="fl">329.27</span>, <span class="fl">278.65</span>, <span class="fl">164.26</span><span class="op">)</span>,</span>
-<span>             nrow <span class="op">=</span> <span class="fl">6</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">grid_mat</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">t</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="va">t</span>,</span>
+<span>                                    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">E1</span> <span class="op">&lt;-</span> <span class="fu">grid_mat</span><span class="op">(</span><span class="st">"T1"</span><span class="op">)</span></span>
+<span><span class="va">E2</span> <span class="op">&lt;-</span> <span class="fu">grid_mat</span><span class="op">(</span><span class="st">"T2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">E1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1]  8 12</span></span></code></pre></div>
 <p>The matrix must preserve the field layout. Rows and columns are not
 interchangeable here: because
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
@@ -219,8 +214,8 @@ is directional, a transposed grid gives a different answer.</p>
 <span><span class="co">#&gt; Paranaiba optimal plot size</span></span>
 <span><span class="co">#&gt; Trials: 1  | rho direction: row  | invalid: 0 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;    trial    mean variance     CV rho_row rho_col    rho    Xo   CVxo valid</span></span>
-<span><span class="co">#&gt;  Trial 1 227.687  4792.24 30.404  -0.019   0.129 -0.019 5.696 12.737  TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt;    trial    mean variance     CV rho_row rho_col   rho    Xo  CVxo valid</span></span>
+<span><span class="co">#&gt;  Trial 1 251.013 3471.819 23.474   0.017   0.091 0.017 4.794 10.72  TRUE</span></span></code></pre></div>
 <p>Both directional estimates are always reported (<code>rho_row</code>
 and <code>rho_col</code>), even though only the one selected by
 <code>rho_direction</code> is used in <code>rho</code> and feeds the
@@ -230,17 +225,17 @@ directional gradient in the field.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Optimal plot size (Xo) across trials:</span></span>
 <span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span><span class="co">#&gt;   5.696   5.696   5.696   5.696   5.696   5.696 </span></span>
+<span><span class="co">#&gt;   4.794   4.794   4.794   4.794   4.794   4.794 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; CV at optimal plot size (CVxo):</span></span>
 <span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span><span class="co">#&gt;   12.74   12.74   12.74   12.74   12.74   12.74</span></span></code></pre></div>
+<span><span class="co">#&gt;   10.72   10.72   10.72   10.72   10.72   10.72</span></span></code></pre></div>
 <p>The full per-trial table is in <code>$summary</code>, and the grids
 as supplied are kept in <code>$matrices</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"variance"</span>, <span class="st">"CV"</span>, <span class="st">"rho"</span>, <span class="st">"Xo"</span>, <span class="st">"CVxo"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt;       mean variance       CV         rho       Xo     CVxo</span></span>
-<span><span class="co">#&gt; 1 227.6872  4792.24 30.40399 -0.01897238 5.696109 12.73689</span></span></code></pre></div>
+<span><span class="co">#&gt;       mean variance       CV        rho       Xo     CVxo</span></span>
+<span><span class="co">#&gt; 1 251.0129 3471.819 23.47375 0.01655932 4.793933 10.71956</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="direction-of-the-walk">Direction of the walk<a class="anchor" aria-label="anchor" href="#direction-of-the-walk"></a>
@@ -254,17 +249,16 @@ as supplied are kept in <code>$matrices</code>:</p>
 <span><span class="co">#&gt; Paranaiba method on 1 trial(s); rho direction = 'row'.</span></span>
 <span><span class="co">#&gt; Paranaiba method on 1 trial(s); rho direction = 'col'.</span></span>
 <span><span class="co">#&gt; Paranaiba method on 1 trial(s); rho direction = 'mean'.</span></span>
-<span><span class="co">#&gt;   direction         rho       Xo     CVxo</span></span>
-<span><span class="co">#&gt; 1       row -0.01897238 5.696109 12.73689</span></span>
-<span><span class="co">#&gt; 2       col  0.12902595 5.665003 12.66733</span></span>
-<span><span class="co">#&gt; 3      mean  0.05502679 5.691037 12.72555</span></span></code></pre></div>
-<p>Here the two directions disagree in sign, which is worth noticing in
-itself: the effect on
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mi>o</mi></msub><annotation encoding="application/x-tex">X_o</annotation></semantics></math>
-is small in this trial only because both values are close to zero, and
+<span><span class="co">#&gt;   direction        rho       Xo     CVxo</span></span>
+<span><span class="co">#&gt; 1       row 0.01655932 4.793933 10.71956</span></span>
+<span><span class="co">#&gt; 2       col 0.09052249 4.781240 10.69118</span></span>
+<span><span class="co">#&gt; 3      mean 0.05354090 4.789785 10.71029</span></span></code></pre></div>
+<p>Here both directional estimates are small, so the choice of direction
+barely moves
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mi>o</mi></msub><annotation encoding="application/x-tex">X_o</annotation></semantics></math>:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>ρ</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(1 - \rho^2)</annotation></semantics></math>
-is flat near the origin. In a field with a strong gradient the gap would
-matter much more.</p>
+is flat near the origin. In a field with a strong directional gradient
+the two would differ more and the choice would matter.</p>
 <p>Unless you are deliberately reproducing a study that did otherwise,
 keep the default <code>"row"</code>, which is the original method.</p>
 </div>
@@ -281,37 +275,37 @@ the trial labels:</p>
 <span><span class="co">#&gt; Paranaiba optimal plot size</span></span>
 <span><span class="co">#&gt; Trials: 2  | rho direction: row  | invalid: 0 </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;    trial    mean variance     CV rho_row rho_col    rho    Xo   CVxo valid</span></span>
-<span><span class="co">#&gt;  Trial 1 227.687  4792.24 30.404  -0.019   0.129 -0.019 5.696 12.737  TRUE</span></span>
-<span><span class="co">#&gt;  Trial 2 292.126 10331.55 34.795   0.562   0.474  0.562 5.491 12.279  TRUE</span></span>
+<span><span class="co">#&gt;    trial    mean variance     CV rho_row rho_col   rho    Xo   CVxo valid</span></span>
+<span><span class="co">#&gt;  Trial 1 251.013 3471.819 23.474   0.017   0.091 0.017 4.794 10.720  TRUE</span></span>
+<span><span class="co">#&gt;  Trial 2 256.167 3346.830 22.584   0.146   0.103 0.146 4.639 10.373  TRUE</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Mean Xo: 5.59  |  Mean CVxo: 12.51</span></span></code></pre></div>
+<span><span class="co">#&gt; Mean Xo: 4.72  |  Mean CVxo: 10.55</span></span></code></pre></div>
 <p><strong>A long data frame</strong>, with the measurement column plus
 row and column indices. The grid is rebuilt from the indices, not from
 the row order of the file, which is much safer when data come out of a
 spreadsheet:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, row <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, row <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
 <span><span class="va">long</span><span class="op">$</span><span class="va">mf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">E1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/calc_paranaiba.html">calc_paranaiba</a></span><span class="op">(</span><span class="va">long</span>, value <span class="op">=</span> <span class="st">"mf"</span>, row_id <span class="op">=</span> <span class="st">"row"</span>, col_id <span class="op">=</span> <span class="st">"col"</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">Xo</span></span>
 <span><span class="co">#&gt; Paranaiba method on 1 trial(s); rho direction = 'row'.</span></span>
-<span><span class="co">#&gt; [1] 5.696109</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 4.793933</span></span></code></pre></div>
 <p>With a <code>trial</code> column, one estimate is produced per
 trial:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">long2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">long</span>, trial <span class="op">=</span> <span class="st">"Trial 1"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, row <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span>, mf <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">E2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, row <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span>, mf <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">E2</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>            trial <span class="op">=</span> <span class="st">"Trial 2"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/calc_paranaiba.html">calc_paranaiba</a></span><span class="op">(</span><span class="va">long2</span>, value <span class="op">=</span> <span class="st">"mf"</span>, row_id <span class="op">=</span> <span class="st">"row"</span>, col_id <span class="op">=</span> <span class="st">"col"</span>,</span>
 <span>               trial <span class="op">=</span> <span class="st">"trial"</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trial"</span>, <span class="st">"rho"</span>, <span class="st">"Xo"</span>, <span class="st">"CVxo"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; Paranaiba method on 2 trial(s); rho direction = 'row'.</span></span>
-<span><span class="co">#&gt;     trial         rho       Xo     CVxo</span></span>
-<span><span class="co">#&gt; 1 Trial 1 -0.01897238 5.696109 12.73689</span></span>
-<span><span class="co">#&gt; 2 Trial 2  0.56221999 5.491419 12.27919</span></span></code></pre></div>
+<span><span class="co">#&gt;     trial        rho       Xo     CVxo</span></span>
+<span><span class="co">#&gt; 1 Trial 1 0.01655932 4.793933 10.71956</span></span>
+<span><span class="co">#&gt; 2 Trial 2 0.14621177 4.638860 10.37281</span></span></code></pre></div>
 <p>Missing cells are an error rather than a silent gap, and
 <code>n_row</code> / <code>n_col</code> can be passed to assert the
 expected grid dimensions.</p>

@@ -77,6 +77,9 @@
     <li>
       <a href="../articles/replicates.html">Number of replications</a>
     </li>
+    <li>
+      <a href="../articles/validation.html">Validation on simulated fields</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -127,13 +130,14 @@ the standard geostatistical definitions, so the package depends only on
 <div class="section level2">
 <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h2>
-<p>The example is the chickpea uniformity trial shipped with the
-package: three replications, each a 6 × 8 grid of 1 m² basic units
-holding the fresh mass of the aerial part.</p>
+<p>The example is the simulated uniformity trial shipped with the
+package (<code><a href="../reference/uniformity_trial.html">?uniformity_trial</a></code>): three trials, each an 8 × 12
+grid of 1 m² basic units holding a biomass-like measurement.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span><span class="op">[</span><span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span> <span class="op">==</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">[</span><span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span> <span class="op">==</span> <span class="st">"T1"</span>,</span>
+<span>                                    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 6 8</span></span></code></pre></div>
+<span><span class="co">#&gt; [1]  8 12</span></span></code></pre></div>
 <p>The matrix must preserve the field layout: rows and columns are not
 interchangeable, because trend and autocorrelation are directional.</p>
 </div>
@@ -145,14 +149,16 @@ interchangeable, because trend and autocorrelation are directional.</p>
 <span><span class="co">#&gt; Checking 1 trial(s).</span></span>
 <span><span class="va">chk</span></span>
 <span><span class="co">#&gt; Uniformity trial check -- Trial 1 </span></span>
-<span><span class="co">#&gt;   Grid:      6 x 8 = 48 basic units, 0 missing</span></span>
-<span><span class="co">#&gt;   Shapes:    15 rectangular plot shapes available</span></span>
-<span><span class="co">#&gt;   Values:    mean 32.311, sd 2.202, CV 6.82%, range [27.847, 37.209]</span></span>
+<span><span class="co">#&gt;   Grid:      8 x 12 = 96 basic units, 0 missing</span></span>
+<span><span class="co">#&gt;   Shapes:    23 rectangular plot shapes available</span></span>
+<span><span class="co">#&gt;   Values:    mean 251.013, sd 58.922, CV 23.47%, range [114.590, 368.440]</span></span>
 <span><span class="co">#&gt;   Outliers:  0 by the boxplot rule</span></span>
-<span><span class="co">#&gt;   Trend:     rows p = 0.136, columns p = 0.884</span></span>
-<span><span class="co">#&gt;   Moran's I: 0.160 (p = 0.0868)   rho row 0.252, col -0.042</span></span>
-<span><span class="co">#&gt;   Variogram: spherical | nugget 2.897, sill 4.437, range 2.29</span></span>
-<span><span class="co">#&gt;              nugget/sill 0.65 -&gt; moderate spatial dependence</span></span>
+<span><span class="co">#&gt;   Trend:     rows p = 0.387, columns p = 0.0336</span></span>
+<span><span class="co">#&gt;   Moran's I: 0.057 (p = 0.367)   rho row 0.059, col 0.104</span></span>
+<span><span class="co">#&gt;   Variogram: gaussian | nugget 3223.678, sill 3715.746, range 9.54</span></span>
+<span><span class="co">#&gt;              nugget/sill 0.87 -&gt; weak spatial dependence</span></span>
+<span><span class="co">#&gt;              little spatial structure: plot size will buy little</span></span>
+<span><span class="co">#&gt;              precision here, whatever method is used</span></span>
 <span><span class="co">#&gt;   Issues:    none</span></span></code></pre></div>
 <p>The printout is the whole diagnostic at a glance. Reading it top to
 bottom:</p>
@@ -190,22 +196,22 @@ size, and they are the reason the check is more than a data audit.</p>
 <code class="sourceCode R"><span><span class="va">chk</span><span class="op">$</span><span class="va">checks</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">variogram</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"model"</span>, <span class="st">"nugget"</span>, <span class="st">"sill"</span>, <span class="st">"range"</span>,</span>
 <span>                            <span class="st">"nugget_ratio"</span>, <span class="st">"dependence"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; $model</span></span>
-<span><span class="co">#&gt; [1] "spherical"</span></span>
+<span><span class="co">#&gt; [1] "gaussian"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $nugget</span></span>
-<span><span class="co">#&gt; [1] 2.896619</span></span>
+<span><span class="co">#&gt; [1] 3223.678</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $sill</span></span>
-<span><span class="co">#&gt; [1] 4.437451</span></span>
+<span><span class="co">#&gt; [1] 3715.746</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $range</span></span>
-<span><span class="co">#&gt; [1] 2.29014</span></span>
+<span><span class="co">#&gt; [1] 9.543577</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $nugget_ratio</span></span>
-<span><span class="co">#&gt; [1] 0.6527664</span></span>
+<span><span class="co">#&gt; [1] 0.8675723</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $dependence</span></span>
-<span><span class="co">#&gt; [1] "moderate"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "weak"</span></span></code></pre></div>
 <p>The <strong>range</strong> is the distance beyond which basic units
 stop being correlated. A plot larger than the range is averaging units
 that are already independent – which is the spatial reading of the
@@ -261,20 +267,19 @@ alone:</p>
 <p>Given a named list of grids, the check runs on each and the summary
 is one row per trial:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">dados_ensaio_C1</span>, <span class="va">dados_ensaio_C1</span><span class="op">$</span><span class="va">Rep</span><span class="op">)</span>,</span>
-<span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Rep"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">uniformity_trial</span>, <span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span><span class="op">)</span>,</span>
+<span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/check_trial.html">check_trial</a></span><span class="op">(</span><span class="va">grids</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; Checking 3 trial(s).</span></span>
-<span><span class="co">#&gt;   trial rows cols n_missing n_shapes     mean       cv n_outliers    morans_i</span></span>
-<span><span class="co">#&gt; 1 Rep 1    6    8         0       15 32.31128 6.815609          0  0.16039301</span></span>
-<span><span class="co">#&gt; 2 Rep 2    6    8         0       15 30.36146 5.491876          0 -0.01025904</span></span>
-<span><span class="co">#&gt; 3 Rep 3    6    8         0       15 31.01494 6.806416          1  0.15381528</span></span>
+<span><span class="co">#&gt;   trial rows cols n_missing n_shapes     mean       cv n_outliers   morans_i</span></span>
+<span><span class="co">#&gt; 1    T1    8   12         0       23 251.0129 23.47375          0 0.05689653</span></span>
+<span><span class="co">#&gt; 2    T2    8   12         0       23 256.1666 22.58366          4 0.10942413</span></span>
+<span><span class="co">#&gt; 3    T3    8   12         0       23 244.5397 24.61861          1 0.08041496</span></span>
 <span><span class="co">#&gt;      range nugget_ratio dependence n_issues</span></span>
-<span><span class="co">#&gt; 1 2.290140    0.6527664   moderate        0</span></span>
-<span><span class="co">#&gt; 2 6.239547    0.8630260       weak        0</span></span>
-<span><span class="co">#&gt; 3 2.263810    0.4393369   moderate        0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 9.543577   0.86757225       weak        0</span></span>
+<span><span class="co">#&gt; 2 1.429325   0.02860592     strong        0</span></span>
+<span><span class="co">#&gt; 3 1.386393   0.57994864   moderate        0</span></span></code></pre></div>
 <p>The maps are then faceted and share one colour scale, which is what
 makes them directly comparable:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">

@@ -8,3 +8,6 @@
 ^LICENSE\.md$
 ^CODE_OF_CONDUCT\.md$
 ^\.claude$
+^docs$
+^pkgdown$
+^_pkgdown\.yml$

@@ -279,7 +279,7 @@
 #' nugget and partial sill exactly at each candidate, under non-negativity.
 #' Spherical, exponential and Gaussian shapes are all tried and the best
 #' weighted fit is kept; exponential and Gaussian use the effective-range
-#' convention, where the range is the distance reaching 95\% of the sill.
+#' convention, where the range is the distance reaching 95% of the sill.
 #'
 #' @param .data a matrix (one trial), a named list of matrices, or a long data
 #'   frame with one row per basic unit.

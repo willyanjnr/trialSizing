@@ -22,12 +22,12 @@
 
 \item{save, file, format, dpi, width, height, units, compression}{saving controls.}
 
-\item{...}{styling arguments forwarded to [plot.qrp_fit()].}
+\item{...}{styling arguments forwarded to \code{\link[=plot.qrp_fit]{plot.qrp_fit()}}.}
 }
 \value{
 A list of page objects, invisibly.
 }
 \description{
 Arranges the per-trial plots in a grid of at most 6 panels (3 x 2), paginating
-when there are more. Requires \pkg{patchwork}. See [plot.lrp_multi()].
+when there are more. Requires \pkg{patchwork}. See \code{\link[=plot.lrp_multi]{plot.lrp_multi()}}.
 }

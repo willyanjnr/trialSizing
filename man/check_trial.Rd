@@ -40,9 +40,9 @@ off skips the only appreciable computation.}
 }
 \value{
 An object of class \code{"trial_check"}: a list with \code{checks}
-  (one element per trial, each holding the dimensions, statistics, outliers,
-  trend, spatial measures, fitted \code{variogram} and any \code{issues}) and
-  \code{summary}, one row per trial.
+(one element per trial, each holding the dimensions, statistics, outliers,
+trend, spatial measures, fitted \code{variogram} and any \code{issues}) and
+\code{summary}, one row per trial.
 }
 \description{
 Inspects the raw grid of basic experimental units and reports what should be
@@ -54,19 +54,19 @@ method drawing the field map.
 \section{What is checked}{
 
 \describe{
-  \item{Structure}{Grid dimensions, missing cells, and how many rectangular
-    plot shapes the grid admits. A grid whose sides are prime yields almost
-    no shapes, which stops the CV-based methods before they start; the count
-    is flagged when it falls below six.}
-  \item{Values}{Missing, negative, zero and constant values, and outliers by
-    the boxplot rule. In a uniformity trial an outlying basic unit is usually
-    a harvest failure or a typing error, and it contaminates every shape that
-    contains it.}
-  \item{Trend}{Means along rows and columns, with the p-value of a monotone
-    trend. A gradient in one direction is field fertility, and it is why
-    shapes of equal area but different orientation give different CVs.}
-  \item{Spatial structure}{Moran's I with its p-value, the first-order
-    autocorrelations used by [calc_paranaiba()], and a fitted variogram.}
+\item{Structure}{Grid dimensions, missing cells, and how many rectangular
+plot shapes the grid admits. A grid whose sides are prime yields almost
+no shapes, which stops the CV-based methods before they start; the count
+is flagged when it falls below six.}
+\item{Values}{Missing, negative, zero and constant values, and outliers by
+the boxplot rule. In a uniformity trial an outlying basic unit is usually
+a harvest failure or a typing error, and it contaminates every shape that
+contains it.}
+\item{Trend}{Means along rows and columns, with the p-value of a monotone
+trend. A gradient in one direction is field fertility, and it is why
+shapes of equal area but different orientation give different CVs.}
+\item{Spatial structure}{Moran's I with its p-value, the first-order
+autocorrelations used by \code{\link[=calc_paranaiba]{calc_paranaiba()}}, and a fitted variogram.}
 }
 }
 
@@ -75,8 +75,8 @@ method drawing the field map.
 The fitted model gives three numbers that bear directly on plot size. The
 \emph{range} is the distance beyond which basic units stop being correlated:
 a plot larger than the range is averaging units that are already
-independent, which is the spatial reading of the plateau that [fit_lrp()]
-and [fit_qrp()] estimate empirically. The \emph{nugget-to-sill ratio} is the
+independent, which is the spatial reading of the plateau that \code{\link[=fit_lrp]{fit_lrp()}}
+and \code{\link[=fit_qrp]{fit_qrp()}} estimate empirically. The \emph{nugget-to-sill ratio} is the
 share of variance with no spatial structure; following Cambardella et al.
 (1994) it is read as strong (below 0.25), moderate (0.25 to 0.75) or weak
 (above 0.75) spatial dependence. When it is weak, the field varies almost at
@@ -127,5 +127,5 @@ Webster, R. & Oliver, M. A. (2007). \emph{Geostatistics for Environmental
 Scientists}, 2nd ed. Wiley, Chichester.
 }
 \seealso{
-[calc_cv_shapes()], [calc_paranaiba()], [plot.trial_check()]
+\code{\link[=calc_cv_shapes]{calc_cv_shapes()}}, \code{\link[=calc_paranaiba]{calc_paranaiba()}}, \code{\link[=plot.trial_check]{plot.trial_check()}}
 }

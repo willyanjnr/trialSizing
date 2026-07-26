@@ -21,11 +21,11 @@ compare_methods(
 \item{.data}{one of: a data frame holding a CV table (with \code{x} and
 \code{cv} columns); a matrix, being the raw grid of basic experimental
 units of one trial; or a named list of such matrices. Grids are expanded
-into CV tables with [calc_cv_shapes()], and only then can the Paranaiba
+into CV tables with \code{\link[=calc_cv_shapes]{calc_cv_shapes()}}, and only then can the Paranaiba
 method take part.}
 
 \item{x, cv}{column names in \code{.data} when it is a data frame (default
-\code{"x"} and \code{"cv"}, the names [calc_cv_shapes()] produces).}
+\code{"x"} and \code{"cv"}, the names \code{\link[=calc_cv_shapes]{calc_cv_shapes()}} produces).}
 
 \item{trial}{optional column name identifying the trial.}
 
@@ -35,7 +35,7 @@ applicable one. Any subset of \code{"mcm"}, \code{"lrp"}, \code{"qrp"} and
 
 \item{step}{grid step for the breakpoint search of the LRP and QRP.}
 
-\item{weights}{weighting for the fits, as in [fit_lrp()]. \code{TRUE} uses
+\item{weights}{weighting for the fits, as in \code{\link[=fit_lrp]{fit_lrp()}}. \code{TRUE} uses
 the \code{n} column, which a grid always provides. It reaches the MCM
 through that method's Federer \code{df} argument, the same weighted least
 squares by another name. The Paranaiba row is unaffected: it is a closed
@@ -48,16 +48,16 @@ the breakpoint-existence p-value where the method has one.}
 }
 \value{
 An object of class \code{"method_comparison"}: a list with
-  \code{summary} (one row per method and trial: \code{trial},
-  \code{method}, \code{Xo}, \code{CVxo}, \code{R2}, \code{RMSE}, and
-  \code{Xo_lwr}, \code{Xo_upr}, \code{p_breakpoint} when
-  \code{bootstrap = TRUE}) and \code{meta}.
+\code{summary} (one row per method and trial: \code{trial},
+\code{method}, \code{Xo}, \code{CVxo}, \code{R2}, \code{RMSE}, and
+\code{Xo_lwr}, \code{Xo_upr}, \code{p_breakpoint} when
+\code{bootstrap = TRUE}) and \code{meta}.
 }
 \description{
 Runs the CV-based methods on one set of data and tabulates what each
 recommends: the optimal plot size \eqn{X_o}, the CV at that size, and
 comparable fit statistics. Given the raw grid instead of a CV table, it also
-builds the table with [calc_cv_shapes()] and adds [calc_paranaiba()], which
+builds the table with \code{\link[=calc_cv_shapes]{calc_cv_shapes()}} and adds \code{\link[=calc_paranaiba]{calc_paranaiba()}}, which
 works on the basic units rather than on CV values.
 }
 \section{What the table is for}{
@@ -117,6 +117,6 @@ Cargnelutti Filho, A. et al. (2025). \emph{Revista Vivencias}, 21(43),
 10.25 m2 for the MCM, LRP and QRP respectively.
 }
 \seealso{
-[fit_lrp()], [fit_qrp()], [fit_mcm()], [calc_paranaiba()],
-  [calc_cv_shapes()]
+\code{\link[=fit_lrp]{fit_lrp()}}, \code{\link[=fit_qrp]{fit_qrp()}}, \code{\link[=fit_mcm]{fit_mcm()}}, \code{\link[=calc_paranaiba]{calc_paranaiba()}},
+\code{\link[=calc_cv_shapes]{calc_cv_shapes()}}
 }

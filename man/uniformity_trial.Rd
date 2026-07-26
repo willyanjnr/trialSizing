@@ -6,22 +6,22 @@
 \title{Simulated uniformity trial}
 \format{
 A data frame with 24 rows (8 grid rows \eqn{\times} 3 trials) and
-  14 variables:
+14 variables:
 \describe{
-  \item{trial}{trial identifier, \code{"T1"}, \code{"T2"} or \code{"T3"}.}
-  \item{row}{grid row index, 1-8.}
-  \item{col01}{response (g m\eqn{^{-2}}) at grid column 1.}
-  \item{col02}{response (g m\eqn{^{-2}}) at grid column 2.}
-  \item{col03}{response (g m\eqn{^{-2}}) at grid column 3.}
-  \item{col04}{response (g m\eqn{^{-2}}) at grid column 4.}
-  \item{col05}{response (g m\eqn{^{-2}}) at grid column 5.}
-  \item{col06}{response (g m\eqn{^{-2}}) at grid column 6.}
-  \item{col07}{response (g m\eqn{^{-2}}) at grid column 7.}
-  \item{col08}{response (g m\eqn{^{-2}}) at grid column 8.}
-  \item{col09}{response (g m\eqn{^{-2}}) at grid column 9.}
-  \item{col10}{response (g m\eqn{^{-2}}) at grid column 10.}
-  \item{col11}{response (g m\eqn{^{-2}}) at grid column 11.}
-  \item{col12}{response (g m\eqn{^{-2}}) at grid column 12.}
+\item{trial}{trial identifier, \code{"T1"}, \code{"T2"} or \code{"T3"}.}
+\item{row}{grid row index, 1-8.}
+\item{col01}{response (g m\eqn{^{-2}}) at grid column 1.}
+\item{col02}{response (g m\eqn{^{-2}}) at grid column 2.}
+\item{col03}{response (g m\eqn{^{-2}}) at grid column 3.}
+\item{col04}{response (g m\eqn{^{-2}}) at grid column 4.}
+\item{col05}{response (g m\eqn{^{-2}}) at grid column 5.}
+\item{col06}{response (g m\eqn{^{-2}}) at grid column 6.}
+\item{col07}{response (g m\eqn{^{-2}}) at grid column 7.}
+\item{col08}{response (g m\eqn{^{-2}}) at grid column 8.}
+\item{col09}{response (g m\eqn{^{-2}}) at grid column 9.}
+\item{col10}{response (g m\eqn{^{-2}}) at grid column 10.}
+\item{col11}{response (g m\eqn{^{-2}}) at grid column 11.}
+\item{col12}{response (g m\eqn{^{-2}}) at grid column 12.}
 }
 
 To recover a trial as a numeric matrix (the form the grid functions expect):
@@ -53,7 +53,7 @@ falls with plot size and levels off at a plateau, as in a real trial. The
 generating script is in \code{data-raw/uniformity_trial.R}.
 }
 \seealso{
-[calc_cv_shapes()], [calc_paranaiba()], [check_trial()],
-  [fit_lrp()]
+\code{\link[=calc_cv_shapes]{calc_cv_shapes()}}, \code{\link[=calc_paranaiba]{calc_paranaiba()}}, \code{\link[=check_trial]{check_trial()}},
+\code{\link[=fit_lrp]{fit_lrp()}}
 }
 \keyword{datasets}

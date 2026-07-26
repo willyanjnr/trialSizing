@@ -73,7 +73,7 @@ Used only when \code{bootstrap = TRUE}.}
 \item{weights}{weights for a weighted least-squares fit. \code{FALSE}
 (default) fits unweighted, as the published procedure does. \code{TRUE}
 uses the \code{n} column of \code{.data}, the number of plots behind each
-CV, as returned by [calc_cv_shapes()]. A single column name or a numeric
+CV, as returned by \code{\link[=calc_cv_shapes]{calc_cv_shapes()}}. A single column name or a numeric
 vector are also accepted. See the section "Weighting by the number of
 plots".}
 }
@@ -176,13 +176,13 @@ calling to make the result reproducible.
 \section{Two ways to call}{
 
 \describe{
-  \item{Vectors}{\code{fit_lrp(x, cv)} fits a single series and returns an
-    \code{"lrp_fit"}.}
-  \item{Data frame}{\code{fit_lrp(.data, x = "x", cv = "cv", trial = "trial")}
-    takes a data frame plus column names. With \code{trial}, one model is fit
-    per trial and an \code{"lrp_multi"} object (summary table plus the
-    individual fits) is returned. Column names default to \code{"x"},
-    \code{"cv"} and \code{"trial"}; missing columns raise a clear error.}
+\item{Vectors}{\code{fit_lrp(x, cv)} fits a single series and returns an
+\code{"lrp_fit"}.}
+\item{Data frame}{\code{fit_lrp(.data, x = "x", cv = "cv", trial = "trial")}
+takes a data frame plus column names. With \code{trial}, one model is fit
+per trial and an \code{"lrp_multi"} object (summary table plus the
+individual fits) is returned. Column names default to \code{"x"},
+\code{"cv"} and \code{"trial"}; missing columns raise a clear error.}
 }
 }
 
@@ -287,5 +287,5 @@ Efron, B. & Tibshirani, R. J. (1993). \emph{An Introduction to the
 Bootstrap}. Chapman & Hall, New York.
 }
 \seealso{
-[plot.lrp_fit()], [predict.lrp_fit()]
+\code{\link[=plot.lrp_fit]{plot.lrp_fit()}}, \code{\link[=predict.lrp_fit]{predict.lrp_fit()}}
 }

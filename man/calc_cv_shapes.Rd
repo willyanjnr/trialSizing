@@ -28,13 +28,13 @@ trials), or a long data frame with one row per basic unit.}
 }
 \value{
 A data frame with one row per shape and trial: \code{trial},
-  \code{X_L}, \code{X_C} (shape in basic units), \code{x} (plot size),
-  \code{n} (number of plots), \code{mean}, \code{sd} and \code{cv} (percent),
-  ordered by plot size.
+\code{X_L}, \code{X_C} (shape in basic units), \code{x} (plot size),
+\code{n} (number of plots), \code{mean}, \code{sd} and \code{cv} (percent),
+ordered by plot size.
 }
 \description{
-Builds the coefficient-of-variation table that [fit_lrp()], [fit_qrp()] and
-[fit_mcm()] consume, starting from the raw grid of basic experimental units
+Builds the coefficient-of-variation table that \code{\link[=fit_lrp]{fit_lrp()}}, \code{\link[=fit_qrp]{fit_qrp()}} and
+\code{\link[=fit_mcm]{fit_mcm()}} consume, starting from the raw grid of basic experimental units
 (BEU) as the trial was harvested. Adjacent BEU are grouped into every
 rectangular plot shape the grid admits: for a grid of \eqn{L} rows by \eqn{C}
 columns, each shape is \eqn{X_L \times X_C} basic units with \eqn{X_L} a
@@ -93,5 +93,5 @@ Paranaiba, P. F., Ferreira, D. F. & Morais, A. R. (2009). \emph{Revista
 Brasileira de Biometria}, 27(2), 255-268.
 }
 \seealso{
-[fit_lrp()], [fit_qrp()], [fit_mcm()], [calc_paranaiba()]
+\code{\link[=fit_lrp]{fit_lrp()}}, \code{\link[=fit_qrp]{fit_qrp()}}, \code{\link[=fit_mcm]{fit_mcm()}}, \code{\link[=calc_paranaiba]{calc_paranaiba()}}
 }

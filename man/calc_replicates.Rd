@@ -18,7 +18,7 @@ calc_replicates(
 \item{treatments}{numeric vector; numbers of treatments (>= 2).}
 
 \item{cv_percent}{single numeric; experimental CV (\%), e.g. the CVxo from
-[fit_lrp()]/[fit_qrp()]/[fit_mcm()].}
+\code{\link[=fit_lrp]{fit_lrp()}}/\code{\link[=fit_qrp]{fit_qrp()}}/\code{\link[=fit_mcm]{fit_mcm()}}.}
 
 \item{lsd_percent}{numeric vector; least significant differences (\% of mean).}
 
@@ -31,8 +31,8 @@ point (defaults 1e-9 and 1000).}
 }
 \value{
 An object of class \code{"replicates_fit"}: \code{data} (Treatments,
-  CV_percent, LSD_percent, Alpha, Design, r_continuous, r_optimal, df_error,
-  q_tukey, converged) and \code{meta}.
+CV_percent, LSD_percent, Alpha, Design, r_continuous, r_optimal, df_error,
+q_tukey, converged) and \code{meta}.
 }
 \description{
 Estimates the number of replications for CRD or RCBD experiments following

@@ -37,7 +37,7 @@
 \arguments{
 \item{x}{an \code{"mcm_fit"} object.}
 
-\item{title, annotate_model, xlab, ylab, decimal_mark, digits_coef, digits_stat}{as in [plot.lrp_fit()].}
+\item{title, annotate_model, xlab, ylab, decimal_mark, digits_coef, digits_stat}{as in \code{\link[=plot.lrp_fit]{plot.lrp_fit()}}.}
 
 \item{point_size, line_size, point_colour, line_colour, bp_colour}{aesthetics.}
 

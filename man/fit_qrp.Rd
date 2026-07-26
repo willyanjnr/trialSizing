@@ -56,22 +56,22 @@ used only when \code{bootstrap = TRUE}.}
 \item{weights}{weights for a weighted least-squares fit. \code{FALSE}
 (default) fits unweighted, as the published procedure does. \code{TRUE}
 uses the \code{n} column of \code{.data} (the number of plots behind each
-CV, as returned by [calc_cv_shapes()]); a column name or a numeric vector
-are also accepted. The caveats are the same as for [fit_lrp()]: the
+CV, as returned by \code{\link[=calc_cv_shapes]{calc_cv_shapes()}}); a column name or a numeric vector
+are also accepted. The caveats are the same as for \code{\link[=fit_lrp]{fit_lrp()}}: the
 breakpoint typically falls, the points remain dependent, and the weighted
 fit statistics are not comparable with the unweighted ones.}
 }
 \value{
 A \code{"qrp_fit"} (single series) or \code{"qrp_multi"} (per trial).
-  The fit also carries \code{local_minima} (competing basins with their SSE
-  excess over the optimum and a \code{competing} flag, or \code{NULL}),
-  \code{local_min_tol}, \code{sse_profile},
-  \code{compat} when \code{start} was given, and \code{bootstrap} when
-  \code{bootstrap = TRUE} (a list with \code{ci}, \code{se}, \code{p_value},
-  \code{statistic}, \code{replicates}, \code{n_valid}, \code{conf_level} and
-  \code{null_model}). Because the quadratic-plateau
-  joins smoothly, this profile is typically a single basin, unlike the
-  stepped profile of [fit_lrp()].
+The fit also carries \code{local_minima} (competing basins with their SSE
+excess over the optimum and a \code{competing} flag, or \code{NULL}),
+\code{local_min_tol}, \code{sse_profile},
+\code{compat} when \code{start} was given, and \code{bootstrap} when
+\code{bootstrap = TRUE} (a list with \code{ci}, \code{se}, \code{p_value},
+\code{statistic}, \code{replicates}, \code{n_valid}, \code{conf_level} and
+\code{null_model}). Because the quadratic-plateau
+joins smoothly, this profile is typically a single basin, unlike the
+stepped profile of \code{\link[=fit_lrp]{fit_lrp()}}.
 }
 \description{
 Fits the quadratic-plateau (smooth broken-line) model
@@ -81,15 +81,15 @@ with \eqn{X_0 = -b/(2c)}. The breakpoint is profiled over a grid: for each
 candidate \eqn{X_0} the model is linear in the plateau level and the
 curvature, so it is fit by least squares with no starting values, and the
 \eqn{X_0} minimizing the residual sum of squares is returned. This mirrors
-[fit_lrp()] and avoids the convergence problems of a direct nls fit.
+\code{\link[=fit_lrp]{fit_lrp()}} and avoids the convergence problems of a direct nls fit.
 }
 \section{Two ways to call}{
 
 \describe{
-  \item{Vectors}{\code{fit_qrp(x, cv)} returns a \code{"qrp_fit"}.}
-  \item{Data frame}{\code{fit_qrp(.data, x = "x", cv = "cv", trial = "trial")};
-    with \code{trial}, one model per trial is fit and a \code{"qrp_multi"}
-    object is returned. Column names default to "x", "cv", "trial".}
+\item{Vectors}{\code{fit_qrp(x, cv)} returns a \code{"qrp_fit"}.}
+\item{Data frame}{\code{fit_qrp(.data, x = "x", cv = "cv", trial = "trial")};
+with \code{trial}, one model per trial is fit and a \code{"qrp_multi"}
+object is returned. Column names default to "x", "cv", "trial".}
 }
 }
 
@@ -100,7 +100,7 @@ replacement, refits on each resample, and returns a percentile interval for
 \eqn{X_o} in \code{$bootstrap$ci}, together with a bootstrap standard error.
 
 It also tests whether the plateau is warranted. The null here is not the one
-used by [fit_lrp()]: a quadratic-plateau that never plateaus is simply a
+used by \code{\link[=fit_lrp]{fit_lrp()}}: a quadratic-plateau that never plateaus is simply a
 quadratic, so the null model is the unconstrained quadratic fitted on every
 observation, and the p-value is the proportion of null resamples whose SSE
 reduction matches or exceeds the observed one. A large p-value means the
@@ -158,5 +158,5 @@ fit_qrp(trials, x = "x", cv = "cv", trial = "trial", step = 0.01)$summary
 }
 }
 \seealso{
-[fit_lrp()], [plot.qrp_fit()]
+\code{\link[=fit_lrp]{fit_lrp()}}, \code{\link[=plot.qrp_fit]{plot.qrp_fit()}}
 }

@@ -62,7 +62,7 @@ font family.}
 \item{theme}{optional ggplot2 theme used instead of the default.}
 
 \item{save, file, format, dpi, width, height, units, compression}{saving controls;
-see [plot.lrp_fit()].}
+see \code{\link[=plot.lrp_fit]{plot.lrp_fit()}}.}
 
 \item{...}{ignored.}
 }
@@ -70,6 +70,6 @@ see [plot.lrp_fit()].}
 A \code{ggplot} object (invisibly when saved).
 }
 \description{
-Same layout and options as [plot.lrp_fit()], with the quadratic descending
+Same layout and options as \code{\link[=plot.lrp_fit]{plot.lrp_fit()}}, with the quadratic descending
 arm and the quadratic equation in the annotation.
 }

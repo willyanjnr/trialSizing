@@ -31,13 +31,13 @@ plain vector, or to check the grid of a long data frame.}
 }
 \value{
 An object of class \code{"paranaiba_fit"}: a list with \code{summary}
-  (one row per trial: mean, variance, CV, rho_row, rho_col, rho, Xo, CVxo,
-  valid) and \code{meta}.
+(one row per trial: mean, variance, CV, rho_row, rho_col, rho, Xo, CVxo,
+valid) and \code{meta}.
 }
 \description{
 Estimates the optimal plot size from the raw uniformity-trial grid using the
 maximum curvature of the coefficient of variation model (Paranaiba, Ferreira
-& Morais, 2009). Unlike [fit_lrp()], [fit_qrp()] and [fit_mcm()], which take
+& Morais, 2009). Unlike \code{\link[=fit_lrp]{fit_lrp()}}, \code{\link[=fit_qrp]{fit_qrp()}} and \code{\link[=fit_mcm]{fit_mcm()}}, which take
 CV values already computed for several plot sizes, this method works directly
 on the basic experimental units (BEU) and returns a closed-form estimate:
 \deqn{X_o = \frac{10 \sqrt[3]{2 (1 - \rho^2) s^2 m}}{m}, \qquad
@@ -114,5 +114,5 @@ Cargnelutti Filho, A. et al. (2014). Tamanho de parcela e numero de
 repeticoes em aveia preta. \emph{Ciencia Rural}, 44(10), 1732-1739.
 }
 \seealso{
-[fit_lrp()], [fit_mcm()], [calc_replicates()]
+\code{\link[=fit_lrp]{fit_lrp()}}, \code{\link[=fit_mcm]{fit_mcm()}}, \code{\link[=calc_replicates]{calc_replicates()}}
 }

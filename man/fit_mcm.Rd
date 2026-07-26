@@ -43,9 +43,9 @@ used only when \code{bootstrap = TRUE}.}
 }
 \value{
 An \code{"mcm_fit"} (single series) or \code{"mcm_multi"} (per trial).
-  With \code{bootstrap = TRUE} the fit also carries \code{bootstrap}, a list
-  with \code{ci}, \code{se}, \code{ci_b}, \code{replicates}, \code{n_valid}
-  and \code{conf_level}.
+With \code{bootstrap = TRUE} the fit also carries \code{bootstrap}, a list
+with \code{ci}, \code{se}, \code{ci_b}, \code{replicates}, \code{n_valid}
+and \code{conf_level}.
 }
 \description{
 Estimates the optimal plot size by the modified maximum curvature method of
@@ -79,7 +79,7 @@ estimated from fewer plots. Some authors apply it, others do not;
 \code{bootstrap = TRUE} resamples the shapes with replacement, refits, and
 returns a percentile interval for \eqn{X_c} in \code{$bootstrap$ci}.
 
-Unlike [fit_lrp()] and [fit_qrp()], there is no test for the existence of the
+Unlike \code{\link[=fit_lrp]{fit_lrp()}} and \code{\link[=fit_qrp]{fit_qrp()}}, there is no test for the existence of the
 optimum, because there is no breakpoint whose presence is in doubt: the curve
 \eqn{CV = a X^{-b}} has a point of maximum curvature whenever \eqn{b > 0}.
 What can be questioned is \eqn{b}. Its bootstrap interval is therefore
@@ -92,10 +92,10 @@ Set the random seed before calling to make the result reproducible.
 \section{Two ways to call}{
 
 \describe{
-  \item{Vectors}{\code{fit_mcm(x, cv, df = NULL)} returns an \code{"mcm_fit"}.}
-  \item{Data frame}{\code{fit_mcm(.data, x = "x", cv = "cv", df = "df",
+\item{Vectors}{\code{fit_mcm(x, cv, df = NULL)} returns an \code{"mcm_fit"}.}
+\item{Data frame}{\code{fit_mcm(.data, x = "x", cv = "cv", df = "df",
     trial = "trial")}; with \code{trial}, one model per trial is fit and an
-    \code{"mcm_multi"} object is returned.}
+\code{"mcm_multi"} object is returned.}
 }
 }
 
@@ -158,5 +158,5 @@ and size for testing yield in \emph{Crambe abyssinica} Hochst.
 Federer, W. T. (1955). \emph{Experimental Design}. Macmillan, New York.
 }
 \seealso{
-[fit_lrp()], [fit_qrp()], [plot.mcm_fit()]
+\code{\link[=fit_lrp]{fit_lrp()}}, \code{\link[=fit_qrp]{fit_qrp()}}, \code{\link[=plot.mcm_fit]{plot.mcm_fit()}}
 }

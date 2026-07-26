@@ -65,7 +65,7 @@ A \code{ggplot} object.
 }
 \description{
 Draws the trial as a map: an ordinary-kriging surface built from the
-variogram fitted by [check_trial()], with the basic experimental units drawn
+variogram fitted by \code{\link[=check_trial]{check_trial()}}, with the basic experimental units drawn
 on top and filled on the same colour scale. The surface shows where the
 field is systematically better or worse; the points show the data the
 surface came from, so an interpolation artefact cannot be mistaken for a
@@ -91,5 +91,5 @@ plot(chk, surface = FALSE)
 }
 }
 \seealso{
-[check_trial()]
+\code{\link[=check_trial]{check_trial()}}
 }

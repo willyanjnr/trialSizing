@@ -510,7 +510,7 @@
 #'   published results obtained with such implementations, and to see how much
 #'   worse they fit.
 #' @param local_min_tol relative SSE tolerance (default 0.10) deciding which
-#'   local minima count as competing. A second basin fitting within 10\% of the
+#'   local minima count as competing. A second basin fitting within 10% of the
 #'   optimum means the breakpoint is not sharply identified. Only labelling is
 #'   affected (the \code{competing} column of \code{$local_minima} and the stars
 #'   in \code{print()}); the fit itself never changes, and no warning is issued.

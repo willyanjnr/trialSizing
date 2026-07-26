@@ -30,9 +30,9 @@
 #' replications). Error df: \eqn{t(r-1)} for CRD and \eqn{(t-1)(r-1)} for RCBD.
 #'
 #' @param treatments numeric vector; numbers of treatments (>= 2).
-#' @param cv_percent single numeric; experimental CV (\%), e.g. the CVxo from
+#' @param cv_percent single numeric; experimental CV (%), e.g. the CVxo from
 #'   [fit_lrp()]/[fit_qrp()]/[fit_mcm()].
-#' @param lsd_percent numeric vector; least significant differences (\% of mean).
+#' @param lsd_percent numeric vector; least significant differences (% of mean).
 #' @param alpha significance level for the Tukey test (default 0.05).
 #' @param design "CRD" or "RCBD".
 #' @param tol,max_iter convergence tolerance and iteration cap for the fixed

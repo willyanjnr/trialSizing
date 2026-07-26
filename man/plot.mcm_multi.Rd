@@ -22,7 +22,7 @@
 
 \item{save, file, format, dpi, width, height, units, compression}{saving controls.}
 
-\item{...}{styling arguments forwarded to [plot.mcm_fit()].}
+\item{...}{styling arguments forwarded to \code{\link[=plot.mcm_fit]{plot.mcm_fit()}}.}
 }
 \value{
 A list of page objects, invisibly.

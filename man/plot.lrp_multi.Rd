@@ -27,7 +27,7 @@ is more than one page.}
 
 \item{format, dpi, width, height, units, compression}{passed to the saver.}
 
-\item{...}{styling arguments forwarded to [plot.lrp_fit()]
+\item{...}{styling arguments forwarded to \code{\link[=plot.lrp_fit]{plot.lrp_fit()}}
 (for example \code{decimal_mark}, \code{cond_word}, \code{label_size}).}
 }
 \value{

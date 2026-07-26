@@ -1,7 +1,3 @@
----
-output: github_document
----
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 
@@ -11,6 +7,7 @@ output: github_document
 <img src="man/figures/logo.png" align="right" height="140" />
 
 <!-- badges: start -->
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 trialSize provides tools for **experimental design sizing** in agricultural
@@ -18,6 +15,14 @@ research: estimating the optimal plot size from a uniformity trial, and the
 number of replications needed to detect a given difference between treatments.
 Every method returns standardized diagnostic statistics and publication-style
 plots that can be saved to TIFF, PDF or PNG.
+
+## Cheat sheet
+
+The whole package on one page, laid out in the order you actually use it.
+Click to open it full size — it is an SVG, so it stays sharp at any zoom and
+prints on one landscape sheet.
+
+<a href="man/figures/cheatsheet.svg"><img src="man/figures/cheatsheet.svg" width="100%" alt="trialSize cheat sheet: uniformity-trial basics and the five-step pipeline (check_trial, calc_cv_shapes, fit_lrp/fit_qrp/fit_mcm, compare_methods/calc_paranaiba, calc_replicates), the four accepted data shapes, checking the trial with the kriged field map of the basic units, CV by plot shape, the three plateau models with the CV-versus-plot-size curve, what a fit returns, comparing methods, the Paranaiba closed form, number of replications, and exporting figures." /></a>
 
 ## Installation
 

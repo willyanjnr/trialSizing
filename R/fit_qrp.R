@@ -602,7 +602,9 @@ plot.qrp_fit <- function(x, title = "Quadratic Plateau", annotate_model = TRUE,
   r2 <- unname(x$parameters["R2"])
 
   xmax <- max(d$x) * 1.05
-  ymax <- max(d$cv) * 1.12
+  ## 1.15 leaves room for the quadratic term's exponent on the top annotation
+  ## line, which would otherwise be clipped by the panel edge.
+  ymax <- max(d$cv) * 1.15
   curve <- data.frame(x = seq(0, max(d$x), length.out = 400))
   curve$cv <- predict(x, curve$x)
 
@@ -635,7 +637,7 @@ plot.qrp_fit <- function(x, title = "Quadratic Plateau", annotate_model = TRUE,
     lCV <- paste0("CV[Xo]=='", p_s, "'")
 
     xm <- 0.55 * xmax
-    ym <- ymax * c(0.97, 0.89, 0.81)
+    ym <- ymax * c(0.93, 0.85, 0.77)
     for (i in seq_len(3))
       g <- g + ggplot2::annotate("text", x = xm, y = ym[i],
                                  label = c(eq1, eq2, eq3)[i], parse = TRUE,

@@ -426,7 +426,9 @@ plot.mcm_fit <- function(x, title = "Modified Maximum Curvature",
   r2 <- unname(x$parameters["R2"])
 
   xmax <- max(d$x) * 1.05
-  ymax <- max(d$cv) * 1.12
+  ## 1.15 leaves room for the exponent of the annotated model, which sits on
+  ## the top line and would otherwise be clipped by the panel edge.
+  ymax <- max(d$cv) * 1.15
   curve <- data.frame(x = seq(min(d$x), max(d$x), length.out = 400))
   curve$cv <- predict(x, curve$x)
 
@@ -454,15 +456,22 @@ plot.mcm_fit <- function(x, title = "Modified Maximum Curvature",
     lCV <- paste0("CV[Xo]=='", p_s, "'")
 
     xm <- 0.55 * xmax
-    ym <- ymax * c(0.97, 0.88)
+    ym <- ymax * c(0.93, 0.84)
     for (i in 1:2)
       g <- g + ggplot2::annotate("text", x = xm, y = ym[i],
                                  label = c(eq1, eq2)[i], parse = TRUE,
                                  hjust = 0.5, size = label_size, family = family)
 
-    xb <- xo + 0.03 * max(d$x)
-    yb <- c(max(p - 0.11 * ymax, 0.10 * ymax),
-            max(p - 0.20 * ymax, 0.02 * ymax))
+    ## Unlike the plateau models, the power curve keeps descending to the right
+    ## of the breakpoint, so these two labels must clear it along the whole
+    ## stretch they span -- not merely at the breakpoint. x_ref is a generous
+    ## estimate of how far the text reaches.
+    xb    <- xo + 0.03 * max(d$x)
+    x_ref <- min(xmax, xb + 0.40 * xmax)
+    y_top <- max(min(p - 0.11 * ymax,
+                     unname(predict(x, x_ref)) - 0.05 * ymax),
+                 0.13 * ymax)
+    yb <- c(y_top, max(y_top - 0.09 * ymax, 0.02 * ymax))
     for (i in 1:2)
       g <- g + ggplot2::annotate("text", x = xb, y = yb[i],
                                  label = c(lXo, lCV)[i], parse = TRUE,

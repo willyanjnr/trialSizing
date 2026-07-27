@@ -2,9 +2,7 @@
 
 
 
-# trialSizing
-
-<img src="man/figures/logo.png" align="right" height="140" alt="trialSizing package logo" />
+# trialSizing <img src="man/figures/logo.png" align="right" height="140" alt="" />
 
 <!-- badges: start -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)

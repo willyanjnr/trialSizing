@@ -1,5 +1,5 @@
 ## ============================================================================
-## trialSize :: Linear Response Plateau (LRP) model by grid search
+## trialSizing :: Linear Response Plateau (LRP) model by grid search
 ## ============================================================================
 
 ## ----------------------------------------------------------------------------
@@ -848,7 +848,7 @@ summary.lrp_fit <- function(object, ...) {
 #' @param title_size size of the plot title. \code{NULL} uses \code{base_size}.
 #' @param family font family for the theme and annotations.
 #' @param theme optional \pkg{ggplot2} theme object used instead of the package
-#'   default (the shared \code{trialSize} theme); the \code{title_size} tweak is
+#'   default (the shared \code{trialSizing} theme); the \code{title_size} tweak is
 #'   applied on top.
 #' @param save logical; if \code{TRUE}, write the figure to disk (default FALSE).
 #' @param file output file name; if \code{NULL}, derived from \code{title}.
@@ -944,7 +944,7 @@ plot.lrp_fit <- function(x, title = "Linear Plateau", annotate_model = TRUE,
     ggplot2::scale_y_continuous(limits = c(0, ymax), expand = c(0, 0)) +
     ggplot2::labs(title = title, x = xlab, y = ylab) +
     (if (is.null(theme))
-      .theme_trialsize(base_size = base_size, family = family)
+      .theme_trialsizing(base_size = base_size, family = family)
      else theme) +
     ggplot2::theme(plot.title = ggplot2::element_text(size = title_size))
 

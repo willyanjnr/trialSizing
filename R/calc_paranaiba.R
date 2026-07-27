@@ -1,5 +1,5 @@
 ## ============================================================================
-## trialSize :: Paranaiba method (maximum curvature of the CV model)
+## trialSizing :: Paranaiba method (maximum curvature of the CV model)
 ## ----------------------------------------------------------------------------
 ## Paranaiba, Ferreira & Morais (2009). From the raw uniformity-trial grid, the
 ## first-order spatial autocorrelation (rho) is estimated along a serpentine
@@ -259,7 +259,7 @@ plot.paranaiba_fit <- function(x, y_var = c("Xo", "CVxo"),
     ggplot2::labs(title = title, x = xlab, y = ylab) +
     ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.08))) +
     (if (is.null(theme))
-      .theme_trialsize(base_size = base_size, family = family)
+      .theme_trialsizing(base_size = base_size, family = family)
      else theme) +
     ggplot2::theme(plot.title = ggplot2::element_text(size = title_size))
 

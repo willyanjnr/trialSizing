@@ -66,7 +66,7 @@ from it.}
 \item{family}{font family for the theme and annotations.}
 
 \item{theme}{optional \pkg{ggplot2} theme object used instead of the package
-default (the shared \code{trialSize} theme); the \code{title_size} tweak is
+default (the shared \code{trialSizing} theme); the \code{title_size} tweak is
 applied on top.}
 
 \item{save}{logical; if \code{TRUE}, write the figure to disk (default FALSE).}

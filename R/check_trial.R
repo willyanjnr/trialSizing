@@ -1,5 +1,5 @@
 ## ============================================================================
-## trialSize :: pre-flight check of a uniformity trial
+## trialSizing :: pre-flight check of a uniformity trial
 ## ----------------------------------------------------------------------------
 ## Everything that should be looked at before a plot-size method is run: is the
 ## grid complete and usable, are the values sane, and does the field actually

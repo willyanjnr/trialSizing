@@ -1,5 +1,5 @@
 ## ============================================================================
-## trialSize :: Optimal number of replications (Cargnelutti Filho et al., 2014)
+## trialSizing :: Optimal number of replications (Cargnelutti Filho et al., 2014)
 ## ----------------------------------------------------------------------------
 ## For each (treatments, LSD) the required replications solve, iteratively,
 ##   r = ( q_alpha * CV / LSD )^2,   q_alpha = studentized range (Tukey),
@@ -209,7 +209,7 @@ plot.replicates_fit <- function(x, y_var = c("r_optimal", "r_continuous"),
     ggplot2::geom_point(size = point_size) +
     ggplot2::labs(title = title, x = xlab, y = ylab, colour = colour_lab) +
     (if (is.null(theme))
-      .theme_trialsize(base_size = base_size, family = family)
+      .theme_trialsizing(base_size = base_size, family = family)
      else theme) +
     ggplot2::theme(plot.title = ggplot2::element_text(size = title_size))
 

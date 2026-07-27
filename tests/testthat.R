@@ -1,4 +1,4 @@
 library(testthat)
-library(trialSize)
+library(trialSizing)
 
-test_check("trialSize")
+test_check("trialSizing")

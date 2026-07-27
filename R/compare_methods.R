@@ -1,5 +1,5 @@
 ## ============================================================================
-## trialSize :: side-by-side comparison of the plot-size methods
+## trialSizing :: side-by-side comparison of the plot-size methods
 ## ----------------------------------------------------------------------------
 ## The methods disagree by construction, and the published articles report that
 ## disagreement as a finding. This runs them on one trial and tabulates what

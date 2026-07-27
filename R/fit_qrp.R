@@ -1,5 +1,5 @@
 ## ============================================================================
-## trialSize :: Quadratic Response Plateau (QRP) model by grid search
+## trialSizing :: Quadratic Response Plateau (QRP) model by grid search
 ## ----------------------------------------------------------------------------
 ## Mirrors fit_lrp(): same interfaces, S3 classes, publication plot and saving.
 ## The quadratic-plateau joins smoothly (vertex at the breakpoint), so fixing
@@ -657,7 +657,7 @@ plot.qrp_fit <- function(x, title = "Quadratic Plateau", annotate_model = TRUE,
     ggplot2::scale_y_continuous(limits = c(0, ymax), expand = c(0, 0)) +
     ggplot2::labs(title = title, x = xlab, y = ylab) +
     (if (is.null(theme))
-      .theme_trialsize(base_size = base_size, family = family)
+      .theme_trialsizing(base_size = base_size, family = family)
      else theme) +
     ggplot2::theme(plot.title = ggplot2::element_text(size = title_size))
 

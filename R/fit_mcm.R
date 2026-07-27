@@ -1,5 +1,5 @@
 ## ============================================================================
-## trialSize :: Modified Maximum Curvature (MCM) plot-size model
+## trialSizing :: Modified Maximum Curvature (MCM) plot-size model
 ## ----------------------------------------------------------------------------
 ## Meier & Lessman (1971), after Lessman & Atkins (1963). The CV vs plot-size
 ## relationship CV = a * X^(-b) is fit and the optimum plot size is the point of
@@ -483,7 +483,7 @@ plot.mcm_fit <- function(x, title = "Modified Maximum Curvature",
     ggplot2::scale_y_continuous(limits = c(0, ymax), expand = c(0, 0)) +
     ggplot2::labs(title = title, x = xlab, y = ylab) +
     (if (is.null(theme))
-      .theme_trialsize(base_size = base_size, family = family)
+      .theme_trialsizing(base_size = base_size, family = family)
      else theme) +
     ggplot2::theme(plot.title = ggplot2::element_text(size = title_size))
 

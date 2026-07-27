@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1584 1224" width="1584" height="1224" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
-  <title>trialSize cheat sheet</title>
-  <desc>One-page reference for the trialSize R package: uniformity-trial basics, the five-step pipeline, accepted data shapes, checking the trial, CV by plot shape, fitting LRP/QRP/MCM plateau models, comparing methods, the Paranaiba closed form, number of replications, and exporting figures.</desc>
+  <title>trialSizing cheat sheet</title>
+  <desc>One-page reference for the trialSizing R package: uniformity-trial basics, the five-step pipeline, accepted data shapes, checking the trial, CV by plot shape, fitting LRP/QRP/MCM plateau models, comparing methods, the Paranaiba closed form, number of replications, and exporting figures.</desc>
 
   <style>
     .ink   { fill: #1f2328; }
@@ -18,7 +18,7 @@
   <rect x="0" y="0" width="1584" height="1224" fill="#ffffff"/>
 
   <!-- ================================ HEADER ================================ -->
-  <text class="ink b" x="36" y="52" font-size="30">Experimental design sizing with <tspan class="acc">trialSize</tspan></text>
+  <text class="ink b" x="36" y="52" font-size="30">Experimental design sizing with <tspan class="acc">trialSizing</tspan></text>
   <text class="mut" x="810" y="52" font-size="24" letter-spacing="1.5">: : CHEAT SHEET</text>
   <rect x="1404" y="28" width="144" height="28" rx="14" fill="#dafbe1" stroke="#1a7f37"/>
   <text class="acc" x="1476" y="47" font-size="13" text-anchor="middle">lifecycle: stable</text>
@@ -340,6 +340,6 @@
 
   <!-- ================================ FOOTER ================================ -->
   <rect x="36" y="1160" width="1512" height="2" fill="#1a7f37"/>
-  <text class="mut" x="36" y="1188" font-size="12.5">tiff (LZW) &#183; png &#183; jpeg &#183; pdf &#183; eps &#183; Portuguese figures: <tspan class="code">decimal_mark = ","</tspan>, <tspan class="code">cond_word = "se"</tspan> &#183; Vignettes: <tspan class="code">vignette(package = "trialSize")</tspan></text>
-  <text class="mut" x="1548" y="1188" font-size="12.5" text-anchor="end">trialSize 0.1.0 &#183; GPL (&#8805; 3) &#183; github.com/willyanjnr/trialSize</text>
+  <text class="mut" x="36" y="1188" font-size="12.5">tiff (LZW) &#183; png &#183; jpeg &#183; pdf &#183; eps &#183; Portuguese figures: <tspan class="code">decimal_mark = ","</tspan>, <tspan class="code">cond_word = "se"</tspan> &#183; Vignettes: <tspan class="code">vignette(package = "trialSizing")</tspan></text>
+  <text class="mut" x="1548" y="1188" font-size="12.5" text-anchor="end">trialSizing 0.1.0 &#183; GPL (&#8805; 3) &#183; github.com/willyanjnr/trialSizing</text>
 </svg>

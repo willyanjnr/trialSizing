@@ -1,5 +1,5 @@
 ## ============================================================================
-## trialSize :: field map of a uniformity trial
+## trialSizing :: field map of a uniformity trial
 ## ----------------------------------------------------------------------------
 ## The surface is ordinary kriging with the variogram fitted by check_trial();
 ## the points are the basic units themselves, filled on the same scale, so the
@@ -8,7 +8,7 @@
 ## information, square cells, one colourbar.
 ## ============================================================================
 
-## The shared package theme (.theme_trialsize) lives in R/theme.R.
+## The shared package theme (.theme_trialsizing) lives in R/theme.R.
 
 ## Axis breaks (internal) -----------------------------------------------------
 ## The axes index rows and columns, so fractional breaks are meaningless. When
@@ -196,5 +196,5 @@ plot.trial_check <- function(x, resolution = 120, points = TRUE,
                   subtitle = if (length(subtitle) && is.na(subtitle)) NULL else subtitle,
                   caption = if (length(caption) && is.na(caption)) NULL else caption,
                   x = xlab, y = ylab) +
-    .theme_trialsize(base_size = base_size, family = family)
+    .theme_trialsizing(base_size = base_size, family = family)
 }

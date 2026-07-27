@@ -16,15 +16,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-# trialSize
+# trialSizing
 
-<img src="man/figures/logo.png" align="right" height="140" />
+<img src="man/figures/logo.png" align="right" height="140" alt="trialSizing package logo" />
 
 <!-- badges: start -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
-trialSize provides tools for **experimental design sizing** in agricultural
+trialSizing provides tools for **experimental design sizing** in agricultural
 research: estimating the optimal plot size from a uniformity trial, and the
 number of replications needed to detect a given difference between treatments.
 Every method returns standardized diagnostic statistics and publication-style
@@ -36,23 +36,23 @@ The whole package on one page, laid out in the order you actually use it.
 Click to open it full size — it is an SVG, so it stays sharp at any zoom and
 prints on one landscape sheet.
 
-<a href="man/figures/cheatsheet.svg"><img src="man/figures/cheatsheet.svg" width="100%" alt="trialSize cheat sheet: uniformity-trial basics and the five-step pipeline (check_trial, calc_cv_shapes, fit_lrp/fit_qrp/fit_mcm, compare_methods/calc_paranaiba, calc_replicates), the four accepted data shapes, checking the trial with the kriged field map of the basic units, CV by plot shape, the three plateau models with the CV-versus-plot-size curve, what a fit returns, comparing methods, the Paranaiba closed form, number of replications, and exporting figures." /></a>
+<a href="man/figures/cheatsheet.svg"><img src="man/figures/cheatsheet.svg" width="100%" alt="trialSizing cheat sheet: uniformity-trial basics and the five-step pipeline (check_trial, calc_cv_shapes, fit_lrp/fit_qrp/fit_mcm, compare_methods/calc_paranaiba, calc_replicates), the four accepted data shapes, checking the trial with the kriged field map of the basic units, CV by plot shape, the three plateau models with the CV-versus-plot-size curve, what a fit returns, comparing methods, the Paranaiba closed form, number of replications, and exporting figures." /></a>
 
 ## Installation
 
-You can install the development version of trialSize from
-[GitHub](https://github.com/willyanjnr/trialSize) with:
+You can install the development version of trialSizing from
+[GitHub](https://github.com/willyanjnr/trialSizing) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("willyanjnr/trialSize")
+pak::pak("willyanjnr/trialSizing")
 ```
 
 ## The workflow
 
 A plot-size study starts from a **uniformity trial** -- a field sown uniformly
 and harvested in a fine grid of small *basic experimental units* (BEU) -- and
-walks through a fixed sequence of steps. trialSize has one function for each:
+walks through a fixed sequence of steps. trialSizing has one function for each:
 
 | Step | Question | Function |
 |-----:|----------|----------|
@@ -67,7 +67,7 @@ The rest of this page follows those steps on one dataset. Everything below uses
 8 &times; 12 grids of 1 m&sup2; BEU; see `?uniformity_trial`).
 
 ```{r setup, message = FALSE}
-library(trialSize)
+library(trialSizing)
 
 # One trial, as the numeric grid the functions expect
 grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
@@ -212,6 +212,6 @@ against published results in the tests and in `vignette("validation")`.
 
 ## Citation
 
-If you use trialSize in your research, please cite the underlying methods (see
+If you use trialSizing in your research, please cite the underlying methods (see
 each function's documentation for the corresponding reference) as well as the
 package itself.

@@ -1,5 +1,5 @@
 ## ============================================================================
-## trialSize :: shared plot theme
+## trialSizing :: shared plot theme
 ## ----------------------------------------------------------------------------
 ## The package theme. It follows the look of the tidyplots figures: a minimal
 ## frame with axis lines and ticks but no panel grid, grey type on white,
@@ -10,7 +10,7 @@
 ## ============================================================================
 
 ## Theme (internal) -----------------------------------------------------------
-.theme_trialsize <- function(base_size = 12, family = "sans") {
+.theme_trialsizing <- function(base_size = 12, family = "sans") {
   ggplot2::theme_minimal(base_size = base_size, base_family = family) +
     ggplot2::theme(
       panel.grid       = ggplot2::element_blank(),

@@ -171,11 +171,17 @@ package.</p>
 <div class="section level2">
 <h2 id="basic-use">Basic use<a class="anchor" aria-label="anchor" href="#basic-use"></a>
 </h2>
+<p>Every fit below passes <code>step = 0.01</code> rather than the
+default <code>0.001</code>. That is only to keep this vignette quick to
+build, and to keep every number on this page consistent with the others:
+the coarser grid already resolves
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mi>o</mi></msub><annotation encoding="application/x-tex">X_o</annotation></semantics></math>
+to two decimals, and only the third decimal differs. See <a href="#fine-tuning">Fine-tuning</a> for what <code>step</code> does.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span>, cv <span class="op">=</span> <span class="va">CV1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span>, cv <span class="op">=</span> <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span>
 <span><span class="va">fit</span></span>
 <span><span class="co">#&gt; Quadratic Response Plateau (QRP) fit</span></span>
-<span><span class="co">#&gt; Breakpoint (Xo):         11.932 </span></span>
+<span><span class="co">#&gt; Breakpoint (Xo):         11.930 </span></span>
 <span><span class="co">#&gt; CV at breakpoint:        7.031 </span></span>
 <span><span class="co">#&gt; R2: 0.918  R2 adj: 0.910  RMSE: 1.324  MAE: 1.069</span></span></code></pre></div>
 <p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>o</mi></msub><mo>≈</mo><mn>11.9</mn></mrow><annotation encoding="application/x-tex">X_o \approx 11.9</annotation></semantics></math>
@@ -185,15 +191,15 @@ on the same data: the smooth join always pushes the optimum out.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Model coefficients:</span></span>
 <span><span class="co">#&gt;          a          b          c </span></span>
-<span><span class="co">#&gt; 23.4681004 -2.7551190  0.1154508 </span></span>
+<span><span class="co">#&gt; 23.4695666 -2.7557723  0.1154976 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Goodness of fit:</span></span>
 <span><span class="co">#&gt;          Breakpoint Breakpoint_Response                  R2              R2_adj </span></span>
-<span><span class="co">#&gt;          11.9320000           7.0310606           0.9177688           0.9095457 </span></span>
+<span><span class="co">#&gt;          11.9300000           7.0313850           0.9177688           0.9095457 </span></span>
 <span><span class="co">#&gt;                RMSE                 MAE                 AIC                 BIC </span></span>
-<span><span class="co">#&gt;           1.3237244           1.0690865          86.1718395          90.7138163 </span></span>
+<span><span class="co">#&gt;           1.3237245           1.0691734          86.1718431          90.7138200 </span></span>
 <span><span class="co">#&gt;                 SSE                 MSE </span></span>
-<span><span class="co">#&gt;          40.3016648           1.7522463</span></span></code></pre></div>
+<span><span class="co">#&gt;          40.3016712           1.7522466</span></span></code></pre></div>
 <p>The QRP reports more fit statistics than the LRP: alongside
 <code>R2</code> and <code>RMSE</code> it returns <code>R2_adj</code>
 (adjusted for the extra parameter), <code>MAE</code>, <code>SSE</code>
@@ -205,10 +211,10 @@ coefficients:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>vertex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="op">-</span><span class="va">cf</span><span class="op">[</span><span class="st">"b"</span><span class="op">]</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">cf</span><span class="op">[</span><span class="st">"c"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  reported <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   vertex reported </span></span>
-<span><span class="co">#&gt;   11.932   11.932</span></span></code></pre></div>
+<span><span class="co">#&gt;    11.93    11.93</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, newx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">11</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 20.828432 12.578777  7.131344  7.031061</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 20.829292 12.578145  7.131279  7.031385</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="plot">Plot<a class="anchor" aria-label="anchor" href="#plot"></a>
@@ -240,15 +246,15 @@ decimal control, <code>digits_c</code> (4 by default), separate from
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span>, cv <span class="op">=</span> <span class="va">CV3</span>, trial <span class="op">=</span> <span class="st">"Trial 3"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span><span class="va">trials</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, trial <span class="op">=</span> <span class="st">"trial"</span><span class="op">)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span><span class="va">trials</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, trial <span class="op">=</span> <span class="st">"trial"</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using x = 'x', cv = 'cv', trial = 'trial' -&gt; 3 trials.</span></span>
 <span><span class="va">res</span></span>
 <span><span class="co">#&gt; QRP fits for 3 trials</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;    trial       a       b      c breakpoint plateau     R2   RMSE     AIC</span></span>
-<span><span class="co">#&gt;  Trial 1 23.4681 -2.7551 0.1155     11.932  7.0311 0.9178 1.3237  86.172</span></span>
-<span><span class="co">#&gt;  Trial 2 20.4943 -1.5222 0.0338     22.489  3.3775 0.8666 2.1062 107.535</span></span>
-<span><span class="co">#&gt;  Trial 3 23.1974 -2.4046 0.0839     14.328  5.9705 0.8298 2.2373 110.314</span></span>
+<span><span class="co">#&gt;  Trial 1 23.4696 -2.7558 0.1155      11.93  7.0314 0.9178 1.3237  86.172</span></span>
+<span><span class="co">#&gt;  Trial 2 20.4941 -1.5222 0.0338      22.49  3.3774 0.8666 2.1062 107.535</span></span>
+<span><span class="co">#&gt;  Trial 3 23.1963 -2.4042 0.0839      14.33  5.9702 0.8298 2.2373 110.314</span></span>
 <span><span class="co">#&gt;      BIC n_local</span></span>
 <span><span class="co">#&gt;   90.714       0</span></span>
 <span><span class="co">#&gt;  112.077       0</span></span>
@@ -259,8 +265,8 @@ article’s QRP figure.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span><span class="op">$</span><span class="va">fits</span><span class="op">[[</span><span class="st">"Trial 3"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; Quadratic Response Plateau (QRP) fit</span></span>
-<span><span class="co">#&gt; Breakpoint (Xo):         14.328 </span></span>
-<span><span class="co">#&gt; CV at breakpoint:        5.971 </span></span>
+<span><span class="co">#&gt; Breakpoint (Xo):         14.330 </span></span>
+<span><span class="co">#&gt; CV at breakpoint:        5.970 </span></span>
 <span><span class="co">#&gt; R2: 0.830  R2 adj: 0.813  RMSE: 2.237  MAE: 1.660</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span>, label_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
@@ -271,9 +277,9 @@ article’s QRP figure.</p>
 <p><code>search_range</code> and <code>step</code> behave exactly as in
 <code><a href="../reference/fit_lrp.html">fit_lrp()</a></code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, search_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, search_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">15</span><span class="op">)</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span>
 <span><span class="co">#&gt; Breakpoint </span></span>
-<span><span class="co">#&gt;     11.932</span></span>
+<span><span class="co">#&gt;      11.93</span></span>
 <span><span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span>
 <span><span class="co">#&gt; Breakpoint </span></span>
 <span><span class="co">#&gt;      11.93</span></span></code></pre></div>
@@ -303,14 +309,14 @@ ordering:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MCM"</span>, <span class="st">"LRP"</span>, <span class="st">"QRP"</span><span class="op">)</span>,</span>
 <span>  Xo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/fit_mcm.html">fit_mcm</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span>,</span>
-<span>         <span class="fu"><a href="../reference/fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span>,</span>
-<span>         <span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>         <span class="fu"><a href="../reference/fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span>,</span>
+<span>         <span class="fu"><a href="../reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>  row.names <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   method        Xo</span></span>
 <span><span class="co">#&gt; 1    MCM  4.494865</span></span>
-<span><span class="co">#&gt; 2    LRP  9.159000</span></span>
-<span><span class="co">#&gt; 3    QRP 11.932000</span></span></code></pre></div>
+<span><span class="co">#&gt; 2    LRP  9.160000</span></span>
+<span><span class="co">#&gt; 3    QRP 11.930000</span></span></code></pre></div>
 <p>Which one to report is a judgement call. The larger optimum is the
 conservative choice: it buys more precision at the cost of more field
 area. The validation article recommends the LRP value as its overall

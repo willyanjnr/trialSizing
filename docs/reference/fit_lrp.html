@@ -333,10 +333,10 @@ Bootstrap</em>. Chapman &amp; Hall, New York.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 17.969850 13.350435  9.500923  6.944847</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="co">## Full precision (about ten times slower)</span></span></span>
-<span class="r-in"><span><span class="fu">fit_lrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      9.159 </span>
+<span class="r-in"><span><span class="co">## Full precision is the default; it costs about ten times more time and</span></span></span>
+<span class="r-in"><span><span class="co">## only refines the third decimal, so it is shown here rather than used</span></span></span>
+<span class="r-in"><span><span class="co">## throughout:</span></span></span>
+<span class="r-in"><span><span class="co"># fit_lrp(X, CV1)$parameters["Breakpoint"]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Title and styling belong to plot(), not to the fit</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Uniformity trial, T1"</span><span class="op">)</span></span></span>
@@ -362,13 +362,13 @@ Bootstrap</em>. Chapman &amp; Hall, New York.</p>
 <span class="r-in"><span><span class="co">## Uncertainty of Xo -------------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co">## Off by default, because the published procedure reports the point alone.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">unc</span> <span class="op">&lt;-</span> <span class="fu">fit_lrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span>, bootstrap <span class="op">=</span> <span class="cn">TRUE</span>, n_boot <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">unc</span> <span class="op">&lt;-</span> <span class="fu">fit_lrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span>, bootstrap <span class="op">=</span> <span class="cn">TRUE</span>, n_boot <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">unc</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Linear Response Plateau (LRP) fit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Method:                  segment  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint (Xo):         9.160 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   95% CI (percentile):  [5.320, 16.725]   SE 2.862</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   breakpoint exists:     p = 0.0020  (500 resamples)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   95% CI (percentile):  [5.436, 17.055]   SE 3.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   breakpoint exists:     p = 0.0050  (200 resamples)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CV at breakpoint:        6.945 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> R2: 0.893  RMSE: 1.513  AIC: 92.3  BIC: 96.9 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -378,12 +378,12 @@ Bootstrap</em>. Chapman &amp; Hall, New York.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Xo =   5.750   SSE  +50.1% vs optimum</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ... see $local_minima for all</span>
 <span class="r-in"><span><span class="va">unc</span><span class="op">$</span><span class="va">bootstrap</span><span class="op">$</span><span class="va">ci</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  5.320 16.725</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  5.43575 17.05475</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## p_value tests whether a breakpoint exists at all: a large value means a</span></span></span>
 <span class="r-in"><span><span class="co">## straight line explains the CV just as well, and no plateau should be read.</span></span></span>
 <span class="r-in"><span><span class="va">unc</span><span class="op">$</span><span class="va">bootstrap</span><span class="op">$</span><span class="va">p_value</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.001996008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.004975124</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Competing breakpoints ---------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co">## Every local minimum of the SSE profile is reported; those fitting within</span></span></span>

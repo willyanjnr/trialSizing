@@ -230,10 +230,10 @@ be read as an optimal plot size.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 18.420012 12.578145  9.298013  7.031385</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="co">## Full precision (about eight times slower)</span></span></span>
-<span class="r-in"><span><span class="fu">fit_qrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     11.932 </span>
+<span class="r-in"><span><span class="co">## Full precision is the default; it costs about eight times more time and</span></span></span>
+<span class="r-in"><span><span class="co">## only refines the third decimal, so it is shown here rather than used</span></span></span>
+<span class="r-in"><span><span class="co">## throughout:</span></span></span>
+<span class="r-in"><span><span class="co"># fit_qrp(X, CV1)$parameters["Breakpoint"]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Uniformity trial, T1"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="fit_qrp-1.png" alt="" width="700" height="433"></span>
@@ -248,16 +248,16 @@ be read as an optimal plot size.</p>
 <span class="r-in"><span><span class="co">## Uncertainty of Xo, off by default. The p-value asks whether the plateau</span></span></span>
 <span class="r-in"><span><span class="co">## buys anything over a plain quadratic.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">unc</span> <span class="op">&lt;-</span> <span class="fu">fit_qrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span>, bootstrap <span class="op">=</span> <span class="cn">TRUE</span>, n_boot <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">unc</span> <span class="op">&lt;-</span> <span class="fu">fit_qrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span>, bootstrap <span class="op">=</span> <span class="cn">TRUE</span>, n_boot <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">unc</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quadratic Response Plateau (QRP) fit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Breakpoint (Xo):         11.930 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   95% CI (percentile):  [9.247, 22.287]   SE 3.786</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   plateau vs quadratic:  p = 0.0020  (500 resamples)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   95% CI (percentile):  [9.885, 22.962]   SE 3.914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   plateau vs quadratic:  p = 0.0050  (200 resamples)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CV at breakpoint:        7.031 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> R2: 0.918  R2 adj: 0.910  RMSE: 1.324  MAE: 1.069 </span>
 <span class="r-in"><span><span class="va">unc</span><span class="op">$</span><span class="va">bootstrap</span><span class="op">$</span><span class="va">ci</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  9.24700 22.28675</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  9.88500 22.96225</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Restrict the breakpoint search</span></span></span>
 <span class="r-in"><span><span class="fu">fit_qrp</span><span class="op">(</span><span class="va">X</span>, <span class="va">CV1</span>, step <span class="op">=</span> <span class="fl">0.01</span>, search_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint"</span><span class="op">]</span></span></span>

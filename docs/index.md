@@ -1,7 +1,5 @@
 # trialSizing
 
-![trialSizing package logo](reference/figures/logo.png)
-
 trialSizing provides tools for **experimental design sizing** in
 agricultural research: estimating the optimal plot size from a
 uniformity trial, and the number of replications needed to detect a
@@ -22,7 +20,7 @@ shapes, checking the trial with the kriged field map of the basic units,
 CV by plot shape, the three plateau models with the CV-versus-plot-size
 curve, what a fit returns, comparing methods, the Paranaiba closed form,
 number of replications, and exporting
-figures.](reference/figures/cheatsheet.svg)](https://willyanjnr.github.io/trialSizing/man/figures/cheatsheet.svg)
+figures.](reference/figures/cheatsheet.svg)](https://willyanjnr.github.io/trialSizing/reference/figures/cheatsheet.svg)
 
 ## Installation
 

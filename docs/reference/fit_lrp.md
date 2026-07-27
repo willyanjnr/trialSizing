@@ -272,10 +272,10 @@ predict(fit, newx = c(2, 5, 7.5, 15))
 #> [1] 17.969850 13.350435  9.500923  6.944847
 
 # \donttest{
-## Full precision (about ten times slower)
-fit_lrp(X, CV1)$parameters["Breakpoint"]
-#> Breakpoint 
-#>      9.159 
+## Full precision is the default; it costs about ten times more time and
+## only refines the third decimal, so it is shown here rather than used
+## throughout:
+# fit_lrp(X, CV1)$parameters["Breakpoint"]
 
 ## Title and styling belong to plot(), not to the fit
 plot(fit, title = "Uniformity trial, T1")
@@ -301,13 +301,13 @@ fit_lrp(cv_tab, x = "x", cv = "cv", step = 0.05,
 ## Uncertainty of Xo -------------------------------------------------------
 ## Off by default, because the published procedure reports the point alone.
 set.seed(1)
-unc <- fit_lrp(X, CV1, step = 0.01, bootstrap = TRUE, n_boot = 500)
+unc <- fit_lrp(X, CV1, step = 0.01, bootstrap = TRUE, n_boot = 200)
 unc
 #> Linear Response Plateau (LRP) fit
 #> Method:                  segment  
 #> Breakpoint (Xo):         9.160 
-#>   95% CI (percentile):  [5.320, 16.725]   SE 2.862
-#>   breakpoint exists:     p = 0.0020  (500 resamples)
+#>   95% CI (percentile):  [5.436, 17.055]   SE 3.025
+#>   breakpoint exists:     p = 0.0050  (200 resamples)
 #> CV at breakpoint:        6.945 
 #> R2: 0.893  RMSE: 1.513  AIC: 92.3  BIC: 96.9 
 #> 
@@ -317,12 +317,12 @@ unc
 #>   Xo =   5.750   SSE  +50.1% vs optimum
 #>   ... see $local_minima for all
 unc$bootstrap$ci
-#> [1]  5.320 16.725
+#> [1]  5.43575 17.05475
 
 ## p_value tests whether a breakpoint exists at all: a large value means a
 ## straight line explains the CV just as well, and no plateau should be read.
 unc$bootstrap$p_value
-#> [1] 0.001996008
+#> [1] 0.004975124
 
 ## Competing breakpoints ---------------------------------------------------
 ## Every local minimum of the SSE profile is reported; those fitting within

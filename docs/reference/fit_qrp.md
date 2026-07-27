@@ -173,10 +173,10 @@ predict(fit, newx = c(2, 5, 7.5, 15))
 #> [1] 18.420012 12.578145  9.298013  7.031385
 
 # \donttest{
-## Full precision (about eight times slower)
-fit_qrp(X, CV1)$parameters["Breakpoint"]
-#> Breakpoint 
-#>     11.932 
+## Full precision is the default; it costs about eight times more time and
+## only refines the third decimal, so it is shown here rather than used
+## throughout:
+# fit_qrp(X, CV1)$parameters["Breakpoint"]
 
 plot(fit, title = "Uniformity trial, T1")
 
@@ -191,16 +191,16 @@ fit$local_minima
 ## Uncertainty of Xo, off by default. The p-value asks whether the plateau
 ## buys anything over a plain quadratic.
 set.seed(1)
-unc <- fit_qrp(X, CV1, step = 0.01, bootstrap = TRUE, n_boot = 500)
+unc <- fit_qrp(X, CV1, step = 0.01, bootstrap = TRUE, n_boot = 200)
 unc
 #> Quadratic Response Plateau (QRP) fit
 #> Breakpoint (Xo):         11.930 
-#>   95% CI (percentile):  [9.247, 22.287]   SE 3.786
-#>   plateau vs quadratic:  p = 0.0020  (500 resamples)
+#>   95% CI (percentile):  [9.885, 22.962]   SE 3.914
+#>   plateau vs quadratic:  p = 0.0050  (200 resamples)
 #> CV at breakpoint:        7.031 
 #> R2: 0.918  R2 adj: 0.910  RMSE: 1.324  MAE: 1.069 
 unc$bootstrap$ci
-#> [1]  9.24700 22.28675
+#> [1]  9.88500 22.96225
 
 ## Restrict the breakpoint search
 fit_qrp(X, CV1, step = 0.01, search_range = c(5, 15))$parameters["Breakpoint"]

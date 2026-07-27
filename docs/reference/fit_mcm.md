@@ -178,18 +178,18 @@ fit_mcm(X, CV1, df = cv_tab$n - 1)$parameters["Breakpoint"]
 ## curve always has a maximum-curvature point when b > 0, so what gets an
 ## interval is b itself.
 set.seed(1)
-unc <- fit_mcm(X, CV1, bootstrap = TRUE, n_boot = 500)
+unc <- fit_mcm(X, CV1, bootstrap = TRUE, n_boot = 200)
 unc
 #> Modified Maximum Curvature (MCM) fit
 #> Method:                  nls 
 #> Weighted by df:          FALSE 
 #> Breakpoint (Xo):         4.495 
-#>   95% CI (percentile):  [4.236, 4.742]   SE 0.117
-#>   exponent b:            [0.377, 0.434]  (500 resamples)
+#>   95% CI (percentile):  [4.171, 4.787]   SE 0.140
+#>   exponent b:            [0.373, 0.435]  (200 resamples)
 #> CV at breakpoint:        12.742 
 #> R2: 0.975  RMSE: 0.725 
 unc$bootstrap$ci_b
-#> [1] 0.3767569 0.4338255
+#> [1] 0.3726114 0.4354598
 
 ## One model per trial
 trials <- rbind(

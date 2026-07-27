@@ -94,12 +94,18 @@ CV3 <- calc_cv_shapes(grid_mat("T3"))$cv
 
 ## Basic use
 
+Every fit below passes `step = 0.01` rather than the default `0.001`.
+That is only to keep this vignette quick to build, and to keep every
+number on this page consistent with the others: the coarser grid already
+resolves $`X_o`$ to two decimals, and only the third decimal differs.
+See [Fine-tuning](#fine-tuning) for what `step` does.
+
 ``` r
 
-fit <- fit_qrp(x = X, cv = CV1)
+fit <- fit_qrp(x = X, cv = CV1, step = 0.01)
 fit
 #> Quadratic Response Plateau (QRP) fit
-#> Breakpoint (Xo):         11.932 
+#> Breakpoint (Xo):         11.930 
 #> CV at breakpoint:        7.031 
 #> R2: 0.918  R2 adj: 0.910  RMSE: 1.324  MAE: 1.069
 ```
@@ -113,15 +119,15 @@ the optimum out.
 summary(fit)
 #> Model coefficients:
 #>          a          b          c 
-#> 23.4681004 -2.7551190  0.1154508 
+#> 23.4695666 -2.7557723  0.1154976 
 #> 
 #> Goodness of fit:
 #>          Breakpoint Breakpoint_Response                  R2              R2_adj 
-#>          11.9320000           7.0310606           0.9177688           0.9095457 
+#>          11.9300000           7.0313850           0.9177688           0.9095457 
 #>                RMSE                 MAE                 AIC                 BIC 
-#>           1.3237244           1.0690865          86.1718395          90.7138163 
+#>           1.3237245           1.0691734          86.1718431          90.7138200 
 #>                 SSE                 MSE 
-#>          40.3016648           1.7522463
+#>          40.3016712           1.7522466
 ```
 
 The QRP reports more fit statistics than the LRP: alongside `R2` and
@@ -136,13 +142,13 @@ cf <- fit$coefficients
 c(vertex = unname(-cf["b"] / (2 * cf["c"])),
   reported = unname(fit$parameters["Breakpoint"]))
 #>   vertex reported 
-#>   11.932   11.932
+#>    11.93    11.93
 ```
 
 ``` r
 
 predict(fit, newx = c(1, 5, 11, 15))
-#> [1] 20.828432 12.578777  7.131344  7.031061
+#> [1] 20.829292 12.578145  7.131279  7.031385
 ```
 
 ## Plot
@@ -188,15 +194,15 @@ trials <- rbind(
   data.frame(x = X, cv = CV3, trial = "Trial 3")
 )
 
-res <- fit_qrp(trials, x = "x", cv = "cv", trial = "trial")
+res <- fit_qrp(trials, x = "x", cv = "cv", trial = "trial", step = 0.01)
 #> Using x = 'x', cv = 'cv', trial = 'trial' -> 3 trials.
 res
 #> QRP fits for 3 trials
 #> 
 #>    trial       a       b      c breakpoint plateau     R2   RMSE     AIC
-#>  Trial 1 23.4681 -2.7551 0.1155     11.932  7.0311 0.9178 1.3237  86.172
-#>  Trial 2 20.4943 -1.5222 0.0338     22.489  3.3775 0.8666 2.1062 107.535
-#>  Trial 3 23.1974 -2.4046 0.0839     14.328  5.9705 0.8298 2.2373 110.314
+#>  Trial 1 23.4696 -2.7558 0.1155      11.93  7.0314 0.9178 1.3237  86.172
+#>  Trial 2 20.4941 -1.5222 0.0338      22.49  3.3774 0.8666 2.1062 107.535
+#>  Trial 3 23.1963 -2.4042 0.0839      14.33  5.9702 0.8298 2.2373 110.314
 #>      BIC n_local
 #>   90.714       0
 #>  112.077       0
@@ -211,8 +217,8 @@ figure.
 
 res$fits[["Trial 3"]]
 #> Quadratic Response Plateau (QRP) fit
-#> Breakpoint (Xo):         14.328 
-#> CV at breakpoint:        5.971 
+#> Breakpoint (Xo):         14.330 
+#> CV at breakpoint:        5.970 
 #> R2: 0.830  R2 adj: 0.813  RMSE: 2.237  MAE: 1.660
 ```
 
@@ -228,9 +234,9 @@ plot(res, label_size = 3)
 
 ``` r
 
-fit_qrp(X, CV1, search_range = c(6, 15))$parameters["Breakpoint"]
+fit_qrp(X, CV1, search_range = c(6, 15), step = 0.01)$parameters["Breakpoint"]
 #> Breakpoint 
-#>     11.932
+#>      11.93
 fit_qrp(X, CV1, step = 0.01)$parameters["Breakpoint"]
 #> Breakpoint 
 #>      11.93
@@ -258,14 +264,14 @@ ordering:
 data.frame(
   method = c("MCM", "LRP", "QRP"),
   Xo = c(fit_mcm(X, CV1)$parameters["Breakpoint"],
-         fit_lrp(X, CV1)$parameters["Breakpoint"],
-         fit_qrp(X, CV1)$parameters["Breakpoint"]),
+         fit_lrp(X, CV1, step = 0.01)$parameters["Breakpoint"],
+         fit_qrp(X, CV1, step = 0.01)$parameters["Breakpoint"]),
   row.names = NULL
 )
 #>   method        Xo
 #> 1    MCM  4.494865
-#> 2    LRP  9.159000
-#> 3    QRP 11.932000
+#> 2    LRP  9.160000
+#> 3    QRP 11.930000
 ```
 
 Which one to report is a judgement call. The larger optimum is the

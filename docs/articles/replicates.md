@@ -180,21 +180,21 @@ grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
                                     grep("^col", names(uniformity_trial))])
 cv_tab <- calc_cv_shapes(grid1)
 
-lrp  <- fit_lrp(cv_tab, x = "x", cv = "cv")
+lrp  <- fit_lrp(cv_tab, x = "x", cv = "cv", step = 0.01)
 cvxo <- unname(lrp$parameters["Breakpoint_Response"])
 cvxo
-#> [1] 6.946387
+#> [1] 6.944847
 
 calc_replicates(treatments = c(5, 10, 20), cv_percent = cvxo,
                 lsd_percent = c(10, 20), design = "RCBD")$data[
                   , c("Treatments", "LSD_percent", "r_continuous", "r_optimal")]
 #>   Treatments LSD_percent r_continuous r_optimal
-#> 1          5          10     8.166458         9
-#> 2         10          10    10.202728        11
-#> 3         20          10    12.426303        13
-#> 4          5          20     2.930601         3
-#> 5         10          20     3.074036         4
-#> 6         20          20     3.406125         4
+#> 1          5          10     8.163305         9
+#> 2         10          10    10.198463        11
+#> 3         20          10    12.420940        13
+#> 4          5          20     2.929867         3
+#> 5         10          20     3.073030         4
+#> 6         20          20     3.404826         4
 ```
 
 So a trial designed with plots of about 9 m² would carry an expected CV

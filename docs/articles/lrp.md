@@ -94,20 +94,26 @@ needs.
 
 ## Basic use
 
+Every fit below passes `step = 0.01` rather than the default `0.001`.
+That is only to keep this vignette quick to build, and to keep every
+number on this page consistent with the others: the coarser grid already
+resolves $`X_o`$ to two decimals, and only the third decimal differs.
+See [Fine-tuning](#fine-tuning) for what `step` does.
+
 ``` r
 
-fit <- fit_lrp(x = X, cv = CV1)
+fit <- fit_lrp(x = X, cv = CV1, step = 0.01)
 fit
 #> Linear Response Plateau (LRP) fit
 #> Method:                  segment  
-#> Breakpoint (Xo):         9.159 
-#> CV at breakpoint:        6.946 
+#> Breakpoint (Xo):         9.160 
+#> CV at breakpoint:        6.945 
 #> R2: 0.893  RMSE: 1.513  AIC: 92.3  BIC: 96.9 
 #> 
 #> Local minima of the SSE profile (8):
-#>   Xo =   7.405   SSE  +15.3% vs optimum
-#>   Xo =  12.824   SSE  +34.5% vs optimum
-#>   Xo =   5.749   SSE  +50.1% vs optimum
+#>   Xo =   7.400   SSE  +15.3% vs optimum
+#>   Xo =  12.820   SSE  +34.5% vs optimum
+#>   Xo =   5.750   SSE  +50.1% vs optimum
 #>   ... see $local_minima for all
 ```
 
@@ -127,9 +133,9 @@ summary(fit)
 #> 
 #> Goodness of fit:
 #>          Breakpoint Breakpoint_Response                  R2                RMSE 
-#>           9.1590000           6.9463865           0.8925664           1.5130367 
+#>           9.1600000           6.9448467           0.8925663           1.5130369 
 #>                 AIC                 BIC 
-#>          92.3206320          96.8626089
+#>          92.3206384          96.8626153
 ```
 
 Everything is also available directly:
@@ -141,7 +147,7 @@ fit$coefficients
 #> 21.049460 -1.539805
 fit$parameters["Breakpoint"]
 #> Breakpoint 
-#>      9.159
+#>       9.16
 round(fit$residuals[1:5], 3)
 #> [1]  3.964  0.262 -0.545 -1.879 -0.419
 ```
@@ -152,7 +158,7 @@ model at any plot size, which is handy to check the plateau behaviour:
 ``` r
 
 predict(fit, newx = c(1, 5, 12, 15))
-#> [1] 19.509655 13.350435  6.946387  6.946387
+#> [1] 19.509655 13.350435  6.944847  6.944847
 ```
 
 The last two values are identical: past the breakpoint the model is
@@ -208,13 +214,13 @@ trials <- rbind(
   data.frame(x = X, cv = CV3, trial = "Trial 3")
 )
 
-res <- fit_lrp(trials, x = "x", cv = "cv", trial = "trial")
+res <- fit_lrp(trials, x = "x", cv = "cv", trial = "trial", step = 0.01)
 #> Using x = 'x', cv = 'cv', trial = 'trial' -> 3 trials.
 res$summary
 #>     trial       a       b breakpoint plateau     R2   RMSE     AIC     BIC
-#> 1 Trial 1 21.0495 -1.5398      9.159  6.9464 0.8926 1.5130  92.321  96.863
-#> 2 Trial 2 19.3597 -1.0725     14.403  3.9130 0.8341 2.3486 112.547 117.089
-#> 3 Trial 3 21.3271 -1.5075     10.111  6.0845 0.8019 2.4137 113.805 118.347
+#> 1 Trial 1 21.0495 -1.5398       9.16  6.9448 0.8926 1.5130  92.321  96.863
+#> 2 Trial 2 19.3597 -1.0725      14.40  3.9162 0.8341 2.3486 112.547 117.089
+#> 3 Trial 3 21.3271 -1.5075      10.11  6.0860 0.8019 2.4137 113.805 118.347
 #>   n_local
 #> 1       8
 #> 2       7
@@ -233,14 +239,14 @@ inspected or plotted as usual:
 res$fits[["Trial 2"]]
 #> Linear Response Plateau (LRP) fit
 #> Method:                  segment  
-#> Breakpoint (Xo):         14.403 
-#> CV at breakpoint:        3.913 
+#> Breakpoint (Xo):         14.400 
+#> CV at breakpoint:        3.916 
 #> R2: 0.834  RMSE: 2.349  AIC: 112.5  BIC: 117.1 
 #> 
 #> Local minima of the SSE profile (7):
-#>   Xo =  17.502   SSE   +0.2% vs optimum  *
-#>   Xo =  10.956   SSE  +12.4% vs optimum
-#>   Xo =  24.862   SSE  +25.9% vs optimum
+#>   Xo =  17.500   SSE   +0.2% vs optimum  *
+#>   Xo =  10.960   SSE  +12.4% vs optimum
+#>   Xo =  24.860   SSE  +25.9% vs optimum
 #>   ... see $local_minima for all
 #>   * fits within 10% of the optimum (local_min_tol); breakpoint not sharply identified
 ```
@@ -286,7 +292,7 @@ warning would fire on nearly every fit and stop meaning anything.
 
 ``` r
 
-fit2 <- fit_lrp(X, CV2)
+fit2 <- fit_lrp(X, CV2, step = 0.01)
 ```
 
 ``` r
@@ -296,13 +302,13 @@ lm2[c("breakpoint", "SSE", "SSE_excess")] <-
   round(lm2[c("breakpoint", "SSE", "SSE_excess")], 3)
 lm2
 #>   breakpoint     SSE SSE_excess competing
-#> 1     17.502 127.138      0.002      TRUE
-#> 2     10.956 142.640      0.124     FALSE
-#> 3     24.862 159.674      0.259     FALSE
-#> 4     32.000 183.044      0.443     FALSE
-#> 5      7.691 196.890      0.552     FALSE
-#> 6      5.999 270.383      1.131     FALSE
-#> 7      3.999 401.987      2.169     FALSE
+#> 1      17.50 127.138      0.002      TRUE
+#> 2      10.96 142.641      0.124     FALSE
+#> 3      24.86 159.674      0.259     FALSE
+#> 4      32.00 183.044      0.443     FALSE
+#> 5       7.69 196.890      0.552     FALSE
+#> 6       5.99 271.638      1.141     FALSE
+#> 7       3.99 404.290      2.187     FALSE
 ```
 
 Read the `SSE_excess` column as “how much worse than the optimum”. When
@@ -339,7 +345,7 @@ soy_cv <- c(18.699092, 14.130115, 10.321934, 7.990773, 12.690754, 9.995547,
             7.916291, 7.588785, 9.276139, 7.130636, 4.777755, 4.279987,
             8.411412, 5.818440, 3.431264, 3.335962)
 
-seeded <- fit_lrp(soy_x, soy_cv, start = 10.17)
+seeded <- fit_lrp(soy_x, soy_cv, start = 10.17, step = 0.01)
 seeded$compat
 #> $start
 #> [1] 10.17
@@ -358,7 +364,7 @@ seeded$compat
 #> [1] 43.17176
 #> 
 #> $SSE_excess
-#> [1] 0.1509478
+#> [1] 0.1509463
 ```
 
 The reported fit is still the optimum at 5.79; `$compat` shows that a
@@ -380,9 +386,9 @@ Once you have decided, `search_range` documents the choice explicitly:
 
 ``` r
 
-fit_lrp(soy_x, soy_cv, search_range = c(8, 20))$parameters["Breakpoint"]
+fit_lrp(soy_x, soy_cv, search_range = c(8, 20), step = 0.01)$parameters["Breakpoint"]
 #> Breakpoint 
-#>      9.537
+#>       9.54
 ```
 
 ## Fine-tuning
@@ -394,9 +400,9 @@ is issued if the breakpoint lands on the edge of the range you gave.
 
 ``` r
 
-fit_lrp(X, CV1, search_range = c(5, 12))$parameters["Breakpoint"]
+fit_lrp(X, CV1, search_range = c(5, 12), step = 0.01)$parameters["Breakpoint"]
 #> Breakpoint 
-#>      9.159
+#>       9.16
 ```
 
 **`step`** is the grid resolution, 0.001 by default. Coarser grids are
@@ -418,9 +424,9 @@ the optimum.
 
 ``` r
 
-fit_lrp(X, CV1, method = "ramp")$parameters["Breakpoint"]
+fit_lrp(X, CV1, method = "ramp", step = 0.01)$parameters["Breakpoint"]
 #> Breakpoint 
-#>      9.159
+#>       9.16
 ```
 
 **`local_min_tol`** sets how close a competitor must fit to be flagged
@@ -429,7 +435,7 @@ as competing. It changes labelling only, never the fit: lower it (say
 
 ``` r
 
-fit_lrp(X, CV2, local_min_tol = 0.02)$local_minima$competing
+fit_lrp(X, CV2, local_min_tol = 0.02, step = 0.01)$local_minima$competing
 #> [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
 ```
 

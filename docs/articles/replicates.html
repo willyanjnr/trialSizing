@@ -268,21 +268,21 @@ feeding the result straight through:</p>
 <span>                                    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">uniformity_trial</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">cv_tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">lrp</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">cv_tab</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span><span class="op">)</span></span>
+<span><span class="va">lrp</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">cv_tab</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, step <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span>
 <span><span class="va">cvxo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">lrp</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint_Response"</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">cvxo</span></span>
-<span><span class="co">#&gt; [1] 6.946387</span></span>
+<span><span class="co">#&gt; [1] 6.944847</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/calc_replicates.html">calc_replicates</a></span><span class="op">(</span>treatments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>, cv_percent <span class="op">=</span> <span class="va">cvxo</span>,</span>
 <span>                lsd_percent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>, design <span class="op">=</span> <span class="st">"RCBD"</span><span class="op">)</span><span class="op">$</span><span class="va">data</span><span class="op">[</span></span>
 <span>                  , <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Treatments"</span>, <span class="st">"LSD_percent"</span>, <span class="st">"r_continuous"</span>, <span class="st">"r_optimal"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt;   Treatments LSD_percent r_continuous r_optimal</span></span>
-<span><span class="co">#&gt; 1          5          10     8.166458         9</span></span>
-<span><span class="co">#&gt; 2         10          10    10.202728        11</span></span>
-<span><span class="co">#&gt; 3         20          10    12.426303        13</span></span>
-<span><span class="co">#&gt; 4          5          20     2.930601         3</span></span>
-<span><span class="co">#&gt; 5         10          20     3.074036         4</span></span>
-<span><span class="co">#&gt; 6         20          20     3.406125         4</span></span></code></pre></div>
+<span><span class="co">#&gt; 1          5          10     8.163305         9</span></span>
+<span><span class="co">#&gt; 2         10          10    10.198463        11</span></span>
+<span><span class="co">#&gt; 3         20          10    12.420940        13</span></span>
+<span><span class="co">#&gt; 4          5          20     2.929867         3</span></span>
+<span><span class="co">#&gt; 5         10          20     3.073030         4</span></span>
+<span><span class="co">#&gt; 6         20          20     3.404826         4</span></span></code></pre></div>
 <p>So a trial designed with plots of about 9 m² would carry an expected
 CV near 7%, and the table reads off how many replications are needed to
 detect a given difference between treatment means.</p>

@@ -19,6 +19,8 @@ the breakpoint, and publication-style plots.
 
 Useful links:
 
+- <https://willyanjnr.github.io/trialSizing/>
+
 - <https://github.com/willyanjnr/trialSizing>
 
 - Report bugs at <https://github.com/willyanjnr/trialSizing/issues>

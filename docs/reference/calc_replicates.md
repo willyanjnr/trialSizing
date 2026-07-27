@@ -130,7 +130,7 @@ cbind(CRD = fit$data$r_optimal, RCBD = rcbd$data$r_optimal)
 # \donttest{
 ## The full published table: every treatment number from 3 to 50, at three
 ## precision levels.
-full <- calc_replicates(treatments = 3:50, cv_percent = 9.25,
+full <- calc_replicates(treatments = 3:30, cv_percent = 9.25,
                         lsd_percent = c(10, 20, 30), design = "CRD")
 head(full$data)
 #>   Treatments CV_percent LSD_percent Alpha Design r_continuous r_optimal

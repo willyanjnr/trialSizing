@@ -129,8 +129,10 @@ coef(fit)
 predict(fit, newx = c(2, 5, 7.5, 15))
 
 \donttest{
-## Full precision (about eight times slower)
-fit_qrp(X, CV1)$parameters["Breakpoint"]
+## Full precision is the default; it costs about eight times more time and
+## only refines the third decimal, so it is shown here rather than used
+## throughout:
+# fit_qrp(X, CV1)$parameters["Breakpoint"]
 
 plot(fit, title = "Uniformity trial, T1")
 
@@ -142,7 +144,7 @@ fit$local_minima
 ## Uncertainty of Xo, off by default. The p-value asks whether the plateau
 ## buys anything over a plain quadratic.
 set.seed(1)
-unc <- fit_qrp(X, CV1, step = 0.01, bootstrap = TRUE, n_boot = 500)
+unc <- fit_qrp(X, CV1, step = 0.01, bootstrap = TRUE, n_boot = 200)
 unc
 unc$bootstrap$ci
 

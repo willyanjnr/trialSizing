@@ -251,7 +251,7 @@
 #' ## curve always has a maximum-curvature point when b > 0, so what gets an
 #' ## interval is b itself.
 #' set.seed(1)
-#' unc <- fit_mcm(X, CV1, bootstrap = TRUE, n_boot = 500)
+#' unc <- fit_mcm(X, CV1, bootstrap = TRUE, n_boot = 200)
 #' unc
 #' unc$bootstrap$ci_b
 #'

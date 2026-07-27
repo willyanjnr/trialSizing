@@ -9,7 +9,7 @@ test_that("fit_qrp reproduces the published chickpea optima", {
   ## hundredth away; a tolerance of 0.011 accepts that while still catching
   ## any real drift
   for (i in seq_along(chickpea_cv_list)) {
-    fit <- fit_qrp(chickpea_X, chickpea_cv_list[[i]])
+    fit <- fit_qrp(chickpea_X, chickpea_cv_list[[i]], step = 0.01)
     expect_equal(unname(fit$parameters["Breakpoint"]), pub$Xo[i],
                  tolerance = 0.011, info = paste("trial", i))
     expect_equal(unname(fit$parameters["Breakpoint_Response"]), pub$CVxo[i],
@@ -19,13 +19,15 @@ test_that("fit_qrp reproduces the published chickpea optima", {
 
 test_that("the mean optimum matches the article's overall value", {
   xo <- vapply(chickpea_cv_list,
-               function(y) unname(fit_qrp(chickpea_X, y)$parameters["Breakpoint"]),
+               function(y) unname(fit_qrp(chickpea_X, y, step = 0.01)$parameters["Breakpoint"]),
                numeric(1))
   expect_equal(round(mean(xo), 2), chickpea_published$QRP$mean_Xo)
 })
 
 test_that("estimates are stable to three decimals", {
-  fit <- fit_qrp(chickpea_X, chickpea_CV1)
+  ## the default step = 0.001 is what pins the third decimal; a coarser
+  ## grid cannot resolve it
+  fit <- fit_qrp(chickpea_X, chickpea_CV1, step = 0.001)
   expect_equal(unname(fit$parameters["Breakpoint"]), 10.965, tolerance = 1e-6)
   expect_equal(unname(fit$parameters["Breakpoint_Response"]), 7.500,
                tolerance = 1e-3)
@@ -33,7 +35,7 @@ test_that("estimates are stable to three decimals", {
 })
 
 test_that("the object has the documented structure", {
-  fit <- fit_qrp(chickpea_X, chickpea_CV1)
+  fit <- fit_qrp(chickpea_X, chickpea_CV1, step = 0.01)
 
   expect_s3_class(fit, "qrp_fit")
   expect_named(fit$coefficients, c("a", "b", "c"))
@@ -43,7 +45,7 @@ test_that("the object has the documented structure", {
 })
 
 test_that("the breakpoint equals the vertex of the parabola", {
-  fit <- fit_qrp(chickpea_X, chickpea_CV1)
+  fit <- fit_qrp(chickpea_X, chickpea_CV1, step = 0.01)
   cf  <- fit$coefficients
 
   ## Xo = -b / (2c)
@@ -57,7 +59,7 @@ test_that("the breakpoint equals the vertex of the parabola", {
 })
 
 test_that("the descending arm is convex and the plateau is flat", {
-  fit <- fit_qrp(chickpea_X, chickpea_CV1)
+  fit <- fit_qrp(chickpea_X, chickpea_CV1, step = 0.01)
   xo  <- unname(fit$parameters["Breakpoint"])
   plateau <- unname(fit$parameters["Breakpoint_Response"])
 
@@ -68,7 +70,7 @@ test_that("the descending arm is convex and the plateau is flat", {
 })
 
 test_that("fitted values and residuals are internally consistent", {
-  fit <- fit_qrp(chickpea_X, chickpea_CV1)
+  fit <- fit_qrp(chickpea_X, chickpea_CV1, step = 0.01)
 
   expect_equal(fit$fitted + fit$residuals, chickpea_CV1)
   expect_equal(unname(fit$parameters["SSE"]), sum(fit$residuals^2))
@@ -79,7 +81,7 @@ test_that("fitted values and residuals are internally consistent", {
 test_that("the grid search matches a converged nls fit", {
   ## same model, fitted by nls starting from the grid-search solution:
   ## if the grid found the least-squares optimum, the SSE must agree
-  fit <- fit_qrp(chickpea_X, chickpea_CV1)
+  fit <- fit_qrp(chickpea_X, chickpea_CV1, step = 0.01)
   cf  <- fit$coefficients
 
   qrp_model <- function(x, a, b, c) {
@@ -103,14 +105,14 @@ test_that("the grid search matches a converged nls fit", {
 
 test_that("QRP gives a larger optimum than LRP on the same data", {
   for (y in chickpea_cv_list) {
-    qrp <- unname(fit_qrp(chickpea_X, y)$parameters["Breakpoint"])
-    lrp <- unname(fit_lrp(chickpea_X, y)$parameters["Breakpoint"])
+    qrp <- unname(fit_qrp(chickpea_X, y, step = 0.01)$parameters["Breakpoint"])
+    lrp <- unname(fit_lrp(chickpea_X, y, step = 0.01)$parameters["Breakpoint"])
     expect_gt(qrp, lrp)
   }
 })
 
 test_that("the data-frame interface fits one model per trial", {
-  res <- fit_qrp(chickpea_long, x = "x", cv = "cv", trial = "trial")
+  res <- fit_qrp(chickpea_long, x = "x", cv = "cv", trial = "trial", step = 0.01)
 
   expect_s3_class(res, "qrp_multi")
   expect_equal(nrow(res$summary), 3)
@@ -120,14 +122,17 @@ test_that("the data-frame interface fits one model per trial", {
 })
 
 test_that("search_range and step behave as documented", {
-  inside <- fit_qrp(chickpea_X, chickpea_CV1, search_range = c(6, 15))
+  ## a range containing the optimum must leave it untouched, so this one is
+  ## compared against the full-precision value and needs step = 0.001
+  inside <- fit_qrp(chickpea_X, chickpea_CV1, search_range = c(6, 15),
+                    step = 0.001)
   expect_equal(unname(inside$parameters["Breakpoint"]), 10.965,
                tolerance = 1e-3)
 
   coarse <- fit_qrp(chickpea_X, chickpea_CV1, step = 0.01)
   expect_equal(round(unname(coarse$parameters["Breakpoint"]), 1), 11.0)
 
-  expect_error(fit_qrp(chickpea_X, chickpea_CV1, search_range = c(20, 40)),
+  expect_error(fit_qrp(chickpea_X, chickpea_CV1, search_range = c(20, 40), step = 0.01),
                "within the data range")
 })
 
@@ -141,7 +146,7 @@ test_that("invalid input is rejected", {
 test_that("plot, print and summary work", {
   skip_if_not_installed("ggplot2")
 
-  fit <- fit_qrp(chickpea_X, chickpea_CV1)
+  fit <- fit_qrp(chickpea_X, chickpea_CV1, step = 0.01)
   expect_s3_class(plot(fit, title = "Trial 1"), "ggplot")
   expect_s3_class(plot(fit, decimal_mark = ",", cond_word = "se"), "ggplot")
   expect_output(print(fit), "Quadratic Response Plateau")

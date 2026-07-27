@@ -131,8 +131,8 @@ test_that("invalid input is rejected", {
 })
 
 test_that("the CVxo of a plot-size fit can be fed straight in", {
-  cvxo <- unname(fit_lrp(chickpea_X,
-                         chickpea_CV1)$parameters["Breakpoint_Response"])
+  cvxo <- unname(fit_lrp(chickpea_X, chickpea_CV1,
+                         step = 0.01)$parameters["Breakpoint_Response"])
   res <- calc_replicates(10, cvxo, 20, design = "RCBD")
 
   expect_equal(res$data$CV_percent, cvxo)

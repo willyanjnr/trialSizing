@@ -48,6 +48,7 @@ URL: https://willyanjnr.github.io/trialSizing/,
     https://github.com/willyanjnr/trialSizing
 BugReports: https://github.com/willyanjnr/trialSizing/issues
 Encoding: UTF-8
+Language: en
 LazyData: true
 Depends: 
     R (>= 3.5)

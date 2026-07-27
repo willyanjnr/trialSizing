@@ -577,8 +577,10 @@
 #' predict(fit, newx = c(2, 5, 7.5, 15))
 #'
 #' \donttest{
-#' ## Full precision (about ten times slower)
-#' fit_lrp(X, CV1)$parameters["Breakpoint"]
+#' ## Full precision is the default; it costs about ten times more time and
+#' ## only refines the third decimal, so it is shown here rather than used
+#' ## throughout:
+#' # fit_lrp(X, CV1)$parameters["Breakpoint"]
 #'
 #' ## Title and styling belong to plot(), not to the fit
 #' plot(fit, title = "Uniformity trial, T1")
@@ -598,7 +600,7 @@
 #' ## Uncertainty of Xo -------------------------------------------------------
 #' ## Off by default, because the published procedure reports the point alone.
 #' set.seed(1)
-#' unc <- fit_lrp(X, CV1, step = 0.01, bootstrap = TRUE, n_boot = 500)
+#' unc <- fit_lrp(X, CV1, step = 0.01, bootstrap = TRUE, n_boot = 200)
 #' unc
 #' unc$bootstrap$ci
 #'

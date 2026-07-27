@@ -96,8 +96,14 @@ size, or the fit loses the within-size variability it needs.
 
 ## Basic use
 
+Every fit below passes `step = 0.01` rather than the default `0.001`. That is
+only to keep this vignette quick to build, and to keep every number on this page
+consistent with the others: the coarser grid already resolves $X_o$ to two
+decimals, and only the third decimal differs. See
+[Fine-tuning](#fine-tuning) for what `step` does.
+
 ```{r fit}
-fit <- fit_lrp(x = X, cv = CV1)
+fit <- fit_lrp(x = X, cv = CV1, step = 0.01)
 fit
 ```
 
@@ -168,7 +174,7 @@ trials <- rbind(
   data.frame(x = X, cv = CV3, trial = "Trial 3")
 )
 
-res <- fit_lrp(trials, x = "x", cv = "cv", trial = "trial")
+res <- fit_lrp(trials, x = "x", cv = "cv", trial = "trial", step = 0.01)
 res$summary
 ```
 
@@ -215,7 +221,7 @@ warning: stepped profiles almost always have several minima, so a warning would
 fire on nearly every fit and stop meaning anything.
 
 ```{r competing}
-fit2 <- fit_lrp(X, CV2)
+fit2 <- fit_lrp(X, CV2, step = 0.01)
 ```
 
 ```{r competing-table}
@@ -254,7 +260,7 @@ soy_cv <- c(18.699092, 14.130115, 10.321934, 7.990773, 12.690754, 9.995547,
             7.916291, 7.588785, 9.276139, 7.130636, 4.777755, 4.279987,
             8.411412, 5.818440, 3.431264, 3.335962)
 
-seeded <- fit_lrp(soy_x, soy_cv, start = 10.17)
+seeded <- fit_lrp(soy_x, soy_cv, start = 10.17, step = 0.01)
 seeded$compat
 ```
 
@@ -275,7 +281,7 @@ plausible on the plot, and what plot sizes are feasible in the field.
 Once you have decided, `search_range` documents the choice explicitly:
 
 ```{r search-range-basin}
-fit_lrp(soy_x, soy_cv, search_range = c(8, 20))$parameters["Breakpoint"]
+fit_lrp(soy_x, soy_cv, search_range = c(8, 20), step = 0.01)$parameters["Breakpoint"]
 ```
 
 ## Fine-tuning
@@ -286,7 +292,7 @@ It must fall inside the data range, and a warning is issued if the breakpoint
 lands on the edge of the range you gave.
 
 ```{r search-range}
-fit_lrp(X, CV1, search_range = c(5, 12))$parameters["Breakpoint"]
+fit_lrp(X, CV1, search_range = c(5, 12), step = 0.01)$parameters["Breakpoint"]
 ```
 
 **`step`** is the grid resolution, 0.001 by default. Coarser grids are faster
@@ -303,7 +309,7 @@ basis `pmin(x, X0)`, the standard least-squares LRP; the plateau points then
 also inform the descending line, which can shift the optimum.
 
 ```{r method}
-fit_lrp(X, CV1, method = "ramp")$parameters["Breakpoint"]
+fit_lrp(X, CV1, method = "ramp", step = 0.01)$parameters["Breakpoint"]
 ```
 
 **`local_min_tol`** sets how close a competitor must fit to be flagged as
@@ -311,7 +317,7 @@ competing. It changes labelling only, never the fit: lower it (say `0.02`) to
 mark only near-ties, raise it to mark any competitor.
 
 ```{r local-min-tol}
-fit_lrp(X, CV2, local_min_tol = 0.02)$local_minima$competing
+fit_lrp(X, CV2, local_min_tol = 0.02, step = 0.01)$local_minima$competing
 ```
 
 ## Warnings worth heeding

@@ -113,8 +113,8 @@ test_that("the Federer degrees-of-freedom weighting changes the fit", {
 test_that("MCM gives a smaller optimum than LRP and QRP", {
   for (y in chickpea_cv_list) {
     mcm <- unname(fit_mcm(chickpea_X, y)$parameters["Breakpoint"])
-    lrp <- unname(fit_lrp(chickpea_X, y)$parameters["Breakpoint"])
-    qrp <- unname(fit_qrp(chickpea_X, y)$parameters["Breakpoint"])
+    lrp <- unname(fit_lrp(chickpea_X, y, step = 0.01)$parameters["Breakpoint"])
+    qrp <- unname(fit_qrp(chickpea_X, y, step = 0.01)$parameters["Breakpoint"])
     expect_lt(mcm, lrp)
     expect_lt(lrp, qrp)
   }

@@ -13,6 +13,7 @@ Sizes field experiments from uniformity-trial data, following the relationship b
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://willyanjnr.github.io/trialSizing/}
   \item \url{https://github.com/willyanjnr/trialSizing}
   \item Report bugs at \url{https://github.com/willyanjnr/trialSizing/issues}
 }

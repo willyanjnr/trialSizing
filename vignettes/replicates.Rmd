@@ -142,7 +142,7 @@ grid1 <- as.matrix(uniformity_trial[uniformity_trial$trial == "T1",
                                     grep("^col", names(uniformity_trial))])
 cv_tab <- calc_cv_shapes(grid1)
 
-lrp  <- fit_lrp(cv_tab, x = "x", cv = "cv")
+lrp  <- fit_lrp(cv_tab, x = "x", cv = "cv", step = 0.01)
 cvxo <- unname(lrp$parameters["Breakpoint_Response"])
 cvxo
 

@@ -83,8 +83,11 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of trialSizing from <a href="https://github.com/willyanjnr/trialSizing" class="external-link">GitHub</a> with:</p>
+<p>Install the released version from <a href="https://CRAN.R-project.org/package=trialSizing" class="external-link">CRAN</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"trialSizing"</span><span class="op">)</span></span></code></pre></div>
+<p>Or the development version from <a href="https://github.com/willyanjnr/trialSizing" class="external-link">GitHub</a>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"willyanjnr/trialSizing"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -136,7 +139,7 @@
 </tbody>
 </table>
 <p>The rest of this page follows those steps on one dataset. Everything below uses <code>uniformity_trial</code>, a <strong>simulated</strong> trial bundled with the package (three 8 × 12 grids of 1 m² BEU; see <code><a href="reference/uniformity_trial.html">?uniformity_trial</a></code>).</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://willyanjnr.github.io/trialSizing/">trialSizing</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># One trial, as the numeric grid the functions expect</span></span>
@@ -148,7 +151,7 @@
 <h3 id="step-1--check-the-trial">Step 1 — Check the trial<a class="anchor" aria-label="anchor" href="#step-1--check-the-trial"></a>
 </h3>
 <p>Before estimating anything, look at the raw grid: its dimensions decide which plot shapes exist at all, and its spatial autocorrelation is what the whole method rests on. <code><a href="reference/check_trial.html">check_trial()</a></code> reports both, and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> draws the field map.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chk</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/check_trial.html">check_trial</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Checking 1 trial(s).</span></span>
 <span><span class="va">chk</span></span>
@@ -169,7 +172,7 @@
 <h3 id="step-2--cv-by-plot-shape">Step 2 — CV by plot shape<a class="anchor" aria-label="anchor" href="#step-2--cv-by-plot-shape"></a>
 </h3>
 <p><code><a href="reference/calc_cv_shapes.html">calc_cv_shapes()</a></code> groups the BEU into every rectangular plot the grid allows and returns one row per shape: the plot size <code>x</code> (in BEU), the number of plots <code>n</code> of that size, and the coefficient of variation <code>cv</code> among them. Several shapes share the same area, so <code>x</code> repeats.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cv_tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calc_cv_shapes.html">calc_cv_shapes</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; CV by shape for 1 trial(s).</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cv_tab</span><span class="op">)</span></span>
@@ -186,7 +189,7 @@
 <h3 id="step-3--fit-a-plot-size-model">Step 3 — Fit a plot-size model<a class="anchor" aria-label="anchor" href="#step-3--fit-a-plot-size-model"></a>
 </h3>
 <p>The CV falls steeply for small plots and then levels off; the plot size where it stops falling is the optimum. <code><a href="reference/fit_lrp.html">fit_lrp()</a></code> finds it with a Linear Response Plateau model, by a grid search over the breakpoint (no starting values needed).</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">cv_tab</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using x = 'x', cv = 'cv' (single series).</span></span>
 <span><span class="va">fit</span></span>
@@ -202,7 +205,7 @@
 <span><span class="co">#&gt;   Xo =   5.750   SSE  +50.1% vs optimum</span></span>
 <span><span class="co">#&gt;   ... see $local_minima for all</span></span></code></pre></div>
 <p>Title and styling belong to the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> method, which draws the fitted broken line, the breakpoint and the plateau annotations:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Uniformity trial T1"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="reference/figures/README-fit-plot-1.png" alt="plot of chunk fit-plot" width="100%"><p class="caption">
@@ -210,7 +213,7 @@ plot of chunk fit-plot
 </p>
 </div>
 <p>To export a figure, use <code>save = TRUE</code>; TIFF is written with LZW compression, and vector formats are available for line art:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, title <span class="op">=</span> <span class="st">"Uniformity trial T1"</span>,</span>
 <span>     save <span class="op">=</span> <span class="cn">TRUE</span>, file <span class="op">=</span> <span class="st">"trial.tiff"</span>, format <span class="op">=</span> <span class="st">"tiff"</span>, dpi <span class="op">=</span> <span class="fl">300</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -218,7 +221,7 @@ plot of chunk fit-plot
 <h3 id="step-4--compare-methods">Step 4 — Compare methods<a class="anchor" aria-label="anchor" href="#step-4--compare-methods"></a>
 </h3>
 <p>The three CV-based models and the closed-form Paranaiba method often give different optima; the plot size typically increases in the order MCM &lt; LRP &lt; QRP. <code><a href="reference/compare_methods.html">compare_methods()</a></code> runs them all from a single grid (it builds the CV table on the way, and adds Paranaiba because it has the raw units):</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/compare_methods.html">compare_methods</a></span><span class="op">(</span><span class="va">grid1</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Comparing 4 method(s) on 1 trial(s).</span></span>
 <span><span class="co">#&gt; Plot-size methods compared</span></span>
@@ -232,7 +235,7 @@ plot of chunk fit-plot
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Xo ranges from 4.495 to 11.950 (a factor of 2.7).</span></span></code></pre></div>
 <p><code><a href="reference/calc_paranaiba.html">calc_paranaiba()</a></code> can also be called on its own; it works directly on the grid and returns a closed-form estimate from the first-order spatial autocorrelation:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/calc_paranaiba.html">calc_paranaiba</a></span><span class="op">(</span><span class="va">grid1</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; Paranaiba method on 1 trial(s); rho direction = 'row'.</span></span>
 <span><span class="co">#&gt;     trial     mean variance       CV    rho_row    rho_col        rho       Xo</span></span>
@@ -240,7 +243,7 @@ plot of chunk fit-plot
 <span><span class="co">#&gt;       CVxo valid</span></span>
 <span><span class="co">#&gt; 1 10.71956  TRUE</span></span></code></pre></div>
 <p>Because every <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> method returns a <code>ggplot</code> object, several fits can be shown side by side with <code>patchwork</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="va">lrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_lrp.html">fit_lrp</a></span><span class="op">(</span><span class="va">cv_tab</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">qrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_qrp.html">fit_qrp</a></span><span class="op">(</span><span class="va">cv_tab</span>, x <span class="op">=</span> <span class="st">"x"</span>, cv <span class="op">=</span> <span class="st">"cv"</span>, step <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
@@ -253,7 +256,7 @@ plot of chunk fit-plot
 <h4 id="several-trials-at-once">Several trials at once<a class="anchor" aria-label="anchor" href="#several-trials-at-once"></a>
 </h4>
 <p>Pass a data frame (or a list of grids) with a trial column to fit one model per trial. The result carries a per-trial summary table plus the individual fits (this works for <code><a href="reference/fit_lrp.html">fit_lrp()</a></code>, <code><a href="reference/fit_qrp.html">fit_qrp()</a></code>, <code><a href="reference/fit_mcm.html">fit_mcm()</a></code> and <code><a href="reference/compare_methods.html">compare_methods()</a></code>):</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">grids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">uniformity_trial</span>, <span class="va">uniformity_trial</span><span class="op">$</span><span class="va">trial</span><span class="op">)</span>,</span>
 <span>                <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^col"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -276,7 +279,7 @@ plot of chunk fit-plot
 <h3 id="step-5--number-of-replications">Step 5 — Number of replications<a class="anchor" aria-label="anchor" href="#step-5--number-of-replications"></a>
 </h3>
 <p>The CV at the optimal plot size (<code>CVxo</code>) feeds directly into the number of replications needed to detect a given difference between treatment means (as a percent of the mean), for CRD or RCBD designs:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cvxo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">parameters</span><span class="op">[</span><span class="st">"Breakpoint_Response"</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">reps</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calc_replicates.html">calc_replicates</a></span><span class="op">(</span></span>
@@ -305,7 +308,7 @@ plot of chunk fit-plot
 <span><span class="co">#&gt;    4.307      TRUE    FALSE</span></span>
 <span><span class="co">#&gt;    4.415      TRUE    FALSE</span></span></code></pre></div>
 <p>The output reports both <code>r_continuous</code> (the tabulated value) and <code>r_optimal</code> (the practical integer, at least 2). Plotting shows how the requirement grows with the number of treatments, one line per LSD level:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reps</span>, title <span class="op">=</span> <span class="st">"Replications needed"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="reference/figures/README-replicates-plot-1.png" alt="plot of chunk replicates-plot" width="100%"><p class="caption">
@@ -328,6 +331,7 @@ plot of chunk replicates-plot
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=trialSizing" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/willyanjnr/trialSizing/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/willyanjnr/trialSizing/issues" class="external-link">Report a bug</a></li>
 </ul>
@@ -368,6 +372,7 @@ plot of chunk replicates-plot
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://CRAN.R-project.org/package=trialSizing" class="external-link"><img src="https://www.r-pkg.org/badges/version/trialSizing" alt="CRAN status"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></li>
 </ul>
 </div>

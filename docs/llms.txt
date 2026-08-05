@@ -24,8 +24,16 @@ figures.](reference/figures/cheatsheet.svg)](https://willyanjnr.github.io/trialS
 
 ## Installation
 
-You can install the development version of trialSizing from
-[GitHub](https://github.com/willyanjnr/trialSizing) with:
+Install the released version from
+[CRAN](https://CRAN.R-project.org/package=trialSizing):
+
+``` r
+
+install.packages("trialSizing")
+```
+
+Or the development version from
+[GitHub](https://github.com/willyanjnr/trialSizing):
 
 ``` r
 

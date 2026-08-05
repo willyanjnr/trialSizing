@@ -5,6 +5,7 @@
 # trialSizing <img src="man/figures/logo.png" align="right" height="140" alt="" />
 
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/trialSizing)](https://CRAN.R-project.org/package=trialSizing)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
@@ -24,8 +25,15 @@ prints on one landscape sheet.
 
 ## Installation
 
-You can install the development version of trialSizing from
-[GitHub](https://github.com/willyanjnr/trialSizing) with:
+Install the released version from
+[CRAN](https://CRAN.R-project.org/package=trialSizing):
+
+``` r
+install.packages("trialSizing")
+```
+
+Or the development version from
+[GitHub](https://github.com/willyanjnr/trialSizing):
 
 ``` r
 # install.packages("pak")
